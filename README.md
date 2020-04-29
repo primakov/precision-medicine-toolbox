@@ -12,7 +12,7 @@ This function allows for convertion of DICOM(CT or MR)dataset into volume (nrrd 
 This function could be used for quick check of the converted images, or any exicting nrrd/mha dataset. It will generate the jpeg images for each ROI slice.
 
 * <b>Extracting of radiomics features </b>
-Feature extraction procedure using [pyradiomics](http://www.simpleitk.org/SimpleITK/resources/software.html) to obtain the radiomics features for nrrd/mha dataset.
+Feature extraction procedure using [pyradiomics](https://github.com/Radiomics/pyradiomics) to obtain the radiomics features for nrrd/mha dataset.
 
 
 
