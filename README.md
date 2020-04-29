@@ -1,6 +1,6 @@
 # The Dlab toolbox
 
-![Python version](https://img.shields.io/badge/python-3.6-green.svg),(https://img.shields.io/badge/python-3.7-green.svg)
+![Python version](https://img.shields.io/badge/python-3.6-green.svg),![Python version](https://img.shields.io/badge/python-3.7-green.svg)
 
 Currently the toolbox has following functionality:
 
