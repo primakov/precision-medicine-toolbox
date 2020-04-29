@@ -2,6 +2,7 @@
 
 ![Python version](https://img.shields.io/badge/python-3.6-green.svg),![Python version](https://img.shields.io/badge/python-3.7-green.svg)
 
+## Description
 Currently the toolbox has following functionality:
 
 * <b>Conversion of DICOM to nrrd</b>
