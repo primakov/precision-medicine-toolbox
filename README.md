@@ -20,7 +20,8 @@ Visualization (in .html report) of:
   * features mutual correlation (Spearman) matrix,  
   * p-values (Bonferroni corrected) for Mann-Whitney test for feature mean values in groups,   
   * univariate ROC-curves for each feature,  
-  * volume analysis: volume-based precision-recall curve + features correlation with volume    
+  * volume analysis: volume-based precision-recall curve + features correlation with volume  
+  
 and calculation of features basic statistics and statistical criterias with export to excel file.
 
 
