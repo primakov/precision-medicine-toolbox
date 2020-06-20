@@ -14,6 +14,13 @@ This function could be used for quick check of the converted images, or any exic
 * <b>Extracting of radiomics features </b>
 Feature extraction procedure using [pyradiomics](https://github.com/Radiomics/pyradiomics) to obtain the radiomics features for nrrd/mha dataset.
 
+* <b>Basic analysis of radiomics features </b>
+Export to excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
+  * features values distributions in binary classes,  
+  * features mutual correlation (Spearman) matrix,  
+  * p-values (Bonferroni corrected) for Mann-Whitney test for features mean values in groups,   
+  * univariate ROC-curves for each feature,  
+  * volume analysis: volume-based precision-recall curve + features correlation with volume.
 
 
 For more information check out the <b>examples.ipynb</b>.
