@@ -3,6 +3,7 @@
 Created on Sun Apr 5 22:40:52 2020
 @author: S.Primakov
 s.primakov@maastrichtuniversity.nl
+
 """
 import os,re
 import pydicom
@@ -47,7 +48,7 @@ class data_set:
             
                 for mask_name in self.__mask_names:         
                     for file in temp_files:
-                        if is_in_list(self.__image_names,file):
+                        if is_in_list(self.__image_names,file.split('\\')[-1][:-5]):
                             if not self._image_only:
                                 for mfile in temp_files:
                                     if re.search(mask_name.lower(),mfile.lower()):
@@ -127,12 +128,12 @@ class data_set:
         return temp_key,temp_data
     
     
-#parameters = {'data_path': r'E:\SergeyData\delete_me\H2', 
-#              'data_type': 'dcm',
+# parameters = {'data_path': r'', 
+#               'data_type': 'dcm',
 #               'mask_names': [],
 #               'image_only': False, 
-#               'multi_rts_per_pat': False,
+#               'multi_rts_per_pat': True,
 #               'image_names': ['image','volume','img','vol']}    
     
      
-#Data1 = data_set(**parameters)    
+# Data1 = data_set(**parameters)  

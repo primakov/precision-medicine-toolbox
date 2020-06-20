@@ -34,10 +34,9 @@ class tool_box(data_set):
             
                     directory = os.path.join(export_path,'images_quick_check',pat,path[1][:-5].split('\\')[-1])
                     z_dist = np.sum(temp_mask_array,axis = (1,2))     
-                    z_ind = np.where(z_dist!=0)
-                    min_bound,max_bound = np.min(z_ind),np.max(z_ind)
+                    z_ind = np.where(z_dist!=0)[0]
             
-                    for j in range(min_bound,max_bound):
+                    for j in z_ind:
                         if not os.path.exists(directory):
                             os.makedirs(directory)
                         temp_image_array[j,0,0]= 1
@@ -47,7 +46,7 @@ class tool_box(data_set):
                         plt.imshow(temp_image_array[j,...],cmap = 'bone')
                         plt.subplot(122)
                         plt.imshow(temp_image_array[j,...],cmap = 'bone')
-                        plt.contour(temp_mask_array [j,...],colors = 'red',linewidths = 2)#,alpha=0.7)
+                        plt.contour(temp_mask_array[j,...],colors = 'red',linewidths = 2)#,alpha=0.7)
                         plt.savefig(os.path.join(directory,'slice #%d'%j),bbox_inches='tight')
                         plt.close()
                 except:
@@ -96,7 +95,7 @@ class tool_box(data_set):
         else:
             raise TypeError('The toolbox should be initialized with data_type = "nrrd"')
         
-    def convert_to_nrrd(self,export_path,region_of_interest='all'):
+    def convert_to_nrrd(self,export_path,region_of_interest='all',image_type = np.int16):
         '''Convert DICOM dataset to the volume (nrrd) format
         export_path = ... export path where the converted nrrds will be placed
         region_of_interest = ... if you know exact name of the ROI you want to extract then write it with the ! character infront,
@@ -119,7 +118,7 @@ class tool_box(data_set):
                     
                 for roi in roi_list:
                     try:
-                        image,mask = self.__get_binary_mask(img_path,rt_structure,roi) 
+                        image,mask = self.__get_binary_mask(img_path,rt_structure,roi,image_type) 
                         
                         export_dir = os.path.join(export_path,'converted_nrrds',pat)
                         
@@ -191,28 +190,40 @@ class tool_box(data_set):
                 skiped_files.append(s)
                     
         try:
-            scan.sort(key = lambda x: int(x.ImagePositionPatient[2]))
+            scan.sort(key = lambda x: x.ImagePositionPatient[2])
         except:
             warn('Some problems with sorting scans')
                 
         return scan,skiped_files
     
-    def __get_pixel_values(self,scans): 
+    def __get_pixel_values(self,scans,image_type): 
         try:
+            # slopes = [s.get('RescaleSlope','n') for s in scans]
+            
+            # if set('n').intersection(set(slopes)):
+            #     image=[]
+            #     for s in scans:
+            #         temp_intercept = 0#s[0x040,0x9096][0][0x040,0x9224].value
+            #         temp_slope = 1#s[0x040,0x9096][0][0x040,0x9225].value
+            #         image.append(s.pixel_array*temp_slope+temp_intercept)
+            #     image = np.stack(image)
+            #     return image.astype(np.int16)
+            
+            # else:    
             image = np.stack([s.pixel_array*s.RescaleSlope+s.RescaleIntercept for s in scans])
-            return image.astype(np.int16) 
+            return image.astype(image_type) 
         except:
             warn('Problems occured with rescaling intensities')
             image = np.stack([s.pixel_array for s in scans])
-            return image.astype(np.int16)
+            return image.astype(image_type)
 
-    def __get_binary_mask(self,img_path,rt_structure,roi): 
+    def __get_binary_mask(self,img_path,rt_structure,roi,image_type): 
         
         image,_ = self.__read_scan(img_path)
 
         precision_level = 0.5
         img_first_slice = image[0] 
-        img_array = self.__get_pixel_values(image)
+        img_array = self.__get_pixel_values(image,image_type)
         
         img_length=len(image)
        
@@ -269,7 +280,7 @@ class tool_box(data_set):
     
             mask[z_index,:,:] = np.logical_or(mask[z_index,:,:],img_slice)
             
-        image_sitk = sitk.GetImageFromArray(img_array.astype(np.int16)) 
+        image_sitk = sitk.GetImageFromArray(img_array.astype(image_type)) 
         mask_sitk = sitk.GetImageFromArray(mask.astype(np.int8))  
        
         image_sitk.SetSpacing((float(xres),float(yres),float(zres)))
@@ -281,13 +292,19 @@ class tool_box(data_set):
 
         return image_sitk, mask_sitk
 
-
-#parameters = {'data_path': r'E:\SergeyData\delete_me\H2', 
-#              'data_type': 'dcm',
-#              'mask_names': [],
-#              'image_only': False, 
-#              'multi_rts_per_pat': False,
-#              'image_names': ['image','volume','img','vol']}    
-#    
-#     
+###Some debugs
+        
+# parameters = {'data_path': r'**', 
+#               'data_type': 'dcm',
+#               'mask_names': [],
+#               'image_only': False, 
+#               'multi_rts_per_pat': True,
+#               'image_names': ['image','volume','img','vol']}      
+    
+    
 #Data1 = tool_box(**parameters) 
+#Data1.convert_to_nrrd(r'**','all')  
+#Data_MRI_nrrd = tool_box(data_path = r'**',data_type='nrrd')
+#Data_MRI_nrrd.get_jpegs(r'**')
+#parameters = r"**"
+#features = Data_MRI_nrrd.extract_features(parameters,loggenabled=True)
