@@ -6,7 +6,7 @@ __pycache__/
 # redundant stuff
 test_log.txt
 features.xlsx
-data/features/
+data/converted_nrrds
 
 # C extensions
 *.so
