@@ -529,13 +529,13 @@ class features_set:
                                     config={'scrollZoom': True})
 
 
-parameters = {
-    'feature_path': 'features.xlsx', # path to csv/xls file with features
-    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
-    'patient_column': 'Patient', # name of column with patient id
-    'patient_in_outcome_column': 'PatientID',
-    'outcome_column': 'gender' # name of outcome column
-}
+#parameters = {
+#    'feature_path': 'features.xlsx', # path to csv/xls file with features
+#    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
+#    'patient_column': 'Patient', # name of column with patient id
+#    'patient_in_outcome_column': 'PatientID',
+#    'outcome_column': 'gender' # name of outcome column
+#}
 
 #fs = features_set(**parameters)
 
