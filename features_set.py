@@ -124,6 +124,8 @@ class features_set:
                             self._outcome[patient_outcome]
         self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
 
+        return None
+
 
     def handle_nan(self, axis=1, how='any', mode='delete'):
         if mode == 'delete':
@@ -137,6 +139,8 @@ class features_set:
         if mode == 'fill':
             print('Not implemented yet')
 
+        return None
+
     def handle_constant(self):
         constant_features = self._feature_dataframe.columns[self._feature_dataframe.nunique() <= 1]
         self._feature_dataframe.drop(constant_features, axis=1, inplace=True)
@@ -144,6 +148,8 @@ class features_set:
         self._feature_column = list(self._feature_dataframe.columns)
         if self._outcome_column in self._feature_column:
             self._feature_column.remove(self._outcome_column)
+
+        return None
 
     def plot_binary_distribution(self, features_to_plot=[]):
 
@@ -205,6 +211,8 @@ class features_set:
         else:
             print('Outcome column should be presented')
 
+        return None
+
     def plot_correlation_matrix(self, features_to_plot=[]):
 
         pio.renderers.default = 'iframe'
@@ -233,6 +241,8 @@ class features_set:
         plotly.offline.plot(fig,
                             filename=os.path.splitext(self._feature_path)[0] + '_corr.html',
                             config={'scrollZoom': True})
+
+        return None
 
     def __get_color(self, v, th):
         if abs(v) <= th:
@@ -305,6 +315,8 @@ class features_set:
                 print('Only binary class labels are supported.')
         else:
             print('Outcome column should be presented')
+
+        return None
 
     def __get_univar_fprs_tprs(self, ftr):
 
@@ -395,6 +407,8 @@ class features_set:
         else:
             print('Outcome column should be presented')
 
+        return None
+
     def calculate_basic_stats(self, volume_feature=''):
 
         num_features = []
@@ -432,6 +446,8 @@ class features_set:
                                         axis=1)
 
         stats_dataframe.to_excel(os.path.splitext(self._feature_path)[0] + '_basic_stats.xlsx')
+
+        return None
 
     def __get_univar_prec_rec(self, ftr):
 
@@ -529,6 +545,8 @@ class features_set:
                                   height=len(num_features) * 20+250)
                 plotly.offline.plot(fig, filename=os.path.splitext(self._feature_path)[0] + '_volume_corr.html',
                                     config={'scrollZoom': True})
+
+        return None
 
 
 #parameters = {
