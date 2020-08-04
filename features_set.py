@@ -46,9 +46,9 @@ class features_set:
     def __read_file(self):
 
         if '.csv' in self._feature_path:
-            feature_df = pd.read_csv(self._feature_path)
+            feature_df = pd.read_csv(self._feature_path, dtype={self._patient_column: str})
         elif '.xls' in self._feature_path:
-            feature_df = pd.read_excel(self._feature_path)
+            feature_df = pd.read_excel(self._feature_path, dtype={self._patient_column: str})
         else:
             print('Data format is not supported')
             return
@@ -66,9 +66,11 @@ class features_set:
         if self._outcome_column:
             if self._outcome_path:
                 if '.csv' in self._outcome_path:
-                    outcome_df = pd.read_csv(self._outcome_path)
+                    outcome_df = pd.read_csv(self._outcome_path, dtype={self._patient_in_outcome_column: str,
+                                                                        self._outcome_column: str})
                 elif '.xls' in self._outcome_path:
-                    outcome_df = pd.read_excel(self._outcome_path)
+                    outcome_df = pd.read_excel(self._outcome_path, dtype={self._patient_in_outcome_column: str,
+                                                                          self._outcome_column: str})
 
                 if not self._patient_in_outcome_column:
                     self._patient_in_outcome_column = self._patient_column
@@ -120,7 +122,7 @@ class features_set:
                     if patient_outcome in patient:
                         self._feature_outcome_dataframe.at[patient, self._outcome_column] = \
                             self._outcome[patient_outcome]
-            self._class_label = np.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
+        self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
 
 
 
@@ -132,6 +134,7 @@ class features_set:
             self._patient_name = list(self._feature_outcome_dataframe.index)
             if self._outcome_column in self._feature_column:
                 self._feature_column.remove(self._outcome_column)
+            self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
         if mode == 'fill':
             print('Not implemented yet')
 
@@ -553,6 +556,15 @@ parameters = {
 #fs.calculate_basic_stats(volume_feature='original_shape_MeshVolume')
 #fs.calculate_basic_stats()
 
+#parameters = {
+#    'feature_path': "C:/Users/e.lavrova/Downloads/CLEAN_OS_sensible_py_115_no_asymmetric_wav.csv", # path to csv/xls file with features
+#    'outcome_path': "C:/Users/e.lavrova/Downloads/soramic_extended_new.xlsx", #path to csv/xls file with outcome
+#    'patient_column': 'Patient', # name of column with patient id
+#    'patient_in_outcome_column': 'Patient1', # name of column with patient id in clinical data file
+#    'outcome_column': '1yearsurvival' # name of outcome column
+#}
+
+#fs = features_set(**parameters)
 
 
 
