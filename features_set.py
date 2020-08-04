@@ -125,7 +125,6 @@ class features_set:
         self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
 
 
-
     def handle_nan(self, axis=1, how='any', mode='delete'):
         if mode == 'delete':
             self._feature_dataframe.dropna(axis=axis, how=how, inplace=True)
@@ -226,7 +225,7 @@ class features_set:
             hovertemplate='feature_1: %{x}<br>feature_2: %{y}<br>r_Spearman: %{z}<extra></extra>'
         )
 
-        layout = {"title": "features correlation matrix"}
+        layout = {"title": "Features correlation matrix"}
         fig = go.Figure(data=data, layout=layout)
         fig.update_xaxes(tickfont=dict(size=7))
         fig.update_yaxes(tickfont=dict(size=7))
@@ -293,7 +292,7 @@ class features_set:
                     layout=layout)
                 fig.update_yaxes(tickfont=dict(size=7))
                 fig.update_xaxes(tickfont=dict(size=7))
-                fig.update_layout(title_text='p-values for Mann-Whitney test (Bonferroni corrected)',
+                fig.update_layout(title_text='The p-values for Mann-Whitney test (Bonferroni corrected)',
                                   height=len(num_features) * 20+250, width=750,
                                   xaxis_type="log", annotations=annotations,
                                   xaxis={"mirror": "allticks", 'side': 'top', 'dtick': 1, 'showgrid': True}
@@ -532,13 +531,13 @@ class features_set:
                                     config={'scrollZoom': True})
 
 
-parameters = {
-    'feature_path': 'features.xlsx', # path to csv/xls file with features
-    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
-    'patient_column': 'Patient', # name of column with patient id
-    'patient_in_outcome_column': 'PatientID',
-    'outcome_column': 'gender' # name of outcome column
-}
+#parameters = {
+#    'feature_path': 'features.xlsx', # path to csv/xls file with features
+#    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
+#    'patient_column': 'Patient', # name of column with patient id
+#    'patient_in_outcome_column': 'PatientID',
+#    'outcome_column': 'gender' # name of outcome column
+#}
 
 #fs = features_set(**parameters)
 
@@ -556,15 +555,6 @@ parameters = {
 #fs.calculate_basic_stats(volume_feature='original_shape_MeshVolume')
 #fs.calculate_basic_stats()
 
-#parameters = {
-#    'feature_path': "C:/Users/e.lavrova/Downloads/CLEAN_OS_sensible_py_115_no_asymmetric_wav.csv", # path to csv/xls file with features
-#    'outcome_path': "C:/Users/e.lavrova/Downloads/soramic_extended_new.xlsx", #path to csv/xls file with outcome
-#    'patient_column': 'Patient', # name of column with patient id
-#    'patient_in_outcome_column': 'Patient1', # name of column with patient id in clinical data file
-#    'outcome_column': '1yearsurvival' # name of outcome column
-#}
-
-#fs = features_set(**parameters)
 
 
 
