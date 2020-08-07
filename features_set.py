@@ -145,8 +145,15 @@ class features_set:
                     if patient_outcome in patient:
                         self._feature_outcome_dataframe.at[patient, self._outcome_column] = \
                             self._outcome[patient_outcome]
+            self._outcome = self._feature_outcome_dataframe[self._outcome_column]
             self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
+            data_balance = []
+            for l in self._class_label:
+                data_balance.append(np.sum(np.array(list(self._outcome)) == l)/len(self._outcome))
 
+        print('Number of observations: {}\nClass labels: {}\nDataset balance: {}'.format(len(self._outcome),
+                                                                                  self._class_label,
+                                                                                  data_balance))
         return None
 
 
@@ -158,7 +165,14 @@ class features_set:
             self._patient_name = list(self._feature_outcome_dataframe.index)
             if self._outcome_column in self._feature_column:
                 self._feature_column.remove(self._outcome_column)
-            self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
+            self._outcome = self._feature_outcome_dataframe[self._outcome_column]
+            self._class_label = pd.unique(np.array(list(self._outcome)))
+            data_balance = []
+            for l in self._class_label:
+                data_balance.append(np.sum(np.array(list(self._outcome)) == l)/len(self._outcome))
+            print('Number of observations: {}\nClass labels: {}\nDataset balance: {}'.format(len(self._outcome),
+                                                                                        self._class_label,
+                                                                                        data_balance))
         if mode == 'fill':
             print('Not implemented yet')
 
