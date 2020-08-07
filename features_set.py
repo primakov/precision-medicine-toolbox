@@ -31,19 +31,48 @@ class features_set:
                  patient_in_outcome_column='',
                  patient_to_drop=[]):
 
-        self._feature_path = feature_path
-        self._outcome_path = outcome_path
-        self._feature_column = feature_column
-        self._outcome_column = outcome_column
-        self._patient_column = patient_column
-        self._patient_in_outcome_column = patient_in_outcome_column
-        self._patient_to_drop = patient_to_drop
-        self._feature_column_to_drop = feature_column_to_drop
+        if type(feature_path) is str:
+            self._feature_path = feature_path
+        else:
+            print('Features csv/xls file path has wrong format.')
+        if type(patient_column) is str:
+            self._patient_column = patient_column
+        else:
+            print('Patient column name has wrong format.')
+        if type(outcome_path) is str:
+            self._outcome_path = outcome_path
+        else:
+            print('Outcome csv/xls file path has wrong format.')
+        if type(feature_column) is list:
+            self._feature_column = feature_column
+        else:
+            print('List of feature columns has wrong format.')
+        if type(outcome_column) is str:
+            self._outcome_column = outcome_column
+        else:
+            print('Outcome column name has wrong format.')
+        if type(patient_in_outcome_column) is str:
+            self._patient_in_outcome_column = patient_in_outcome_column
+        else:
+            print('Patient column name in dataframe with outcomes has wrong format.')
+        if type(patient_to_drop) is list:
+            self._patient_to_drop = patient_to_drop
+        else:
+            print('List of patient names to be excluded has wrong format.')
+        if type(feature_column_to_drop) is list:
+            self._feature_column_to_drop = feature_column_to_drop
+        else:
+            print('List of feature names to be excluded has wrong format.')
         self._class_label = []
         self._outcome = []
-        self.__read_file()
+        self._feature_dataframe = None
+        self._feature_outcome_dataframe = None
+        if len(feature_path)>0 and len(patient_column)>0:
+            self.__read_files()
+        else:
+            print('Path to csv/xls with features or patient column name is missing.')
 
-    def __read_file(self):
+    def __read_files(self):
 
         if '.csv' in self._feature_path:
             feature_df = pd.read_csv(self._feature_path, dtype={self._patient_column: str})
@@ -53,76 +82,70 @@ class features_set:
             print('Data format is not supported')
             return
 
-        if self._patient_column:
-            feature_df.set_index(self._patient_column, inplace=True)
+        if len(self._feature_column) > 0:
+            self._feature_column = list(set(self._feature_column) & set(list(feature_df.columns)))
         else:
-            print('No patient column specified.')
-        self._patient_name = list(feature_df.index)
+            self._feature_column = list(feature_df.columns)
 
-        for patient in self._patient_to_drop:
-            if patient in self._patient_name:
-                self._patient_name.remove(patient)
+        if len(self._outcome_column) > 0:
+            if self._outcome_column in self._feature_column:
+                self._feature_column.remove(self._outcome_column)
 
-        if self._outcome_column:
-            if self._outcome_path:
+        if len(self._feature_column_to_drop) > 0:
+            for feature in self._feature_column_to_drop:
+                if feature in self._feature_column:
+                    self._feature_column.remove(feature)
+
+        if '' in self._feature_column:
+            self._feature_column.remove('')
+        if 'Unnamed: 0' in self._feature_column:
+            self._feature_column.remove('Unnamed: 0')
+
+        technical_features_to_remove = []
+        for feature in self._feature_column:
+            if ('diagnostics' in feature) or ('general' in feature):
+                technical_features_to_remove.append(feature)
+        for feature in technical_features_to_remove:
+            self._feature_column.remove(feature)
+
+        if len(self._patient_column) > 0:
+            if self._patient_column in list(feature_df.columns):
+                self._patient_name = list(feature_df[self._patient_column])
+                feature_df.set_index(self._patient_column, inplace=True)
+                if len(self._patient_to_drop) > 0:
+                    for patient in self._patient_to_drop:
+                        if patient in self._patient_name:
+                            self._patient_name.remove(patient)
+                feature_df = feature_df.reindex(self._patient_name)
+            if self._patient_column in self._feature_column:
+                self._feature_column.remove(self._patient_column)
+
+        self._feature_dataframe = feature_df[self._feature_column].copy()
+
+        if len(self._outcome_path) > 0:
+            if (len(self._patient_column) > 0) & (len(self._patient_in_outcome_column) > 0):
                 if '.csv' in self._outcome_path:
                     outcome_df = pd.read_csv(self._outcome_path, dtype={self._patient_in_outcome_column: str,
                                                                         self._outcome_column: str})
                 elif '.xls' in self._outcome_path:
                     outcome_df = pd.read_excel(self._outcome_path, dtype={self._patient_in_outcome_column: str,
                                                                           self._outcome_column: str})
-
-                if not self._patient_in_outcome_column:
-                    self._patient_in_outcome_column = self._patient_column
-
-                try:
-                    if (self._patient_in_outcome_column in list(outcome_df.columns)) and (self._outcome_column in
-                                                                                          list(outcome_df.columns)):
-                        outcome_df.set_index(self._patient_in_outcome_column, inplace=True)
-                        self._outcome = outcome_df[self._outcome_column]
-                except:
-                    print('Outcome data format is not supported.')
-
-            else:
-                if self._outcome_column in list(self._feature_dataframe.columns):
-                    self._outcome = self._feature_dataframe[self._outcome_column]
+                outcome_df.set_index(self._patient_in_outcome_column, inplace=True)
+                self._outcome = outcome_df[self._outcome_column]
 
         else:
-            print('No outcome specified')
-
-        if self._feature_column:
-            feature_column_list = self._feature_column
-        else:
-            feature_column_list = list(feature_df.columns)
-        for column in self._feature_column_to_drop:
-            if column in feature_column_list:
-                feature_column_list.remove(column)
-        if self._outcome_column in feature_column_list:
-            feature_column_list.remove(self._outcome_column)
-        if self._patient_column in feature_column_list:
-            feature_column_list.remove(self._patient_column)
-        if '' in feature_column_list:
-            feature_column_list.remove('')
-        if 'Unnamed: 0' in feature_column_list:
-            feature_column_list.remove('Unnamed: 0')
-
-        feature_column_list_final = feature_column_list.copy()
-        for column in feature_column_list:
-            if ('diagnostics' in column) or ('general' in column):
-                feature_column_list_final.remove(column)
-
-        self._feature_column = feature_column_list_final
-        self._feature_dataframe = feature_df.reindex(self._patient_name)[self._feature_column]
+            if self._outcome_column in list(feature_df.columns):
+                self._outcome = feature_df[self._outcome_column]
 
         if len(self._outcome) > 0:
             self._feature_outcome_dataframe = self._feature_dataframe.copy()
             self._feature_outcome_dataframe[self._outcome_column] = None
             for patient_outcome in list(self._outcome.index):
-                for patient in list(self._feature_dataframe.index):
+                for patient in self._patient_name:
                     if patient_outcome in patient:
                         self._feature_outcome_dataframe.at[patient, self._outcome_column] = \
                             self._outcome[patient_outcome]
-        self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
+            self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
 
         return None
 
