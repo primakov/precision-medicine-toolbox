@@ -147,11 +147,12 @@ class features_set:
                             self._outcome[patient_outcome]
             self._outcome = self._feature_outcome_dataframe[self._outcome_column]
             self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
+            self._class_label.sort()
             data_balance = []
             for l in self._class_label:
                 data_balance.append(np.sum(np.array(list(self._outcome)) == l)/len(self._outcome))
 
-        print('Number of observations: {}\nClass labels: {}\nDataset balance: {}'.format(len(self._outcome),
+        print('Number of observations: {}\nClass labels: {}\nClasses balance: {}'.format(len(self._outcome),
                                                                                   self._class_label,
                                                                                   data_balance))
         return None
@@ -167,10 +168,11 @@ class features_set:
                 self._feature_column.remove(self._outcome_column)
             self._outcome = self._feature_outcome_dataframe[self._outcome_column]
             self._class_label = pd.unique(np.array(list(self._outcome)))
+            self._class_label.sort()
             data_balance = []
             for l in self._class_label:
                 data_balance.append(np.sum(np.array(list(self._outcome)) == l)/len(self._outcome))
-            print('Number of observations: {}\nClass labels: {}\nDataset balance: {}'.format(len(self._outcome),
+            print('Number of observations: {}\nClass labels: {}\nClasses balance: {}'.format(len(self._outcome),
                                                                                         self._class_label,
                                                                                         data_balance))
         if mode == 'fill':
@@ -185,66 +187,112 @@ class features_set:
         self._feature_column = list(self._feature_dataframe.columns)
         if self._outcome_column in self._feature_column:
             self._feature_column.remove(self._outcome_column)
+        self._outcome = self._feature_outcome_dataframe[self._outcome_column]
+        self._class_label = pd.unique(np.array(list(self._outcome)))
+        self._class_label.sort()
+        data_balance = []
+        for l in self._class_label:
+            data_balance.append(np.sum(np.array(list(self._outcome)) == l) / len(self._outcome))
+        print('Number of observations: {}\nClass labels: {}\nClasses balance: {}'.format(len(self._outcome),
+                                                                                         self._class_label,
+                                                                                         data_balance))
 
         return None
 
-    def plot_binary_distribution(self, features_to_plot=[]):
+    def plot_distribution(self, features_to_plot=[], binary_classes_to_plot=[]):
 
         if len(self._outcome) > 0:
-            if len(self._class_label) == 2:
+            if len(binary_classes_to_plot) == 2:
+                if (binary_classes_to_plot[0] in self._class_label) & (binary_classes_to_plot[1] in self._class_label):
+                    if not features_to_plot:
+                        features_to_plot = self._feature_column
+                    num_features = []
+                    for feature in features_to_plot:
+                        if self._feature_dataframe[feature].dtype != 'object':
+                            num_features.append(feature)
+                    cols = 4
+                    rows = len(num_features) // 4 + 1
+                    num_features_tuple = tuple(num_features)
+                    fig = plotly.subplots.make_subplots(rows=rows, cols=cols, subplot_titles=num_features_tuple)
+                    counter = 0
+                    for feature in num_features:
+                        c = counter % 4 + 1
+                        r = counter // 4 + 1
+                        fig.append_trace(go.Histogram(
+                            x=self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
+                                                                  binary_classes_to_plot[0]][feature],
+                            opacity=0.75,
+                            name=str(binary_classes_to_plot[0]),
+                            marker={'color': 'magenta'},
+                            showlegend=(counter == 0)),
+                            r, c)
+                        fig.append_trace(go.Histogram(
+                            x=self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
+                                                                  binary_classes_to_plot[1]][feature],
+                            opacity=0.75,
+                            name=str(binary_classes_to_plot[1]),
+                            marker={'color': 'orange'},
+                            showlegend=(counter == 0)),
+                            r, c)
+                        fig.update_xaxes(title_text='values', title_font={"size": 10}, title_standoff=5, row=r, col=c,
+                                         showgrid=False, zeroline=False)
+                        fig.update_yaxes(title_text='count', title_font={"size": 10}, title_standoff=0, row=r, col=c,
+                                         showgrid=False, zeroline=False)
+                        fig.layout.update(go.Layout(barmode='overlay'))
+                        counter += 1
+                    for i in fig['layout']['annotations']:
+                        i['font'] = dict(size=10)
+                    fig.update_layout(title_text='Features binary distribution in classes',
+                                      height=rows * 250, width=1250)
+                    plotly.offline.plot(fig,
+                                        filename=os.path.splitext(self._feature_path)[0] + '_distr.html',
+                                        config={'scrollZoom': True})
+                else:
+                    print('Wrong class label(s).')
+            else:
+
+                color_scheme = ['magenta', 'orange', 'cyan', 'yellow', 'lime',
+                                'blue', 'red', 'green', 'darkviolet', 'saddlebrown']
                 if not features_to_plot:
                     features_to_plot = self._feature_column
-
                 num_features = []
                 for feature in features_to_plot:
                     if self._feature_dataframe[feature].dtype != 'object':
                         num_features.append(feature)
-
                 cols = 4
                 rows = len(num_features) // 4 + 1
                 num_features_tuple = tuple(num_features)
-
                 fig = plotly.subplots.make_subplots(rows=rows, cols=cols, subplot_titles=num_features_tuple)
                 counter = 0
-
                 for feature in num_features:
-
                     c = counter % 4 + 1
                     r = counter // 4 + 1
-                    fig.append_trace(go.Histogram(
-                        x=self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                              self._class_label[0]][feature],
-                        opacity=0.75,
-                        name=str(self._class_label[0]),
-                        marker={'color': 'magenta'},
-                        showlegend=(counter == 0)),
-                        r, c)
-                    fig.append_trace(go.Histogram(
-                        x=self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                              self._class_label[1]][feature],
-                        opacity=0.75,
-                        name=str(self._class_label[1]),
-                        marker={'color': 'orange'},
-                        showlegend=(counter == 0)),
-                        r, c)
+                    counter_colors = 0
+                    for cl in self._class_label:
+                        fig.append_trace(go.Histogram(
+                            x=self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
+                                                                  cl][feature],
+                            opacity=0.5,
+                            name=str(cl),
+                            marker={'color': color_scheme[counter_colors]},
+                            showlegend=(counter == 0)),
+                            r, c)
+                        counter_colors += 1
+
                     fig.update_xaxes(title_text='values', title_font={"size": 10}, title_standoff=5, row=r, col=c,
                                      showgrid=False, zeroline=False)
                     fig.update_yaxes(title_text='count', title_font={"size": 10}, title_standoff=0, row=r, col=c,
                                      showgrid=False, zeroline=False)
                     fig.layout.update(go.Layout(barmode='overlay'))
                     counter += 1
-
                 for i in fig['layout']['annotations']:
                     i['font'] = dict(size=10)
-
                 fig.update_layout(title_text='Features binary distribution in classes',
                                   height=rows * 250, width=1250)
                 plotly.offline.plot(fig,
                                     filename=os.path.splitext(self._feature_path)[0] + '_distr.html',
                                     config={'scrollZoom': True})
 
-            else:
-                print('Only binary class labels are supported.')
         else:
             print('Outcome column should be presented')
 
@@ -287,12 +335,12 @@ class features_set:
         else:
             return 'purple'
 
-    def __get_MW_p(self, ftrs, p_threshold=0.05):
+    def __get_MW_p(self, ftrs, binary_classes_to_plot, p_threshold=0.05):
         p_MW = []
         df_0 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                   self._class_label[0]]
+                                                   binary_classes_to_plot[0]]
         df_1 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                   self._class_label[1]]
+                                                   binary_classes_to_plot[1]]
         for feature in ftrs:
             s, p = sp.stats.mannwhitneyu(df_0[feature].astype(float),
                                          df_1[feature].astype(float),
@@ -303,72 +351,79 @@ class features_set:
                                                                         method='bonferroni')
         return p_MW_corr
 
-    def plot_MW_p(self, features_to_plot=[], p_threshold=0.05):
+    def plot_MW_p(self, features_to_plot=[], binary_classes_to_plot=[], p_threshold=0.05):
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
-                if not features_to_plot:
-                    features_to_plot = self._feature_column
-
-                num_features = []
-                for feature in features_to_plot:
-                    if self._feature_dataframe[feature].dtype != 'object':
-                        num_features.append(feature)
-                p_MW_corr = self.__get_MW_p(ftrs=num_features, p_threshold=p_threshold)
-
-                colors = [self.__get_color(v, p_threshold) for v in p_MW_corr]
-                shapes = [{'type': 'line',
-                           'xref': 'x',
-                           'yref': 'y',
-                           'x0': p_threshold,
-                           'y0': 0,
-                           'x1': p_threshold,
-                           'y1': len(num_features)}]
-                annotations = [
-                    go.layout.Annotation(
-                        x=math.log10(p_threshold),
-                        y=len(num_features),
-                        text="alpha="+str(p_threshold),
-                        showarrow=True, arrowhead=7, ax=100, ay=0
-                    )
-                ]
-                layout = plotly.graph_objs.Layout(shapes=shapes)
-
-                fig = go.Figure(
-                    [go.Bar(x=list(p_MW_corr), y=num_features, marker={'color': colors}, orientation='h')],
-                    layout=layout)
-                fig.update_yaxes(tickfont=dict(size=7))
-                fig.update_xaxes(tickfont=dict(size=7))
-                fig.update_layout(title_text='The p-values for Mann-Whitney test (Bonferroni corrected)',
-                                  height=len(num_features) * 20+250, width=750,
-                                  xaxis_type="log", annotations=annotations,
-                                  xaxis={"mirror": "allticks", 'side': 'top', 'dtick': 1, 'showgrid': True}
-                                  )
-                plotly.offline.plot(fig,
-                                    filename=os.path.splitext(self._feature_path)[0] + '_MW.html',
-                                    config={'scrollZoom': True})
-
+                binary_classes_to_plot = self._class_label
             else:
-                print('Only binary class labels are supported.')
+                if len(binary_classes_to_plot) != 2:
+                    print('Only binary class labels are supported.')
+                    return
+                elif not ((binary_classes_to_plot[0] in self._class_label) & (binary_classes_to_plot[1] in self._class_label)):
+                    print('Wrong class label(s).')
+                    return
+
+            if not features_to_plot:
+                features_to_plot = self._feature_column
+
+            num_features = []
+            for feature in features_to_plot:
+                if self._feature_dataframe[feature].dtype != 'object':
+                    num_features.append(feature)
+            p_MW_corr = self.__get_MW_p(ftrs=num_features,
+                                        binary_classes_to_plot=binary_classes_to_plot,
+                                        p_threshold=p_threshold)
+
+            colors = [self.__get_color(v, p_threshold) for v in p_MW_corr]
+            shapes = [{'type': 'line',
+                        'xref': 'x',
+                        'yref': 'y',
+                        'x0': p_threshold,
+                        'y0': 0,
+                        'x1': p_threshold,
+                        'y1': len(num_features)}]
+            annotations = [
+                go.layout.Annotation(
+                    x=math.log10(p_threshold),
+                    y=len(num_features),
+                    text="alpha="+str(p_threshold),
+                    showarrow=True, arrowhead=7, ax=100, ay=0
+                )
+            ]
+            layout = plotly.graph_objs.Layout(shapes=shapes)
+
+            fig = go.Figure(
+                [go.Bar(x=list(p_MW_corr), y=num_features, marker={'color': colors}, orientation='h')],
+                layout=layout)
+            fig.update_yaxes(tickfont=dict(size=7))
+            fig.update_xaxes(tickfont=dict(size=7))
+            fig.update_layout(title_text='The p-values for Mann-Whitney test (Bonferroni corrected)',
+                                height=len(num_features) * 20+250, width=750,
+                                xaxis_type="log", annotations=annotations,
+                                xaxis={"mirror": "allticks", 'side': 'top', 'dtick': 1, 'showgrid': True}
+                                )
+            plotly.offline.plot(fig,
+                                filename=os.path.splitext(self._feature_path)[0] + '_MW.html',
+                                config={'scrollZoom': True})
         else:
             print('Outcome column should be presented')
-
         return None
 
-    def __get_univar_fprs_tprs(self, ftr):
+    def __get_univar_fprs_tprs(self, ftr, binary_classes_to_plot):
 
         mean_0 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                     self._class_label[0]][ftr].mean()
+                                                     binary_classes_to_plot[0]][ftr].mean()
         mean_1 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                     self._class_label[1]][ftr].mean()
+                                                     binary_classes_to_plot[1]][ftr].mean()
         feature_min = np.min(np.array(self._feature_outcome_dataframe[ftr]))
         feature_max = np.max(np.array(self._feature_outcome_dataframe[ftr]))
         step = (feature_max - feature_min) / 100
         x = np.array(self._feature_outcome_dataframe[ftr])
         n_0 = len(self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                      self._class_label[0]])
+                                                      binary_classes_to_plot[0]])
         n_1 = len(self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
-                                                      self._class_label[1]])
+                                                      binary_classes_to_plot[1]])
         th = []
         tprs = []
         fprs = []
@@ -380,8 +435,8 @@ class features_set:
             t = feature_min + i * step
             th.append(t)
             y_pred = op(x, t).astype(int)
-            tp = np.sum(y_pred[np.where(self._feature_outcome_dataframe[self._outcome_column] == self._class_label[1])])
-            fp = np.sum(y_pred[np.where(self._feature_outcome_dataframe[self._outcome_column] == self._class_label[0])])
+            tp = np.sum(y_pred[np.where(self._feature_outcome_dataframe[self._outcome_column] == binary_classes_to_plot[1])])
+            fp = np.sum(y_pred[np.where(self._feature_outcome_dataframe[self._outcome_column] == binary_classes_to_plot[0])])
             tpr = tp / n_1
             fpr = fp / n_0
             tprs.append(tpr)
@@ -389,58 +444,64 @@ class features_set:
 
         return fprs, tprs
 
-    def plot_univariate_roc(self, features_to_plot = [], auc_threshold=0.75):
+    def plot_univariate_roc(self, features_to_plot=[], binary_classes_to_plot=[], auc_threshold=0.75):
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
-                if not features_to_plot:
-                    features_to_plot = self._feature_column
-
-                num_features = []
-                for feature in features_to_plot:
-                    if self._feature_outcome_dataframe[feature].dtype != 'object':
-                        num_features.append(feature)
-
-                cols = 4
-                rows = len(num_features) // 4 + 1
-                num_features_tuple = tuple(num_features)
-
-                fig = plotly.subplots.make_subplots(rows=rows, cols=cols, subplot_titles=num_features_tuple)
-                counter = 0
-
-                for feature in num_features:
-
-                    c = counter % 4 + 1
-                    r = counter // 4 + 1
-                    fprs, tprs = self.__get_univar_fprs_tprs(ftr=feature)
-                    univar_auc = auc(fprs, tprs)
-                    fig.append_trace(go.Scatter(x=fprs, y=tprs,
-                                                name='ROC',
-                                                marker={'color': self.__get_color(univar_auc, auc_threshold)}),
-                                     r, c)
-                    fig.append_trace(go.Scatter(x=[0, 1], y=[0, 1],
-                                                name='Chance', marker={'color': 'grey'},
-                                                mode='lines+markers+text',
-                                                text=[' ROC AUC=%0.2f' % univar_auc, ''], textposition='middle right'),
-                                     r, c)
-
-                    fig.update_xaxes(title_text='FPR', title_font={"size": 10}, title_standoff=5, row=r, col=c,
-                                     showgrid=False, zeroline=False)
-                    fig.update_yaxes(title_text='TPR', title_font={"size": 10}, title_standoff=0, row=r, col=c,
-                                     showgrid=False, zeroline=False)
-                    counter += 1
-
-                for i in fig['layout']['annotations']:
-                    i['font'] = dict(size=10)
-
-                fig.update_layout(title_text='Features univariate ROC-curves',
-                                  height=rows * 250, width=1250, showlegend=False)
-                plotly.offline.plot(fig,
-                                    filename=os.path.splitext(self._feature_path)[0] + '_roc-univar.html',
-                                    config={'scrollZoom': True})
-
+                binary_classes_to_plot = self._class_label
             else:
-                print('Only binary class labels are supported.')
+                if len(binary_classes_to_plot) != 2:
+                    print('Only binary class labels are supported.')
+                    return
+                elif not ((binary_classes_to_plot[0] in self._class_label) & (
+                        binary_classes_to_plot[1] in self._class_label)):
+                    print('Wrong class label(s).')
+                    return
+
+            if not features_to_plot:
+                features_to_plot = self._feature_column
+
+            num_features = []
+            for feature in features_to_plot:
+                if self._feature_outcome_dataframe[feature].dtype != 'object':
+                    num_features.append(feature)
+
+            cols = 4
+            rows = len(num_features) // 4 + 1
+            num_features_tuple = tuple(num_features)
+
+            fig = plotly.subplots.make_subplots(rows=rows, cols=cols, subplot_titles=num_features_tuple)
+            counter = 0
+
+            for feature in num_features:
+                c = counter % 4 + 1
+                r = counter // 4 + 1
+                fprs, tprs = self.__get_univar_fprs_tprs(ftr=feature, binary_classes_to_plot=binary_classes_to_plot)
+                univar_auc = auc(fprs, tprs)
+                fig.append_trace(go.Scatter(x=fprs, y=tprs,
+                                            name='ROC',
+                                            marker={'color': self.__get_color(univar_auc, auc_threshold)}),
+                                    r, c)
+                fig.append_trace(go.Scatter(x=[0, 1], y=[0, 1],
+                                            name='Chance', marker={'color': 'grey'},
+                                            mode='lines+markers+text',
+                                            text=[' ROC AUC=%0.2f' % univar_auc, ''], textposition='middle right'),
+                                    r, c)
+
+                fig.update_xaxes(title_text='FPR', title_font={"size": 10}, title_standoff=5, row=r, col=c,
+                                 showgrid=False, zeroline=False)
+                fig.update_yaxes(title_text='TPR', title_font={"size": 10}, title_standoff=0, row=r, col=c,
+                                 showgrid=False, zeroline=False)
+                counter += 1
+
+            for i in fig['layout']['annotations']:
+                i['font'] = dict(size=10)
+
+            fig.update_layout(title_text='Features univariate ROC-curves:' + str(binary_classes_to_plot),
+                              height=rows * 250, width=1250, showlegend=False)
+            plotly.offline.plot(fig,
+                                filename=os.path.splitext(self._feature_path)[0] + '_roc-univar.html',
+                                config={'scrollZoom': True})
         else:
             print('Outcome column should be presented')
 
