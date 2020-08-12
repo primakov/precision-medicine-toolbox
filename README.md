@@ -16,10 +16,10 @@ Feature extraction procedure using [pyradiomics](https://github.com/Radiomics/py
 
 * <b>Basic analysis of radiomics features </b>
 Export to excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
-  * features values distributions in binary classes,  
-  * features mutual correlation (Spearman) matrix,  
-  * p-values (Bonferroni corrected) for Mann-Whitney test for features mean values in groups,   
-  * univariate ROC-curves for each feature,  
+  * features values distributions in binary and multiple classes,  
+  * features mutual correlation (Spearman's) matrix,  
+  * p-values (Bonferroni corrected) for Mann-Whitney test for features mean values in classes (binary, for multiple classes you need to select 2 classes to compare),   
+  * univariate ROC-curves for each feature (binary, for multiple classes you need to select 2 classes),  
   * volume analysis: volume-based precision-recall curve + features correlation with volume.
 
 
