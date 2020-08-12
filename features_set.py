@@ -31,6 +31,14 @@ class features_set:
                  patient_in_outcome_column='',
                  patient_to_drop=[]):
 
+        # initializes a new features_set class object
+        # feature_path, outcome_path, patient_column are compulsory
+
+        # feature_path - path to csv./.xls(x) file with features
+        # outcome_path - path to csv./.xls(x) file with outcomes
+        #
+        #
+
         if type(feature_path) is str:
             self._feature_path = feature_path
         else:
@@ -73,6 +81,8 @@ class features_set:
             print('Path to csv/xls with features or patient column name is missing.')
 
     def __read_files(self):
+
+        # reads .csv/.xls(x) tables with features and outcomes and gets feature_set attributes
 
         if '.csv' in self._feature_path:
             feature_df = pd.read_csv(self._feature_path, dtype={self._patient_column: str})
@@ -523,10 +533,10 @@ class features_set:
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
-                p_MW_corr = self.__get_MW_p(ftrs=num_features)
+                p_MW_corr = self.__get_MW_p(ftrs=num_features, binary_classes_to_plot=self._class_label)
                 univar_auc = []
                 for feature in num_features:
-                    fprs, tprs = self.__get_univar_fprs_tprs(ftr=feature)
+                    fprs, tprs = self.__get_univar_fprs_tprs(ftr=feature, binary_classes_to_plot=self._class_label)
                     univar_auc.append(auc(fprs, tprs))
                 stats_dataframe_ext = pd.DataFrame({'p_MW_corrected': p_MW_corr,
                                                     'univar_auc': univar_auc},
