@@ -21,6 +21,9 @@ import plotly.io as pio
 
 
 class features_set:
+    ''' Class for basic statistical features analysis.
+    Contains DataFrame with features and outcomes and extracts the following attributes:
+     patients list, features list, class labels, class balance. '''
     def __init__(self,
                  feature_path=None,
                  outcome_path=None,
@@ -31,13 +34,25 @@ class features_set:
                  patient_in_outcome_column='',
                  patient_to_drop=[]):
 
-        # initializes a new features_set class object
-        # feature_path, outcome_path, patient_column are compulsory
-
-        # feature_path - path to csv./.xls(x) file with features
-        # outcome_path - path to csv./.xls(x) file with outcomes
-        #
-        #
+        '''
+        Initialization of a new feature_set object.
+        :param feature_path: string
+            The path to csv./.xls(x) file with features.
+        :param outcome_path: string
+            The path to csv./.xls(x) file with outcomes.
+        :param feature_column: array_like, optional
+            A list of features from features dataframe to be included. By default, all the features are included.
+        :param feature_column_to_drop: array-like, optional
+            A list of features from features dataframe to be excluded. By default, no features are excluded.
+        :param outcome_column: string
+            A name of the column, containing outcomes, in outcomes dataframe.
+        :param patient_column: string
+             A name of the column in features dataframe, containing patients identifiers.
+        :param patient_in_outcome_column: string
+            A name of the column in outcomes dataframe, containing patients identifiers. The identifiers should be matching the ones in features dataframe.
+        :param patient_to_drop: array_like, optional
+            A list of patients to be excluded. By default, no patients are excluded.
+        '''
 
         if type(feature_path) is str:
             self._feature_path = feature_path
@@ -82,7 +97,8 @@ class features_set:
 
     def __read_files(self):
 
-        # reads .csv/.xls(x) tables with features and outcomes and gets feature_set attributes
+        # reads .csv/.xls(x) tables with features and outcomes and gets feature_set attributes, such as
+        # patients list, features list, class labels, class balance
 
         if '.csv' in self._feature_path:
             feature_df = pd.read_csv(self._feature_path, dtype={self._patient_column: str})
@@ -169,6 +185,17 @@ class features_set:
 
 
     def handle_nan(self, axis=1, how='any', mode='delete'):
+        '''
+        Handling NaN values.
+        :param axis: {0, 1}, default 1
+            Whether to drop labels from the index (0) or columns (1).
+        :param how: {'any', 'all'}, default 'any'
+            Whether column/row is to be removed, when there is any NaN value or all of them are NaN.
+        :param mode: {'delete'}, default 'delete'
+            By now, there is only one option to delete an object (patient, feature) with missing values.
+        :return: void (changes in the class object)
+        '''
+
         if mode == 'delete':
             self._feature_dataframe.dropna(axis=axis, how=how, inplace=True)
             self._feature_outcome_dataframe.dropna(axis=axis, how=how, inplace=True)
@@ -191,6 +218,11 @@ class features_set:
         return None
 
     def handle_constant(self):
+
+        '''
+        Handling constant values - features with olny one unique value are removed.
+        '''
+
         constant_features = self._feature_dataframe.columns[self._feature_dataframe.nunique() <= 1]
         self._feature_dataframe.drop(constant_features, axis=1, inplace=True)
         self._feature_outcome_dataframe.drop(constant_features, axis=1, inplace=True)
@@ -210,6 +242,14 @@ class features_set:
         return None
 
     def plot_distribution(self, features_to_plot=[], binary_classes_to_plot=[]):
+        '''
+        Plotting distributions of features values in classes into .html report.
+        :param features_to_plot: array_like
+            List of features to be included. By default, all the features from the features dataframe are included.
+        :param binary_classes_to_plot: array_like, shape = [2]
+            The names of 2 specific classes to be selected in case of multi-class data.
+        :return:
+        '''
 
         if len(self._outcome) > 0:
             if len(binary_classes_to_plot) == 2:
@@ -309,6 +349,12 @@ class features_set:
         return None
 
     def plot_correlation_matrix(self, features_to_plot=[]):
+        '''
+        Plotting absolute values of mutual Spearman correlation coefficient for the features into .html report.
+        :param features_to_plot: array_like
+            List of features to be included. By default, all the features from the features dataframe are included.
+        :return: void (.html report is generated and saved)
+        '''
 
         pio.renderers.default = 'iframe'
 
@@ -340,12 +386,21 @@ class features_set:
         return None
 
     def __get_color(self, v, th):
+        # Setting of a binary color scheme, based on a threshold value; based on input value, returns color name.
+        # v : float - input numerical value
+        # th : float - threshold value
+
         if abs(v) <= th:
             return 'orange'
         else:
             return 'purple'
 
     def __get_MW_p(self, ftrs, binary_classes_to_plot, p_threshold=0.05):
+        # Calculation of Mann-Whitney U test p-values for each feature and Bonferroni correction for multiple testing.
+        # Returning list of p-values
+        # ftrs : array_like - list of features names
+        # binary_classes_to_plot : array_like -
+
         p_MW = []
         df_0 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
                                                    binary_classes_to_plot[0]]
@@ -362,6 +417,16 @@ class features_set:
         return p_MW_corr
 
     def plot_MW_p(self, features_to_plot=[], binary_classes_to_plot=[], p_threshold=0.05):
+        '''
+        Plotting Mann-Whitney U test p-values for each feature and Bonferroni correction for multiple testing into .html report.
+        :param features_to_plot: array_like
+            List of features to be included. By default, all the features from the features dataframe are included.
+        :param binary_classes_to_plot: array_like, shape = [2]
+            The names of 2 specific classes to be selected in case of multi-class data.
+        :param p_threshold: float, default 0.05
+            The significance level.
+        :return: void (.html report is generated and saved)
+        '''
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
@@ -421,6 +486,10 @@ class features_set:
         return None
 
     def __get_univar_fprs_tprs(self, ftr, binary_classes_to_plot):
+        # Computing TPRs and FPRs for simple binary classifier, based on each of the features
+        # Returns TPRs and FPRs lists
+        # ftr : array_like - list of features
+        # binary_classes_to_plot: array_like - the names of 2 specific classes to be selected in case of multi-class data
 
         mean_0 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
                                                      binary_classes_to_plot[0]][ftr].mean()
@@ -455,6 +524,16 @@ class features_set:
         return fprs, tprs
 
     def plot_univariate_roc(self, features_to_plot=[], binary_classes_to_plot=[], auc_threshold=0.75):
+        '''
+        Plotting of the ROC curves for simple binary classifiers, each based on separate feature, calculating ROC AUCs.
+        :param features_to_plot: array_like
+            List of features to be included. By default, all the features from the features dataframe are included.
+        :param binary_classes_to_plot: array_like, shape = [2]
+            The names of 2 specific classes to be selected in case of multi-class data.
+        :param auc_threshold: float
+            A threshold value for ROC AUC to be highlighted.
+        :return: void (.html report is generated and saved)
+        '''
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
@@ -518,6 +597,15 @@ class features_set:
         return None
 
     def calculate_basic_stats(self, volume_feature=''):
+        '''
+        Calculation of basic statistics
+        (such as # of NaN values, mean, std, min, max values,
+        Mann-Whitney test p-value for binary classes, univariate ROC AUC for binary classes,
+        Spearman’s correlation coefficient with volume) for each feature and saving it into .csv/.xls(x)
+        :param volume_feature: string
+            name of the feature, which is considered as volume
+        :return: void (.csv/.xls(x) file is saved)
+        '''
 
         num_features = []
         for feature in self._feature_column:
@@ -559,6 +647,10 @@ class features_set:
 
     def __get_univar_prec_rec(self, ftr):
 
+        # Calculation of precision/recall scores for simple binary classifiers, based on one single feature
+        # ftr: string - name of the feature
+        # Returns
+
         mean_0 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
                                                      self._class_label[0]][ftr].mean()
         mean_1 = self._feature_outcome_dataframe.loc[self._feature_outcome_dataframe[self._outcome_column] ==
@@ -589,7 +681,18 @@ class features_set:
 
         return precs, recs
 
-    def volume_analysis(self, volume_feature='', auc_threshold=0.75, features_to_plot=[], corr_threshold=0.75):
+    def volume_analysis(self, volume_feature='', features_to_plot=[], corr_threshold=0.75):
+        '''
+        Plotting precision-recall curve for simple binary classifier, based on volume feature;
+        Calculating volume correlation (Spearman) coefficients for each feature
+        :param volume_feature: string
+            name of the feature, which is considered as volume
+        :param features_to_plot: array_like
+            List of features to be included. By default, all the features from the features dataframe are included.
+        :param corr_threshold: float
+            A threshold value for Spearman correlation coefficient to be highlighted.
+        :return: void (.html reports are generated and saved)
+        '''
         if volume_feature:
             if volume_feature in self._feature_column:
                 if len(self._outcome) > 0:
@@ -655,31 +758,6 @@ class features_set:
                                     config={'scrollZoom': True})
 
         return None
-
-
-#parameters = {
-#    'feature_path': 'features.xlsx', # path to csv/xls file with features
-#    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
-#    'patient_column': 'Patient', # name of column with patient id
-#    'patient_in_outcome_column': 'PatientID',
-#    'outcome_column': 'gender' # name of outcome column
-#}
-
-#fs = features_set(**parameters)
-
-#fs.volume_analysis(volume_feature='original_shape_VoxelVolume')
-# parameters = {'feature_path': 'features.csv',
-#               'patient_column': 'Patient'
-#               }
-
-#fs = features_set(**parameters)
-
-# fs.plot_binary_distribution()
-# fs.plot_correlation_matrix()
-# fs.plot_MW_p()
-#fs.plot_univariate_roc()
-#fs.calculate_basic_stats(volume_feature='original_shape_MeshVolume')
-#fs.calculate_basic_stats()
 
 
 
