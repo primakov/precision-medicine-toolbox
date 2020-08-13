@@ -17,8 +17,37 @@ import matplotlib.pyplot as plt
 import radiomics
 from radiomics import featureextractor
 from pandas import DataFrame
+import pandas as pd
 
 class tool_box(data_set):
+
+    def get_dataset_description(self,parameter_list=['Modality','SliceThickness',
+                    'PixelSpacing','SeriesDate','Manufacturer']):
+        '''get dicom dataset parameters'''
+        CT_params = ['PatientName','ConvolutionKernel','SliceThickness',
+                      'PixelSpacing','KVP','Exposure','XRayTubeCurrent',
+                      'SeriesDate']
+        MRI_params = ['Manufacturer','SliceThickness','PixelSpacing',
+                      'StudyDate','MagneticFieldStrength','EchoTime']
+        
+        if self._data_type =='dcm':
+            if parameter_list == 'MRI':
+                params_list = MRI_params
+                
+            elif parameter_list == 'CT':
+                params_list = CT_params
+            else:
+                params_list = parameter_list
+                           
+            dataset_stats = DataFrame(data=None,columns = params_list )
+            for pat,path in tqdm(self,desc='Patients processed'):
+                image,_ = self.__read_scan(path[0])
+                for i,temp_slice in enumerate(image):
+                    dataset_stats = dataset_stats.append(pd.Series([pat,str(i),*[self.__val_check(temp_slice,x) for x in params_list]],index = ['patient','slice#',*params_list]),ignore_index=True) 
+        
+            return dataset_stats
+        else:
+            warn('Only available for DICOM dataset')
 
     def get_jpegs(self,export_path):
         '''Convert each slice of nnrd containing ROI to jpeg image. Quick and convienient way to check your ROI's after conversion.
@@ -292,6 +321,15 @@ class tool_box(data_set):
 
         return image_sitk, mask_sitk
 
+    def __val_check(self,file,value):
+        try:
+            val = getattr(file,value)
+            if val == '' or val==' ':
+                return 'NaN'
+            else:
+                return val
+        except:
+            return 'NaN'
 ###Some debugs
         
 # parameters = {'data_path': r'**', 
@@ -308,3 +346,9 @@ class tool_box(data_set):
 #Data_MRI_nrrd.get_jpegs(r'**')
 #parameters = r"**"
 #features = Data_MRI_nrrd.extract_features(parameters,loggenabled=True)
+
+
+#parameters = {'data_path': r'C:\Users\S.Primakov.000\Documents\GitHub\The_Dlab_toolbox\data\dcms', #path_to_your_data
+#  'data_type': 'dcm'}  
+#mri_dcms = tool_box(**parameters)
+#dataset_description = mri_dcms.get_dataset_description('MRI')   
