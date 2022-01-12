@@ -1,0 +1,14 @@
+site_name: pm_toolbox
+nav:
+  - Home: index.md
+  - Tutorials: tutorials.md
+  - Code Reference:
+    - Imaging module: images_set.md
+    - Features module: features_set.md
+theme: readthedocs
+docs_dir: 'docs'
+site_dir: 'site'
+plugins:
+  - search
+  - mkdocstrings
+copyright: Copyright &copy; 2019 - 2022, Serge  y Primakov & Lisa Lavrova.

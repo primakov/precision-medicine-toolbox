@@ -21,6 +21,7 @@ import plotly.io as pio
 
 
 class features_set:
+    '''This module allows for preliminary statistical analysis of the numerical features.'''
     def __init__(self,
                  feature_path=None,
                  outcome_path=None,
@@ -31,13 +32,6 @@ class features_set:
                  patient_in_outcome_column='',
                  patient_to_drop=[]):
 
-        # initializes a new features_set class object
-        # feature_path, outcome_path, patient_column are compulsory
-
-        # feature_path - path to csv./.xls(x) file with features
-        # outcome_path - path to csv./.xls(x) file with outcomes
-        #
-        #
 
         if type(feature_path) is str:
             self._feature_path = feature_path
@@ -168,7 +162,14 @@ class features_set:
         return None
 
 
-    def handle_nan(self, axis=1, how='any', mode='delete'):
+    def handle_nan(self, axis: int=1, how: str='any', mode: str='delete'):
+        """Handle the missing values.
+
+        Arguments:
+            axis: Determines if patients (0) or variables (1) with the missing values have to be fixed.
+            how: Determines if handling is needed when there is at least one missing value ('any') or all of them are missing ('all').
+            mode: Determines the strategy: 'delete' will delete the variable/patient, 'fill' will fill a missing value with the imputation method.
+        """
         if mode == 'delete':
             self._feature_dataframe.dropna(axis=axis, how=how, inplace=True)
             self._feature_outcome_dataframe.dropna(axis=axis, how=how, inplace=True)
@@ -191,6 +192,8 @@ class features_set:
         return None
 
     def handle_constant(self):
+        """Drop the features with the constant values."""
+
         constant_features = self._feature_dataframe.columns[self._feature_dataframe.nunique() <= 1]
         self._feature_dataframe.drop(constant_features, axis=1, inplace=True)
         self._feature_outcome_dataframe.drop(constant_features, axis=1, inplace=True)
@@ -209,7 +212,13 @@ class features_set:
 
         return None
 
-    def plot_distribution(self, features_to_plot=[], binary_classes_to_plot=[]):
+    def plot_distribution(self, features_to_plot: list=[], binary_classes_to_plot: list=[]):
+        """Plot distribution of the feature values in classes into interactive .html report.
+
+        Arguments:
+            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
+        """
 
         if len(self._outcome) > 0:
             if len(binary_classes_to_plot) == 2:
@@ -308,7 +317,12 @@ class features_set:
 
         return None
 
-    def plot_correlation_matrix(self, features_to_plot=[]):
+    def plot_correlation_matrix(self, features_to_plot: list=[]):
+        """Plot correlation (Spearman's) matrix for the features into interactive .html report.
+
+        Arguments:
+            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+        """
 
         pio.renderers.default = 'iframe'
 
@@ -361,7 +375,14 @@ class features_set:
                                                                         method='bonferroni')
         return p_MW_corr
 
-    def plot_MW_p(self, features_to_plot=[], binary_classes_to_plot=[], p_threshold=0.05):
+    def plot_MW_p(self, features_to_plot: list=[], binary_classes_to_plot: list=[], p_threshold: float=0.05):
+        """Plot Mann-Whitney p-values (corrected) for the features into interactive .html report.
+
+        Arguments:
+            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
+            p_threshold: Significance level.
+        """
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
@@ -454,7 +475,14 @@ class features_set:
 
         return fprs, tprs
 
-    def plot_univariate_roc(self, features_to_plot=[], binary_classes_to_plot=[], auc_threshold=0.75):
+    def plot_univariate_roc(self, features_to_plot: list=[], binary_classes_to_plot: list=[], auc_threshold: float=0.75):
+        """Plot univariate ROC AUC for each feature into interactive .html report.
+
+        Arguments:
+            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
+            auc_threshold: ROC AUC value for the feature to be considered as 'distinctive'.
+        """
 
         if len(self._outcome) > 0:
             if len(self._class_label) == 2:
