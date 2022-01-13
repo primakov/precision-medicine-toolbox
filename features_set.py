@@ -32,7 +32,6 @@ class features_set:
                  patient_in_outcome_column='',
                  patient_to_drop=[]):
 
-
         if type(feature_path) is str:
             self._feature_path = feature_path
         else:
@@ -216,7 +215,7 @@ class features_set:
         """Plot distribution of the feature values in classes into interactive .html report.
 
         Arguments:
-            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
             binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
         """
 
@@ -321,7 +320,7 @@ class features_set:
         """Plot correlation (Spearman's) matrix for the features into interactive .html report.
 
         Arguments:
-            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
         """
 
         pio.renderers.default = 'iframe'
@@ -376,10 +375,10 @@ class features_set:
         return p_MW_corr
 
     def plot_MW_p(self, features_to_plot: list=[], binary_classes_to_plot: list=[], p_threshold: float=0.05):
-        """Plot Mann-Whitney p-values (corrected) for the features into interactive .html report.
+        """Plot two-sided Mann-Whitney U test p-values for comparison of features values means in 2 classes (with correction for multiple testing) into interactive .html report.
 
         Arguments:
-            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
+            features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
             binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
             p_threshold: Significance level.
         """
@@ -476,12 +475,12 @@ class features_set:
         return fprs, tprs
 
     def plot_univariate_roc(self, features_to_plot: list=[], binary_classes_to_plot: list=[], auc_threshold: float=0.75):
-        """Plot univariate ROC AUC for each feature into interactive .html report.
+        """Plot univariate ROC curves (with AUC calculation) for threshold binary classifier, based of each feature separately into interactive .html report.
 
         Arguments:
-            features_to_plot: List of the features; if the input list is empty, will be plotted for all the features.
-            binary_classes_to_plot: List, containing 2 classes of interest, if the dataset is multi-class.
-            auc_threshold: ROC AUC value for the feature to be considered as 'distinctive'.
+            features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
+            binary_classes_to_plot: List, containing 2 classes of interest in case of multi-class data.
+            auc_threshold: Threshold value for ROC AUC to be highlighted.
         """
 
         if len(self._outcome) > 0:
@@ -545,7 +544,12 @@ class features_set:
 
         return None
 
-    def calculate_basic_stats(self, volume_feature=''):
+    def calculate_basic_stats(self, volume_feature: str=''):
+        """Calculate basic statistical scores (such as: number of missing values, mean, std, min, max, Mann-Whitney test p-values for binary classes, univariate ROC AUC for binary classes, Spearman's correlation with volume if volumetric feature name is sent to function) for each feature and save it to .csv file.
+
+        Arguments:
+            volume_feature: Name of the feature, which is considered as volume.
+        """
 
         num_features = []
         for feature in self._feature_column:
@@ -617,7 +621,15 @@ class features_set:
 
         return precs, recs
 
-    def volume_analysis(self, volume_feature='', auc_threshold=0.75, features_to_plot=[], corr_threshold=0.75):
+    def volume_analysis(self, volume_feature: str='', auc_threshold: float=0.75, features_to_plot: list=[], corr_threshold: float=0.75):
+        '''Calculate features correlation (Spearman’s) with volume and plot volume-based precision-recall curve.
+
+        Arguments:
+            volume_feature: Name of the feature, which is considered as volume.
+            auc_threshold: Threshold value for area under precision-recall curve to be highlighted.
+            features_to_plot: Specific features to be selected (otherwise selects all the numerical features)
+            corr_threshold: Threshold value for absolute value for Spearman’s correlation coefficient to be considered as ‘strong correlation’.
+        '''
         if volume_feature:
             if volume_feature in self._feature_column:
                 if len(self._outcome) > 0:
