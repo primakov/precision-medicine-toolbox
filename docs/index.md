@@ -1,4 +1,4 @@
-# Welcome to *pm_toolbox* documentation!
+# Welcome to *precision-medicine-toolbox* documentation!
 [![License](https://img.shields.io/github/license/precision-medicine-um/precision_medicine_toolbox)](https://opensource.org/licenses/BSD-3-Clause)
 [![Documentation Status](https://readthedocs.org/projects/radiomics-training/badge/?version=latest)](https://radiomics-training.readthedocs.io/en/latest/?badge=latest)
 
@@ -9,13 +9,13 @@ and to perform exploratory feature analysis.
 
 Currently, the toolbox has the following functionality:  
   
-* **Conversion of DICOM to nrrd.** This function allows for the conversion of DICOM (CT or MR) dataset into volume (nrrd format) dataset. 2D data is temporarily not supported.  
-* **Unrolling nrrd images & roi masks into jpeg slices.** This function could be used for a quick check of the converted images or any existing nrrd/mha dataset. It will generate the jpeg images for each ROI slice.  
+* **Conversion of DICOM to NRRD.** This function allows for the conversion of DICOM (CT or MR) dataset into volume (nrrd format) dataset. 2D data is temporarily not supported.  
+* **Unrolling NRRD images & ROI masks into jpeg slices.** This function could be used for a quick check of the converted images or any existing nrrd/mha dataset. It will generate the jpeg images for each ROI slice.  
 * **Extracting of radiomics features.** Feature extraction procedure using pyradiomics to obtain the radiomics features for nrrd/mha dataset.  
 * **Basic analysis of radiomics features.** Export to excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
     * features values distributions in binary classes,
     * features mutual correlation (Spearman) matrix,
-    * p-values (Bonferroni corrected) for Mann-Whitney test for features mean values in groups,
+    * p-values (corrected) for Mann-Whitney test for features mean values in groups,
     * univariate ROC-curves for each feature,
     * volumetric analysis: volume-based precision-recall curve + features correlation with volume.
 
@@ -24,7 +24,7 @@ Currently, the toolbox has the following functionality:
 ## Code and documentation
 The *pm_toolbox* is an open-source package, the source code is available [online](https://github.com/precision-medicine-um/precision_medicine_toolbox). 
 The online documentation is available [here](http://precision_medicine_toolbox.readthedocs.io/). 
-The functionality of the toolbox is illustrated in the tutorial [notebooks]().
+The functionality of the toolbox is illustrated in the tutorial [notebooks](https://github.com/primakov/precision-medicine-toolbox/tree/master/examples).
 ## 3rd-party packages used in the PM_toolbox
 Our package is using the existing quality tools for the key steps:
 

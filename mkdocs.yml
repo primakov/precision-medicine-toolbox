@@ -11,4 +11,4 @@ site_dir: 'site'
 plugins:
   - search
   - mkdocstrings
-copyright: Copyright &copy; 2019 - 2022, Serge  y Primakov & Lisa Lavrova.
+copyright: Copyright &copy; 2019 - 2022, Sergey Primakov & Lisa Lavrova.
