@@ -15,7 +15,7 @@ from features_set import features_set
 
 class analysis_box(features_set):
 
-    '''This module allows for preliminary statistical analysis of the numerical features.'''
+    '''This module is inherited from features_set class and allows for preliminary statistical analysis of the numerical features.'''
 
     def handle_nan(self, axis: int=1, how: str='any', mode: str='delete'):
         """Handle the missing values.

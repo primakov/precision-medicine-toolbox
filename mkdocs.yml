@@ -3,8 +3,8 @@ nav:
   - Home: index.md
   - Tutorials: tutorials.md
   - Code Reference:
-    - Imaging module: images_set.md
-    - Features module: features_set.md
+    - Imaging module: tool_box.md
+    - Features module: analysis_box.md
 theme: readthedocs
 docs_dir: 'docs'
 site_dir: 'site'

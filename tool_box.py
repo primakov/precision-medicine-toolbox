@@ -21,7 +21,7 @@ import pandas as pd
 
 class tool_box(data_set):
 
-    '''This module allows for high-level functionality while working with the raw imaging data.'''
+    '''This module is inherited from data_set class and allows for high-level functionality while working with the raw imaging data.'''
 
     def get_dataset_description(self, parameter_list: list =['Modality','SliceThickness',
                     'PixelSpacing','SeriesDate','Manufacturer']) -> DataFrame:

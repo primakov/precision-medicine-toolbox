@@ -1,6 +1,6 @@
-# Documentation for features_set
+# Documentation for analysis_box
 
-::: features_set.features_set
+::: analysis_box.analysis_box
     handler: python
     selection:
       members:
