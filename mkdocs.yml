@@ -3,12 +3,15 @@ nav:
   - Home: index.md
   - Tutorials: tutorials.md
   - Code Reference:
+    - Images class: data_set.md
     - Imaging module: tool_box.md
+    - Features class: features_set.md
     - Features module: analysis_box.md
 theme: readthedocs
 docs_dir: 'docs'
 site_dir: 'site'
 plugins:
   - search
+  - autorefs
   - mkdocstrings
 copyright: Copyright &copy; 2019 - 2022, Sergey Primakov & Lisa Lavrova.

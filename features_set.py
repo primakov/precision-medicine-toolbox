@@ -21,15 +21,30 @@ import plotly.io as pio
 
 
 class features_set:
+    '''This class creates features set objects.'''
+
     def __init__(self,
-                 feature_path=None,
-                 outcome_path=None,
-                 feature_column=[],
-                 feature_column_to_drop=[],
-                 outcome_column='',
-                 patient_column='',
-                 patient_in_outcome_column='',
-                 patient_to_drop=[]):
+                 feature_path: str =None,
+                 outcome_path: str =None,
+                 feature_column: list =[],
+                 feature_column_to_drop: list =[],
+                 outcome_column: str ='',
+                 patient_column: str ='',
+                 patient_in_outcome_column: str ='',
+                 patient_to_drop: list =[]):
+
+        """Initialise a dataset object.
+
+        Arguments:
+            feature_path: Path to csv./.xls(x) file with features.
+            outcome_path: Path to csv./.xls(x) file with outcomes.
+            feature_column: List of features to be included.
+            feature_column_to_drop: List of features to be excluded.
+            outcome_column: Name of the column with outcomes.
+            patient_column: Name of the column with patients IDs in features file.
+            patient_in_outcome_column: Name of the column with patients IDs in outcomes file.
+            patient_to_drop: List of patients to be excluded.
+        """
 
         if type(feature_path) is str:
             self._feature_path = feature_path

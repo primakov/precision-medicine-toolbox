@@ -15,8 +15,21 @@ from tqdm import tqdm
 is_in_list = lambda names_list, name: any([True for v in names_list if re.search(v,name.lower())])
 
 class data_set:
-    def __init__(self, data_path = None, data_type = 'dcm',mask_names =[],image_only = False, multi_rts_per_pat = False,
-                 image_names=['image','volume','img','vol']):
+    '''This class creates imaging dataset objects.'''
+
+    def __init__(self, data_path: str = None, data_type: str = 'dcm',mask_names: list =[], image_only: bool = False, multi_rts_per_pat: bool = False,
+                 image_names: list=['image','volume','img','vol']):
+        """Initialise a dataset object.
+
+        Arguments:
+            data_path: Path to DICOM/NRRD root directory (structure inside patient’s folder doesn’t matter).
+            data_type: Original data format, 'dcm' is default, can be 'nrrd'.
+            mask_names: List of names for NRRD files containing binary mask, default is ‘mask’.
+            image_only: If your dataset has only images, whithout Rtstructures, you need to set it to True, otherwise default value is False.
+            multi_rts_per_pat: If you have multiple Rtstructures in the patient folder you need to set it to True, otherwise default value is False, to speed up the parsing algorithm.
+            image_names: List of names for NRRD files containing image file, default is ['image','volume','img','vol'].
+        """
+
         self.index = 0
         self._data_path = data_path
         self._data_type = data_type
