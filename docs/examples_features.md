@@ -15,8 +15,8 @@ import pandas as pd
 ## Required data
 
 To run the tutorial, you will need the following files, available in the 'data/features' folder of the *pm_toolbox* repository:  
-* '*extended_clinical_df.xlsx*' - this is the clinical data file provided with the Lung1 dataset (Aerts et al., 2014); we added binary variables of 1-, 1.5-, and 2-years survival, based on the presented data,
-* '*extracted_features_full.xlsx*' - this is a file with the PyRadiomic features values (can be extracted in the imaging module tutorial) for **all** the patients from Lung1 dataset.
+- '*extended_clinical_df.xlsx*' - this is the clinical data file provided with the Lung1 dataset (Aerts et al., 2014); we added binary variables of 1-, 1.5-, and 2-years survival, based on the presented data,  
+- '*extracted_features_full.xlsx*' - this is a file with the PyRadiomic features values (can be extracted in the imaging module tutorial) for **all** the patients from Lung1 dataset.
 
 ## Binary classes functionality
 
