@@ -1,4 +1,4 @@
-site_name: pm_toolbox
+site_name: precision-medicine-toolbox
 nav:
   - Home: index.md
   - Tutorials: tutorials.md
