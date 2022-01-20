@@ -1,11 +1,9 @@
 # Welcome to *precision-medicine-toolbox* documentation!
 [![License](https://img.shields.io/github/license/precision-medicine-um/precision_medicine_toolbox)](https://opensource.org/licenses/BSD-3-Clause)
-[![Documentation Status](https://readthedocs.org/projects/radiomics-training/badge/?version=latest)](https://radiomics-training.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/precision-medicine-toolbox/badge/?version=latest)](https://precision-medicine-toolbox.readthedocs.io/en/latest/?badge=latest)
 
-The *pm_toolbox* (precision_medicine_toolbox) is an open-source python package for medical imaging data 
-preparation for data science tasks. 
-This package is aimed to provide a tool to curate the imaging data 
-and to perform exploratory feature analysis.  
+*precision-medicine-toolbox* is an open-source python package for medical imaging data preparation for data science tasks. 
+This package is aimed to provide a tool to curate the imaging data and to perform exploratory feature analysis.  
 
 Currently, the toolbox has the following functionality:  
   
@@ -22,17 +20,17 @@ Currently, the toolbox has the following functionality:
 **Warning!** Not intended for clinical use!
 
 ## Code and documentation
-The *pm_toolbox* is an open-source package, the source code is available [online](https://github.com/precision-medicine-um/precision_medicine_toolbox). 
-The online documentation is available [here](http://precision_medicine_toolbox.readthedocs.io/). 
+*precision-medicine-toolbox* is an open-source package, the source code is available [online](https://github.com/primakov/precision-medicine-toolbox). 
+The online documentation is available [here](http://precision-medicine-toolbox.readthedocs.io/). 
 The functionality of the toolbox is illustrated in the tutorial [notebooks](https://github.com/primakov/precision-medicine-toolbox/tree/master/examples).
-## 3rd-party packages used in the PM_toolbox
+## 3rd-party packages used in *precision-medicine-toolbox*
 Our package is using the existing quality tools for the key steps:
 
 * pydicom (DICOM I/O),
 * SimpleITK (image I/O and pre-processing),
 * pyradiomics (features extraction).
 
-See [requirements.txt](https://github.com/precision-medicine-um/precision_medicine_toolbox/blob/master/requirements.txt) for more.
+See [requirements.txt](https://github.com/primakov/precision-medicine-toolbox/blob/master/requirements.txt) for more.
 ## Installation
 Before use, install the dependencies from the requirements file:  
 ```
@@ -43,7 +41,7 @@ Then clone repository with the git client of your preference.
 The following example illustrates how to initialize an object of a dataset class:  
 ```python
 import os, sys
-sys.path.append('path to pm_toolbox directory')
+sys.path.append('path to precision-medicine-toolbox directory')
 from tool_box import tool_box
 
 # set up parameters for your imaging dataset
@@ -67,7 +65,7 @@ Initial and main developers:
 * Sergey Primakov [@primakov](https://github.com/primakov)
 * Lisa Lavrova [@lavrovaliz](https://github.com/lavrovaliz)
 
-Also you can see the list of the [contributors](https://github.com/precision-medicine-um/precision_medicine_toolbox/graphs/contributors).
+Also you can see the list of the [contributors](https://github.com/primakov/precision-medicine-toolbox/graphs/contributors).
 ## License
 This project is licensed under the BSD-3-Clause License 
 (see the [LICENSE](https://github.com/precision-medicine-um/precision_medicine_toolbox/blob/master/LICENSE) for the details).
