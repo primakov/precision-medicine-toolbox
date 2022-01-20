@@ -1,6 +1,6 @@
-# *precision_medicine_toolbox* tutorials
-The *precision_medicine_toolbox* functionality is illustrated in the following notebooks. 
-You can clone the *precision_medicine_toolbox* repository to your computer and find the Jupyter files 
+# *precision-medicine-toolbox* tutorials
+The *precision-medicine-toolbox* functionality is illustrated in the following notebooks. 
+You can clone the *precision-medicine-toolbox* repository to your computer and find the Jupyter files 
 in the *examples* folder. The *data* folder is for imaging data. 
 The scripts can be corrected accordingly.
 ## Imaging module
