@@ -2,7 +2,7 @@ site_name: precision-medicine-toolbox
 nav:
   - Home: index.md
   - Tutorials: tutorials.md
-  - Code Reference:
+  - API:
     - Imaging class: data_set.md
     - Imaging module: tool_box.md
     - Features class: features_set.md
