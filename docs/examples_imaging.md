@@ -144,7 +144,7 @@ We are using PyRadiomics parameters file customized for CT data:
 
 
 ```python
-parameters = r"../example_ct_parameters.yaml"
+parameters = r"example_ct_parameters.yaml"
 features = data_ct_nrrd.extract_features(parameters, loggenabled=True)
 ```
 
