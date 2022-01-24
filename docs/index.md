@@ -8,10 +8,10 @@ This package is aimed to provide a tool to curate the imaging data and to perfor
 
 Currently, the toolbox has the following functionality:  
   
-* **Conversion of DICOM to NRRD.** This function allows for the conversion of DICOM (CT or MR) dataset into volume (nrrd format) dataset. 2D data is temporarily not supported.  
-* **Unrolling NRRD images & ROI masks into jpeg slices.** This function could be used for a quick check of the converted images or any existing nrrd/mha dataset. It will generate the jpeg images for each ROI slice.  
-* **Extracting of radiomics features.** Feature extraction procedure using pyradiomics to obtain the radiomics features for nrrd/mha dataset.  
-* **Basic analysis of radiomics features.** Export to excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
+* **Conversion of DICOM to NRRD.** This function allows for the conversion of DICOM (CT or MR) dataset into volume (NRRD format) dataset. 2D data is temporarily not supported.  
+* **Unrolling NRRD images & ROI masks into jpeg slices.** This function could be used for a quick check of the converted images or any existing NRRD/MHA dataset. It will generate the JPEG images for each ROI slice.  
+* **Extracting of radiomics features.** Feature extraction procedure using pyradiomics to obtain the radiomics features for NRRD/MHA dataset.  
+* **Basic analysis of radiomics features.** Export to Excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
     * features values distributions in binary classes,
     * features mutual correlation (Spearman) matrix,
     * p-values (corrected) for Mann-Whitney test for features mean values in groups,
