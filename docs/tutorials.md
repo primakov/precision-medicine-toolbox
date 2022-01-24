@@ -7,7 +7,7 @@ The scripts can be corrected accordingly.
 How to convert DICOM into NRRD, check ROI segmentation, 
 extract the radiomic features, and explore the imaging parameters:  
 
-* [tutorial imaging](examples_imaging.md).
+* [tutorial imaging](imaging_module.md).
 ## Features module
 How to visualize features distribution in classes, 
 plot the feature correlation matrix, 
@@ -15,7 +15,7 @@ check Mann-Whitney U-test p-values, plot univariate ROC
 (and calculate AUC) for each feature, perform volumetric analysis, 
 and save all the scores:
 
-* [tutorial features](examples_features.md).
+* [tutorial features](features_module.md).
 ## Suggestions
 If you are feeling a feature is not illustrated in the tutorials above, 
 don't hesitate to suggest/contribute.
