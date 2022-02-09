@@ -192,7 +192,9 @@ class tool_box(data_set):
     def pre_process(self, ref_img_path: str = None, save_path: str = None,
                     z_score: bool = False, norm_coeff: tuple = None, hist_match: bool = False,
                     hist_equalize: bool = False, binning: bool = False, percentile_scaling: bool = False,
-                    subcateneus_fat: bool = False, fat_value: bool = None, verbosity: bool = False, visualize: bool = False):
+                    reshape: bool = False, to_shape: np.array = None, corr_bias_field: bool = False,
+                    subcateneus_fat: bool = False, fat_value: bool = None,
+                    verbosity: bool = False, visualize: bool = False):
 
         ref_img_arr = sitk.GetArrayFromImage(sitk.ReadImage(ref_img_path))
         for i, pat in tqdm(self):
@@ -392,12 +394,12 @@ class tool_box(data_set):
         except:
             return 'NaN'
 
-    def __normalize_image_zscore(self, image, norm_coeff):  ##Zscore whole image/or masked region
+    def __normalize_image_zscore(self, image, norm_coeff):  ##Zscore whole image
         img = image - norm_coeff[0]
         img = img / norm_coeff[1]
         return img
 
-    def __normalize_image_zscore_per_image(self, image, verbosity):  ##Zscore based on the masked region intensities
+    def __normalize_image_zscore_per_image(self, image, mask, verbosity):  ##Zscore based on the masked region intensities
         image_s = image.copy()
         mu = np.mean(image_s.flatten())
         sigma = np.std(image_s.flatten())
@@ -490,8 +492,32 @@ class tool_box(data_set):
 
         return interp_t_values[bin_idx].reshape(oldshape).astype(np.int16)
 
+    def _resize_3d_img(self, img, shape, interp=cv2.INTER_CUBIC):
+        init_img = img.copy()
+        temp_img = np.zeros((init_img.shape[0], shape[1], shape[2]))
+        new_img = np.zeros(shape)
+        for i in range(0, init_img.shape[0]):
+            temp_img[i, ...] = cv2.resize(init_img[i, ...], dsize=(shape[2], shape[1]), interpolation=interp)
+        for j in range(0, shape[1]):
+            new_img[:, j, :] = (cv2.resize(temp_img[:, j, :], dsize=(shape[2], shape[0]), interpolation=interp))
+        return new_img
+
+    def _correct_bias_field(self):
+
+        temp_data_orig = sitk.ReadImage()
+        temp_mask = sitk.ReadImage()
+
+        im = sitk.Cast(temp_data_orig, sitk.sitkFloat32)
+        mm = sitk.Cast(temp_mask, sitk.sitkUInt8)
+        corrector = sitk.N4BiasFieldCorrectionImageFilter()
+        numberFittingLevels = 4
+        temp_image_array = sitk.GetArrayFromImage(corrector.Execute(im, mm))
+
+        return temp_image_array
+
     def __preprocessing_function(self, img, mask, ref_img, z_score, norm_coeff, hist_match, hist_equalize, binning,
-                                 percentile_scaling, subcateneus_fat, fat_value, verbosity, visualize):
+                                 percentile_scaling, reshape, to_shape, corr_bias_field, subcateneus_fat, fat_value,
+                                 verbosity, visualize):
 
         if verbosity:
             unique_number_of_intensity = np.unique(img.flatten())
