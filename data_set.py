@@ -17,7 +17,10 @@ is_in_list = lambda names_list, name: any([True for v in names_list if re.search
 class data_set:
     '''This class creates imaging dataset objects.'''
 
-    def __init__(self, data_path: str = None, data_type: str = 'dcm',mask_names: list =[], image_only: bool = False, multi_rts_per_pat: bool = False,
+    def __init__(self, data_path: str = None,
+                 data_type: str = 'dcm', mask_names: list = [],
+                 image_only: bool = False, multi_rts_per_pat: bool = False,
+                 messy_structure: bool = False,
                  image_names: list=['image','volume','img','vol']):
         """Initialise a dataset object.
 
@@ -27,6 +30,7 @@ class data_set:
             mask_names: List of names for NRRD files containing binary mask, default is ‘mask’.
             image_only: If your dataset has only images, whithout Rtstructures, you need to set it to True, otherwise default value is False.
             multi_rts_per_pat: If you have multiple Rtstructures in the patient folder you need to set it to True, otherwise default value is False, to speed up the parsing algorithm.
+            messy_structure: If data is not organised properly in folders.
             image_names: List of names for NRRD files containing image file, default is ['image','volume','img','vol'].
         """
 
@@ -43,10 +47,10 @@ class data_set:
         self._image_only = image_only
         self.__image_names = image_names
         self.__multi_rts_per_pat = multi_rts_per_pat
-        self.__parse_directory()
+        self.__parse_directory(messy_structure)
         
         
-    def __parse_directory(self):
+    def __parse_directory(self, messy_structure=False):
         
         if self._data_type =='nrrd':
             
@@ -73,7 +77,17 @@ class data_set:
             for patient in tqdm(self.__patients):
             
                 dcm_files=[]
+                all_dicom_subfiles = []
                 dict_length = len(self._patient_dict)
+
+                if messy_structure:
+                    for root, dirs, files in os.walk(os.path.join(self._data_path)):
+                        for file in files:
+                            if file.endswith('.dcm'):
+                                temp_file = pydicom.read_file(os.path.join(root, file),force = True)
+                                if temp_file.Modality == 'RTSTRUCT':
+                                    all_dicom_subfiles.append(os.path.join(root, file))
+                    print(len(all_dicom_subfiles))
                 
                 for root, dirs, files in os.walk(os.path.join(self._data_path,patient)):
                     for file in files:
@@ -82,45 +96,58 @@ class data_set:
                             
                 if not len(dcm_files):
                     warn('No dcm data found for patient:%s check the folder, ensure that dicom files ends with .dcm'%patient)
-                
-                for file in dcm_files:
-                    structfile ='' 
-                    try:
-                        temp_file = pydicom.read_file(file,force = True)
-                        
-                        if not self._image_only:
-                            if temp_file.Modality == 'RTSTRUCT':
-                                structfile = file
-                                datafile=''
-                                for dfile in dcm_files:
-                                    temp_dfile = pydicom.read_file(dfile,force = True)
-                            
-                                    if is_in_list(['ct','mr','us','nm'],str(temp_dfile.Modality).lower()): 
-                                        if (temp_dfile.StudyInstanceUID != temp_file.StudyInstanceUID):
-                                            warn('StudyInstanceUID doesnt match!')
-                                            
-                                        datafile = os.path.dirname(os.path.abspath(dfile)) 
-                                        rts_name = structfile[:-4].split('\\')[-1] 
-                                        self._patient_dict[patient+'_'+rts_name[-15:]]=[datafile,structfile]
-                                        break
-            
-                        else:
-                            datafile=''
-                            for dfile in dcm_files:
-                                temp_dfile = pydicom.read_file(dfile,force = True)
-                                if  is_in_list(['ct','mr','us','nm'],str(temp_dfile.Modality).lower()): 
-                                    datafile = os.path.dirname(os.path.abspath(dfile)) #getting directory name
-                                    self._patient_dict[patient]=[datafile]
+
+                if messy_structure:
+                    for rt in all_dicom_subfiles:
+                        temp_rt = pydicom.read_file(rt, force=True)
+                        for dfile in dcm_files:
+                            temp_dfile = pydicom.read_file(dfile, force=True)
+                            if is_in_list(['ct', 'mr', 'us', 'nm'], str(temp_dfile.Modality).lower()):
+                                if (temp_dfile.SeriesInstanceUID != temp_rt.SeriesInstanceUID):
+                                    pass
+                                else:
+                                    datafile = os.path.dirname(os.path.abspath(dfile))
+                                    rts_name = rt[:-4].split('\\')[-2]  # +rt[:-4].split('\\')[-2]
+                                    self._patient_dict[patient + '_' + rts_name[-15:]] = [datafile, rt]
                                     break
-                                                
-                    except KeyboardInterrupt:
-                        raise           
-                    except:
-                        warn('Some problems have occured with the file: %s'%file)
-                    
-                    
-                    if not self.__multi_rts_per_pat and  dict_length-len(self._patient_dict): 
-                        break
+                else:
+                    for file in dcm_files:
+                        structfile = ''
+                        try:
+                            temp_file = pydicom.read_file(file, force=True)
+
+                            if not self._image_only:
+                                if temp_file.Modality == 'RTSTRUCT':
+                                    structfile = file
+                                    datafile = ''
+                                    for dfile in dcm_files:
+                                        temp_dfile = pydicom.read_file(dfile, force=True)
+
+                                        if is_in_list(['ct', 'mr', 'us', 'nm'], str(temp_dfile.Modality).lower()):
+                                            if (temp_dfile.StudyInstanceUID != temp_file.StudyInstanceUID):
+                                                warn('StudyInstanceUID doesnt match!')
+
+                                            datafile = os.path.dirname(os.path.abspath(dfile))
+                                            rts_name = structfile[:-4].split('\\')[-1]
+                                            self._patient_dict[patient + '_' + rts_name[-15:]] = [datafile, structfile]
+                                            break
+
+                            else:
+                                datafile = ''
+                                for dfile in dcm_files:
+                                    temp_dfile = pydicom.read_file(dfile, force=True)
+                                    if is_in_list(['ct', 'mr', 'us', 'nm'], str(temp_dfile.Modality).lower()):
+                                        datafile = os.path.dirname(os.path.abspath(dfile))  # getting directory name
+                                        self._patient_dict[patient] = [datafile]
+                                        break
+
+                        except KeyboardInterrupt:
+                            raise
+                        except:
+                            warn('Some problems have occured with the file: %s' % file)
+
+                        if not self.__multi_rts_per_pat and dict_length - len(self._patient_dict):
+                            break
                 
       
         else:
