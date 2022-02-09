@@ -1,0 +1,13 @@
+Pre-processing parameters:
+ref_img_path: ../data/converted_nrrds/LUNG1-001_20180209_CT_2/image.nrrd
+save_path: ../data/nrrd_preprocessed
+z_score: False
+"norm_coeff: (1000.0, 500.0)"
+hist_match: True
+hist_equalize: False
+binning: 255
+percentile_scaling: True
+subcateneus_fat: False
+fat_value: 774
+verbosity: True
+visualize: True

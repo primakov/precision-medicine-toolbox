@@ -202,7 +202,10 @@ class tool_box(data_set):
             mask_array = sitk.GetArrayFromImage(mask)
             ref_image_arr = ref_img_arr.copy()
             # run the pre-processing
-            pre_processed_arr = self.__preprocessing_function(image_array, mask_array, ref_image_arr)
+            pre_processed_arr = self.__preprocessing_function(image_array, mask_array, ref_image_arr,
+                                                              z_score, norm_coeff, hist_match, hist_equalize,
+                                                              binning, percentile_scaling, subcateneus_fat,
+                                                              fat_value, verbosity, visualize)
 
             export_dir = os.path.join(save_path, i)
             if not os.path.exists(export_dir):
@@ -391,19 +394,19 @@ class tool_box(data_set):
 
     def __normalize_image_zscore(self, image, norm_coeff):  ##Zscore whole image/or masked region
         img = image - norm_coeff[0]
-        img = image / norm_coeff[1]
+        img = img / norm_coeff[1]
         return img
 
-    def __normalize_image_zscore_per_image(self, image):  ##Zscore based on the masked region intensities
+    def __normalize_image_zscore_per_image(self, image, verbosity):  ##Zscore based on the masked region intensities
         image_s = image.copy()
         mu = np.mean(image_s.flatten())
         sigma = np.std(image_s.flatten())
-        if self.verbosity:
+        if verbosity:
             print('ROI MU = %s, sigma = %s' % (mu, sigma))
         img = (image - mu) / sigma
         return img, mu, sigma
 
-    def __resample_intensities(self, orig_img, bin_nr):  ## Intensity resampling whole image/or masked region
+    def __resample_intensities(self, orig_img, bin_nr, verbosity):  ## Intensity resampling whole image/or masked region
         v_count = 0
         img_list = []
         filtered = orig_img.copy()
@@ -416,7 +419,7 @@ class tool_box(data_set):
         for st in np.arange(step, max_val_img + step, step):
             resampled[(filtered <= st) & (filtered >= st - step)] = v_count
             v_count += 1
-        if self.verbosity:
+        if verbosity:
             print("Resampling with a step of: ", step, 'Amount of unique values, original img: ',
                   len(np.unique(orig_img.flatten())), 'resampled img: ', len(np.unique(resampled.flatten())))
 
@@ -541,7 +544,7 @@ class tool_box(data_set):
                 plt.show()
 
         if binning:
-            img = self.__resample_intensities(img, binning)
+            img = self.__resample_intensities(img, binning, verbosity)
             if verbosity:
                 print('-' * 40)
                 print('Intensity values resampled with a number of bins: %s' % binning)
@@ -555,29 +558,29 @@ class tool_box(data_set):
         if hist_equalize and img.dtype == np.uint8:
             equalized = [cv2.equalizeHist(np.squeeze(x).astype(np.uint8)) for x in img]
             img = np.stack(equalized)
-            if self.verbosity:
+            if verbosity:
                 print('Histogram equalization applied')
-            if self.visualize:
+            if visualize:
                 plt.figure(figsize=(12, 12))
                 plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
                 plt.title('Histogram equalize')
                 plt.show()
 
-        if self.z_score and self.norm_coeff:
-            img = self.__normalize_image_zscore(img, self.norm_coeff)
-            if self.verbosity:
-                print('Z-score normalization applied based on the whole image, Mu=%s, sigma=%s' % (self.norm_coeff))
-            if self.visualize:
+        if z_score and norm_coeff:
+            img = self.__normalize_image_zscore(img, norm_coeff)
+            if verbosity:
+                print('Z-score normalization applied based on the whole image, Mu=%s, sigma=%s' % (norm_coeff))
+            if visualize:
                 plt.figure(figsize=(12, 12))
                 plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
                 plt.title('Z-score normalization applied')
                 plt.show()
 
-        elif self.z_score:
-            img, mu, sigma = self.__normalize_image_zscore_per_image(img)
-            if self.verbosity:
+        elif z_score:
+            img, mu, sigma = self.__normalize_image_zscore_per_image(img, verbosity)
+            if verbosity:
                 print('Z-score normalization applied based on image intensities, Mu=%s, sigma=%s' % (mu, sigma))
-            if self.visualize:
+            if visualize:
                 plt.figure(figsize=(12, 12))
                 plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
                 plt.title('Z-score normalization applied')
