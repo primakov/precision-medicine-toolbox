@@ -196,6 +196,25 @@ class tool_box(data_set):
                     subcateneus_fat: bool = False, fat_value: bool = None,
                     reshape: bool = False, to_shape: np.array = None,
                     verbosity: bool = False, visualize: bool = False):
+        '''Pre-process the images.
+
+        Arguments:
+            ref_img_path: Path to the reference image for the histogram matching.
+            save_path: Path to the folder where the pre-processed images will be stored.
+            z_score: Enable Z-scoring.
+            norm_coeff: Normalization coefficients for z-scoring (mean and standard deviation).
+            hist_match: Enable histogram matching.
+            hist_equalize: Enable histogram equalization.
+            binning: Enable intensities resampling.
+            percentile_scaling: Enable intensities scaling based on 95 percentile.
+            corr_bias_field: Enable bias field correction.
+            subcateneus_fat: Enable intensities rescaling based on subcateneus fat.
+            fat_value: Intensity value specific for the fat.
+            reshape: Enable 3D reshaping of the images.
+            to_shape: Target shape for image reshaping.
+            verbosity: Enable log reporting.
+            visualize: Enable visualization of every pre-processing step.
+        '''
 
         ref_img_arr = sitk.GetArrayFromImage(sitk.ReadImage(ref_img_path))
         for i, pat in tqdm(self):
