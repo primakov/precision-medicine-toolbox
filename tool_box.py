@@ -524,7 +524,7 @@ class tool_box(data_set):
         return img_output
 
     def __preprocessing_function(self, img, mask, ref_img, z_score, norm_coeff, hist_match, hist_equalize, binning,
-                                 percentile_scaling, corr_bias_field, n_fitting_levels=4, n_iterations=[50],
+                                 percentile_scaling, corr_bias_field,
                                  subcateneus_fat, fat_value, reshape, to_shape,
                                  verbosity, visualize):
 
@@ -545,7 +545,7 @@ class tool_box(data_set):
             plt.show()
 
         if corr_bias_field:
-            img = self.__correct_bias_field(img, mask, n_fitting_levels, n_iterations)
+            img = self.__correct_bias_field(img, mask, n_fitting_levels=4, n_iterations=[50])
             if verbosity:
                 print('N4 bias field correction performed')
             if visualize:
