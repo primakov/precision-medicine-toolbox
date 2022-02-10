@@ -192,8 +192,9 @@ class tool_box(data_set):
     def pre_process(self, ref_img_path: str = None, save_path: str = None,
                     z_score: bool = False, norm_coeff: tuple = None, hist_match: bool = False,
                     hist_equalize: bool = False, binning: bool = False, percentile_scaling: bool = False,
-                    reshape: bool = False, to_shape: np.array = None, corr_bias_field: bool = False,
+                    corr_bias_field: bool = False,
                     subcateneus_fat: bool = False, fat_value: bool = None,
+                    reshape: bool = False, to_shape: np.array = None,
                     verbosity: bool = False, visualize: bool = False):
 
         ref_img_arr = sitk.GetArrayFromImage(sitk.ReadImage(ref_img_path))
@@ -206,8 +207,12 @@ class tool_box(data_set):
             # run the pre-processing
             pre_processed_arr = self.__preprocessing_function(image_array, mask_array, ref_image_arr,
                                                               z_score, norm_coeff, hist_match, hist_equalize,
-                                                              binning, percentile_scaling, subcateneus_fat,
-                                                              fat_value, verbosity, visualize)
+                                                              binning, percentile_scaling,
+                                                              corr_bias_field,
+                                                              subcateneus_fat,
+                                                              fat_value,
+                                                              reshape, to_shape,
+                                                              verbosity, visualize)
 
             export_dir = os.path.join(save_path, i)
             if not os.path.exists(export_dir):
@@ -492,7 +497,8 @@ class tool_box(data_set):
 
         return interp_t_values[bin_idx].reshape(oldshape).astype(np.int16)
 
-    def _resize_3d_img(self, img, shape, interp=cv2.INTER_CUBIC):
+    def __resize_3d_img(self, img, shape, interp=cv2.INTER_CUBIC):
+
         init_img = img.copy()
         temp_img = np.zeros((init_img.shape[0], shape[1], shape[2]))
         new_img = np.zeros(shape)
@@ -502,21 +508,24 @@ class tool_box(data_set):
             new_img[:, j, :] = (cv2.resize(temp_img[:, j, :], dsize=(shape[2], shape[0]), interpolation=interp))
         return new_img
 
-    def _correct_bias_field(self):
+    def __correct_bias_field(self, img, mask, n_fitting_levels, n_iterations):
 
-        temp_data_orig = sitk.ReadImage()
-        temp_mask = sitk.ReadImage()
+        img_sitk = sitk.GetImageFromArray(img)
+        mask_sitk = sitk.GetImageFromArray(mask)
 
-        im = sitk.Cast(temp_data_orig, sitk.sitkFloat32)
-        mm = sitk.Cast(temp_mask, sitk.sitkUInt8)
+        img_sitk_cast = sitk.Cast(img_sitk, sitk.sitkFloat32)
+        mask_sitk_cast = sitk.Cast(mask_sitk, sitk.sitkUInt8)
+
         corrector = sitk.N4BiasFieldCorrectionImageFilter()
-        numberFittingLevels = 4
-        temp_image_array = sitk.GetArrayFromImage(corrector.Execute(im, mm))
+        corrector.SetMaximumNumberOfIterations(n_fitting_levels * n_iterations)
 
-        return temp_image_array
+        img_output = sitk.GetArrayFromImage(corrector.Execute(img_sitk_cast, mask_sitk_cast))
+
+        return img_output
 
     def __preprocessing_function(self, img, mask, ref_img, z_score, norm_coeff, hist_match, hist_equalize, binning,
-                                 percentile_scaling, reshape, to_shape, corr_bias_field, subcateneus_fat, fat_value,
+                                 percentile_scaling, corr_bias_field, n_fitting_levels=4, n_iterations=[50],
+                                 subcateneus_fat, fat_value, reshape, to_shape,
                                  verbosity, visualize):
 
         if verbosity:
@@ -534,6 +543,16 @@ class tool_box(data_set):
             plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
             plt.title('original image')
             plt.show()
+
+        if corr_bias_field:
+            img = self.__correct_bias_field(img, mask, n_fitting_levels, n_iterations)
+            if verbosity:
+                print('N4 bias field correction performed')
+            if visualize:
+                plt.figure(figsize=(12, 12))
+                plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
+                plt.title('Bias field correction')
+                plt.show()
 
         if subcateneus_fat:
             img = self.__intensity_scaling(np.squeeze(img), fat_value, method='fat')
@@ -611,6 +630,17 @@ class tool_box(data_set):
                 plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
                 plt.title('Z-score normalization applied')
                 plt.show()
+
+        if reshape and to_shape:
+            if to_shape.shape==3:
+                img = self.__resize_3d_img(img)
+                if verbosity:
+                    print('Image reshaped: %s' % to_shape)
+                if visualize:
+                    plt.figure(figsize=(12, 12))
+                    plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
+                    plt.title('Reshaped image')
+                    plt.show()
 
         return img
 
