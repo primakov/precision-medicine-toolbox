@@ -12,7 +12,7 @@ from collections import OrderedDict
 from tqdm import tqdm
 
 
-is_in_list = lambda names_list, name: any([True for v in names_list if re.search(v,name.lower())])
+is_in_list = lambda names_list, name: any([True for v in names_list if re.search(v, name.lower())])
 
 class data_set:
     '''This class creates imaging dataset objects.'''
@@ -21,7 +21,7 @@ class data_set:
                  data_type: str = 'dcm', mask_names: list = [],
                  image_only: bool = False, multi_rts_per_pat: bool = False,
                  messy_structure: bool = False,
-                 image_names: list=['image','volume','img','vol']):
+                 image_names: list=['image', 'volume', 'img', 'vol']):
         """Initialise a dataset object.
 
         Arguments:

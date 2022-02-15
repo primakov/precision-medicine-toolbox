@@ -21,12 +21,15 @@ import pandas as pd
 import csv
 import cv2
 
+class MyException(Exception):
+    pass
+
 class tool_box(data_set):
 
     '''This module is inherited from data_set class and allows for high-level functionality while working with the raw imaging data.'''
 
-    def get_dataset_description(self, parameter_list: list =['Modality','SliceThickness',
-                    'PixelSpacing','SeriesDate','Manufacturer']) -> DataFrame:
+    def get_dataset_description(self, parameter_list: list =['Modality', 'SliceThickness',
+                    'PixelSpacing', 'SeriesDate', 'Manufacturer']) -> DataFrame:
         """Get specified metadata from the DICOM files of the dataset.
 
         Arguments:
@@ -254,7 +257,222 @@ class tool_box(data_set):
             for key, value in params.items():
                 writer.writerow([str(str(key) + ': ' + str(value))])
 
+    def get_quality_checks(self, qc_parameters={'specific_modality': '',
+                                                'thickness_range': [],
+                                                'scan_length_range': [],
+                                                'axial_res': [],
+                                                'spacing_range': [],
+                                                'kernels_list': []},
+                                                verbosity=False):
+        ## init dataframe, parse qa tags
+        df_columns = ['Patient id', 'Modality is acceptable', 'Projection is axial',
+                      'Complete scan (no missing/overlapping slices)',
+                      'Scan len is in range', 'Slice thickness is in range',
+                      'Slice thickness is consistent', 'Pixel spacing is in range',
+                      'Convolutional kernel tag is present', 'Convolutional kernel is acceptable',
+                      'Axial pr. resolution is acceptable', 'Intensity intercept/slope tags are present']
 
+        checks_df = pd.DataFrame([], columns=df_columns)
+        for pat in tqdm(self):
+            checks = self.__quality_checks(*pat, qc_parameters=qc_parameters, columns=df_columns, verbosity=verbosity)
+            checks_df = checks_df.append(checks, ignore_index=True)
+        return checks_df
+
+    def __quality_checks(self, patient, path, qc_parameters, columns, verbosity):
+        scans, skipped_files = self.__read_scan(path[0])
+        scans_sorted = False
+        try:
+            scans.sort(key=lambda x: x.ImagePositionPatient[2])
+            scans_sorted = True
+        except:
+            warn('Some problems with sorting scans for pat:%s' % patient)
+        img = scans[0]
+
+        ##check scans modality
+        if qc_parameters.get('specific_modality', 0):
+            if len(qc_parameters['specific_modality']) > 0:
+                try:
+                    modality = self.__check_modality(scans, qc_parameters['specific_modality'])
+                    if verbosity:
+                        print('Modality check status:', modality)
+                except:
+                    modality = np.nan
+                    print('Cannot perform Modality check for pat: %s' % patient)
+            else:
+                raise MyException(
+                    "Please correctly specify the 'specific_modality' in parameters (e.g. 'specific_modality':'CT')")
+        else:
+            modality = '-'
+            if verbosity:
+                print("Acceptable value was not provided for the 'specific_modality', modality check was not performed ")
+
+        ##number of slices_check
+        if qc_parameters.get('scan_length_range', 0):
+            if len(qc_parameters['scan_length_range']) == 2:
+                try:
+                    if len(scans) >= qc_parameters['scan_length_range'][0] \
+                            and len(scans) <= qc_parameters['scan_length_range'][1]:
+                        slice_nr = 1
+                    else:
+                        slice_nr = 0
+                    if verbosity:
+                        print('Number of slices check status:', slice_nr)
+                except:
+                    slice_nr = np.nan
+                    print('Cannot perform slice # check for pat: %s' % patient)
+            else:
+                raise MyException("Please correctly specify the scan_length_range in parameters (e.g. 'scan_length_range':[1,50])")
+        else:
+            slice_nr = '-'
+            if verbosity:
+                print('Acceptable range was not provided for the number of slices check.')
+
+        ##pixel_spacing range check
+        if qc_parameters.get('spacing_range', 0):
+            if len(qc_parameters['spacing_range']) == 2:
+                try:
+                    ps = img.PixelSpacing
+                    if ps[0] == ps[1] and ps[0] >= qc_parameters['spacing_range'][0] and ps[0] <= qc_parameters['spacing_range'][1]:
+                        pixel_sp = 1
+                    else:
+                        pixel_sp = 0
+                    if verbosity:
+                        print('Pixel spacing in acceptable range check status:', pixel_sp)
+                except:
+                    pixel_sp = np.nan
+                    print('Cannot perform pixel spacing range check for pat: %s' % patient)
+            else:
+                raise MyException("Please correctly specify the spacing_range in parameters (e.g. 'spacing_range':[0.9,1.5])")
+        else:
+            pixel_sp = '-'
+            if verbosity:
+                print('Acceptable range was not provided for the pixel spacing range check.')
+
+        ##check axial
+        try:
+            axial = self.__check_image_axial_plane(img)
+            if verbosity:
+                print('Axial plane check status:', axial)
+        except:
+            axial = np.nan
+            print('Cannot perform axial plane check for pat: %s' % patient)
+
+        ##check rescaling constants
+        if qc_parameters.get('axial_res', 0):
+            if len(qc_parameters['axial_res']) == 2:
+                try:
+                    intercept_slope, image_shape = self.__get_pixel_values(scans,np.int8,True,qc_parameters['axial_res'])
+                    if verbosity:
+                        print('Intercept/slope check status:', intercept_slope)
+                        print('Image shape is %s check status'%qc_parameters['axial_res'], image_shape)
+                except:
+                    intercept_slope, image_shape = np.nan, np.nan
+                    print('Cannot perform Intercept/slope and image shape check for pat: %s' % patient)
+            else:
+                raise MyException("Please correctly specify the axial_res in parameters (e.g. 'axial_res':[512,512])")
+        else:
+            intercept_slope, image_shape = '-', '-'
+            if verbosity:
+                print('Acceptable range was not provided for the axial resolution, axial pr. resolution check & Intercept/slope check are not performed ')
+
+        ##check slice thickness consistency
+        if qc_parameters.get('thickness_range', 0):
+            if len(qc_parameters['thickness_range']) == 2:
+                try:
+                    slice_thickness_consistency, slice_thickness_range = self.__check_consistent_slice_thickness(scans,
+                                                                                                              thickness_range=qc_parameters['thickness_range'])
+                    if verbosity:
+                        print('Slice thickness consistency check status:', slice_thickness_consistency)
+                        print('Slice thickness in acceptable range check status:', slice_thickness_range)
+                except:
+                    slice_thickness_consistency, slice_thickness_range = np.nan, np.nan
+                    print('Cannot perform slice thickness consistency and range check for pat: %s' % patient)
+            else:
+                raise MyException("Please correctly specify the 'thickness_range' in parameters (e.g. 'thickness_range':[3,5])")
+        else:
+            slice_thickness_consistency, slice_thickness_range = '-', '-'
+            if verbosity:
+                print('Acceptable range was not provided for the thickness_range, slice thickness range check & slice thickness consistency check are not performed ')
+
+        ##check missing overlaping slices
+        try:
+            missing_overlapping_slices = self.__check_missing_overlapping_slices(scans)
+            if verbosity:
+                print('Missing/overlapping slices check status:', missing_overlapping_slices)
+        except:
+            missing_overlapping_slices = np.nan
+            print('Cannot perform missing/overlapping slice check for pat: %s' % patient)
+
+        ##check conv kernel
+        if qc_parameters.get('kernels_list', 0):
+            if len(qc_parameters['kernels_list']) >0:
+                try:
+                    conv_kern = self.__check_kernel(scans, qc_parameters['kernels_list'])
+                    conv_pres = 1
+                    if verbosity:
+                        print('Conv Kernel check status:', conv_kern)
+                except:
+                    conv_kern = np.nan
+                    conv_pres = 0
+                    print('Cannot perform conv kernel check for pat: %s' % patient)
+            else:
+                raise MyException("Please correctly specify the 'kernels_list' in parameters (e.g. 'kernels_list':['standard','lung'])")
+        else:
+            conv_kern, conv_pres = '-', '-'
+            if verbosity:
+                print("Acceptable value was not provided for the 'kernels_list', conv kernel check was not performed ")
+
+        checks = [patient, modality, axial, missing_overlapping_slices, slice_nr, slice_thickness_range,
+                  slice_thickness_consistency, pixel_sp, conv_pres, conv_kern,
+                  image_shape, intercept_slope]
+        return pd.Series(checks, index=columns)
+
+    def __check_image_axial_plane(self, img):
+        if int(img.ImageOrientationPatient[0]) and int(img.ImageOrientationPatient[4]) and not int(
+                img.ImageOrientationPatient[1]) and not int(img.ImageOrientationPatient[2]) and not int(
+                img.ImageOrientationPatient[3]) and not int(img.ImageOrientationPatient[5]):
+            return 1
+        else:
+            return 0
+
+    def __check_modality(self,scans,speciefic_mod):
+        mod_list = [str(x.Modality).lower() for x in scans]
+        if mod_list.count(speciefic_mod.lower()) == len(mod_list):
+            return 1
+        else:
+            return 0
+
+    def __check_consistent_slice_thickness(self, scans, thickness_range):
+        slice_thickness = [np.round(x.SliceThickness, 1) for x in scans]
+        if slice_thickness.count(slice_thickness[0]) == len(slice_thickness):
+            if slice_thickness[0] >= thickness_range[0] and slice_thickness[1] <= thickness_range[1]:
+                return 1, 1
+            else:
+                return 1, 0
+        else:
+            if slice_thickness[0] >= thickness_range[0] and slice_thickness[1] <= thickness_range[1]:
+                return 0, 1
+            else:
+                return 0, 0
+
+    def __check_missing_overlapping_slices(self, scans):
+        temp_spacing = []
+        scan_real_range = np.round(list(np.float(x.ImagePositionPatient[2]) for x in scans), 1)
+        for i in range(len(scan_real_range) - 1):
+            temp_spacing.append(np.round(scan_real_range[i + 1] - scan_real_range[i], 1))
+
+        if temp_spacing.count(temp_spacing[0]) == len(temp_spacing):
+            return 1
+        else:
+            return 0
+
+    def __check_kernel(self, scans, kernels=[]):
+        kernels = [x.lower() for x in kernels]
+        kernels_list = [x.ConvolutionKernel for x in scans]
+        if kernels_list.count(kernels_list[0]) == len(kernels_list) and kernels_list[0].lower() in set(kernels):
+            return 1
+        else:
+            return 0
 
     def __get_roi_id(self,rtstruct,roi):
 
@@ -291,7 +509,7 @@ class tool_box(data_set):
         mask[pol_row_coords, pol_col_coords] = 1
         return mask
 
-    def __read_scan(self,path):
+    def __read_scan(self, path):
         scan = []
         skiped_files = []
         for s in os.listdir(path):
@@ -312,26 +530,23 @@ class tool_box(data_set):
 
         return scan,skiped_files
 
-    def __get_pixel_values(self,scans,image_type):
+    def __get_pixel_values(self,scans,image_type,qa=False,image_res=[512,512]):
         try:
-            # slopes = [s.get('RescaleSlope','n') for s in scans]
-
-            # if set('n').intersection(set(slopes)):
-            #     image=[]
-            #     for s in scans:
-            #         temp_intercept = 0#s[0x040,0x9096][0][0x040,0x9224].value
-            #         temp_slope = 1#s[0x040,0x9096][0][0x040,0x9225].value
-            #         image.append(s.pixel_array*temp_slope+temp_intercept)
-            #     image = np.stack(image)
-            #     return image.astype(np.int16)
-
-            # else:    
             image = np.stack([s.pixel_array*s.RescaleSlope+s.RescaleIntercept for s in scans])
-            return image.astype(image_type)
+            if qa:
+                if image.shape[1] == image_res[0] and image.shape[2] == image_res[1]:
+                    return 1, 1
+                else:
+                    return 1, 0
+            else:
+                return image.astype(image_type)
         except:
             warn('Problems occured with rescaling intensities')
             image = np.stack([s.pixel_array for s in scans])
-            return image.astype(image_type)
+            if qa:
+                return 0, 0
+            else:
+                return image.astype(image_type)
 
     def __get_binary_mask(self,img_path,rt_structure,roi,image_type):
 
