@@ -198,6 +198,7 @@ class tool_box(data_set):
                     corr_bias_field: bool = False,
                     subcateneus_fat: bool = False, fat_value: bool = None,
                     reshape: bool = False, to_shape: np.array = None,
+                    window_filtering_params: tuple = None,
                     verbosity: bool = False, visualize: bool = False):
         '''Pre-process the images.
 
@@ -230,7 +231,7 @@ class tool_box(data_set):
             pre_processed_arr = self.__preprocessing_function(image_array, mask_array, ref_image_arr,
                                                               z_score, norm_coeff, hist_match, hist_equalize,
                                                               binning, percentile_scaling,
-                                                              corr_bias_field,
+                                                              corr_bias_field, window_filtering_params,
                                                               subcateneus_fat,
                                                               fat_value,
                                                               reshape, to_shape,
@@ -652,11 +653,11 @@ class tool_box(data_set):
         img_list = []
         filtered = orig_img.copy()
         if np.min(orig_img.flatten()) < 0:
-            filtered += np.min(orig_img.flatten())
+            filtered += np.abs(np.min(orig_img.flatten()))
         resampled = np.zeros_like(filtered)
         max_val_img = np.max(filtered.flatten())
-        step = max_val_img / bin_nr
-
+        step = max_val_img / (1.0*bin_nr)
+        print('min: ',np.min(filtered.flatten()),'max: ',np.max(filtered.flatten()),'step: ',step)
         for st in np.arange(step, max_val_img + step, step):
             resampled[(filtered <= st) & (filtered >= st - step)] = v_count
             v_count += 1
@@ -757,8 +758,22 @@ class tool_box(data_set):
 
         return img_output
 
+    def __apply_window(self, img, window_params, verbosity=False):
+        new_img = img.copy()
+        WW = window_params[0]
+        WL = window_params[1]
+        assert (WW < 2000) and (WW > 0) and (WL < 200) and (WL > -1000)
+        up_lim, low_lim = WL + WW / 2, WL - WW / 2
+        if low_lim < -1000:
+            low_lim = -1000
+        if verbosity:
+            print('Window limits ', low_lim, up_lim)
+        new_img[np.where(img < low_lim)] = low_lim
+        new_img[np.where(img > up_lim)] = up_lim
+        return new_img
+
     def __preprocessing_function(self, img, mask, ref_img, z_score, norm_coeff, hist_match, hist_equalize, binning,
-                                 percentile_scaling, corr_bias_field,
+                                 percentile_scaling, corr_bias_field, window_filtering_params,
                                  subcateneus_fat, fat_value, reshape, to_shape,
                                  verbosity, visualize):
 
@@ -786,6 +801,16 @@ class tool_box(data_set):
                 plt.figure(figsize=(12, 12))
                 plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
                 plt.title('Bias field correction')
+                plt.show()
+
+        if len(window_filtering_params) == 2:
+            img = self.__apply_window(img, window_filtering_params,verbosity)
+            if verbosity:
+                print('Window filtering applied')
+            if visualize:
+                plt.figure(figsize=(12, 12))
+                plt.imshow(img[int(len(img) / 2.), ...], cmap='bone')
+                plt.title('Window filtering')
                 plt.show()
 
         if subcateneus_fat:
