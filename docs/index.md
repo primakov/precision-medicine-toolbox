@@ -1,4 +1,5 @@
 # Welcome to *precision-medicine-toolbox* documentation!
+[![DOI](https://zenodo.org/badge/259937957.svg)](https://zenodo.org/badge/latestdoi/259937957)
 [![License](https://img.shields.io/github/license/primakov/precision-medicine-toolbox)](https://opensource.org/licenses/BSD-3-Clause)
 [![Documentation Status](https://readthedocs.org/projects/precision-medicine-toolbox/badge/?version=latest)](https://precision-medicine-toolbox.readthedocs.io/en/latest/?badge=latest)
 [![CodeFactor](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox/badge)](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox)
