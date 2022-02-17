@@ -4,8 +4,8 @@ You can clone the *precision-medicine-toolbox* repository to your computer and f
 in the *examples* folder. The *data* folder is for imaging data. 
 The scripts can be corrected accordingly.
 ## Imaging module
-How to convert DICOM into NRRD, check ROI segmentation, 
-extract the radiomic features, and explore the imaging parameters:  
+How to explore the imaging parameters, perform basic quality check for the imaging data, convert DICOM into NRRD, 
+perform basic image pre-processing, check ROI segmentation, and extract the radiomic features:  
 
 * [tutorial imaging](imaging_module.md).
 ## Features module

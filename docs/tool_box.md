@@ -8,6 +8,8 @@
         - get_jpegs
         - extract_features
         - convert_to_nrrd
+        - pre_process
+        - get_quality_checks
     rendering:
       show_root_heading: false
       show_source: false

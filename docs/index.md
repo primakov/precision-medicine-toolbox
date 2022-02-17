@@ -1,5 +1,5 @@
 # Welcome to *precision-medicine-toolbox* documentation!
-[![License](https://img.shields.io/github/license/precision-medicine-um/precision_medicine_toolbox)](https://opensource.org/licenses/BSD-3-Clause)
+[![License](https://img.shields.io/github/license/primakov/precision-medicine-toolbox)](https://opensource.org/licenses/BSD-3-Clause)
 [![Documentation Status](https://readthedocs.org/projects/precision-medicine-toolbox/badge/?version=latest)](https://precision-medicine-toolbox.readthedocs.io/en/latest/?badge=latest)
 [![CodeFactor](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox/badge)](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox)
 
@@ -8,7 +8,23 @@ This package is aimed to provide a tool to curate the imaging data and to perfor
 
 Currently, the toolbox has the following functionality:  
   
+* **Dataset exploration.** This function gets the specified metadata from the DICOM files of the dataset and allows for exploration of the diversity degree of the imaging parameters..
+* **Dataset quality check.** This function checks every scan in the dataset to be in line with the pre-defined requirements:  
+    * imaging modality is correct,  
+    * slice thickness is in the acceptable range,  
+    * number of slices is in the acceptable range,  
+    * all the slices have a target plane resolution,  
+    * in-plane pixel spacing is in the acceptable range,  
+    * reconstruction kernel for CT data is presented and is acceptable.  
 * **Conversion of DICOM to NRRD.** This function allows for the conversion of DICOM (CT or MR) dataset into volume (NRRD format) dataset. 2D data is temporarily not supported.  
+* **Basic image pre-processing.** This function performs basic image pre-processing steps, selected by the user; the following methods are available:  
+    * N4 bias field correction,  
+    * intensity rescaling, based on fat values or percentile values,  
+    * histogram matching,  
+    * intensities resampling,  
+    * histogram equalization,  
+    * Z-scoring, based on defined normalization coefficients or image-based values,  
+    * image reshaping.  
 * **Unrolling NRRD images & ROI masks into jpeg slices.** This function could be used for a quick check of the converted images or any existing NRRD/MHA dataset. It will generate the JPEG images for each ROI slice.  
 * **Extracting of radiomics features.** Feature extraction procedure using pyradiomics to obtain the radiomics features for NRRD/MHA dataset.  
 * **Basic analysis of radiomics features.** Export to Excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
@@ -69,7 +85,7 @@ Initial and main developers:
 Also you can see the list of the [contributors](https://github.com/primakov/precision-medicine-toolbox/graphs/contributors).
 ## License
 This project is licensed under the BSD-3-Clause License 
-(see the [LICENSE](https://github.com/precision-medicine-um/precision_medicine_toolbox/blob/master/LICENSE) for the details).
+(see the [LICENSE](https://github.com/primakov/precision-medicine-toolbox/blob/master/LICENSE) for the details).
 ## Acknowledgements  
 The Precision Medicine department colleagues for their support and feedback.  
 PyRadiomics for a reliable open-source tool for features extraction.  

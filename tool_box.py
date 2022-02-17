@@ -264,20 +264,20 @@ class tool_box(data_set):
                                                         'axial_res': [],
                                                         'spacing_range': [],
                                                         'kernels_list': []},
-                           verbosity: bool =False):
+                           verbosity: bool =False) -> DataFrame:
 
         '''Perform a basic quality check for the data. If one of the quality checked parameters is not passed, the correspondig check is not to be performed.
 
                 Arguments:
-                    specific_modality: Target modality of the dataset.
-                    thickness_range: Range of the acceptable slice thicknesses.
-                    scan_length_range: Range of the acceptable number of slices.
-                    axial_res: Target axial resolution.
-                    spacing_range: Range of the acceptable in-plane pixel spacing.
-                    kernels_list: List of the acceptable kernels for CT data.
+                    specific_modality str: Target modality of the dataset.
+                    thickness_range list: Range of the acceptable slice thicknesses, minimum and maximum.
+                    scan_length_range list: Range of the acceptable number of slices, minimum and maximum.
+                    axial_res list: Target axial resolution, in both dimensions.
+                    spacing_range list: Range of the acceptable in-plane pixel spacing, minimum and maximum.
+                    kernels_list list: List of the acceptable kernels for CT data.
                     verbosity: Enable log reporting.
                 Returns:
-                    DataFrame with the quality check results for each patient: '1' - check passed, '0' - check failed.
+                    DataFrame with the quality check results for each patient. If '1' - check passed, if '0' - check failed.
                 '''
         ## init dataframe, parse qa tags
         df_columns = ['Patient id', 'Modality is acceptable', 'Projection is axial',
