@@ -258,13 +258,27 @@ class tool_box(data_set):
             for key, value in params.items():
                 writer.writerow([str(str(key) + ': ' + str(value))])
 
-    def get_quality_checks(self, qc_parameters={'specific_modality': '',
-                                                'thickness_range': [],
-                                                'scan_length_range': [],
-                                                'axial_res': [],
-                                                'spacing_range': [],
-                                                'kernels_list': []},
-                                                verbosity=False):
+    def get_quality_checks(self, qc_parameters: dict = {'specific_modality': '',
+                                                        'thickness_range': [],
+                                                        'scan_length_range': [],
+                                                        'axial_res': [],
+                                                        'spacing_range': [],
+                                                        'kernels_list': []},
+                           verbosity: bool =False):
+
+        '''Perform a basic quality check for the data. If one of the quality checked parameters is not passed, the correspondig check is not to be performed.
+
+                Arguments:
+                    specific_modality: Target modality of the dataset.
+                    thickness_range: Range of the acceptable slice thicknesses.
+                    scan_length_range: Range of the acceptable number of slices.
+                    axial_res: Target axial resolution.
+                    spacing_range: Range of the acceptable in-plane pixel spacing.
+                    kernels_list: List of the acceptable kernels for CT data.
+                    verbosity: Enable log reporting.
+                Returns:
+                    DataFrame with the quality check results for each patient: '1' - check passed, '0' - check failed.
+                '''
         ## init dataframe, parse qa tags
         df_columns = ['Patient id', 'Modality is acceptable', 'Projection is axial',
                       'Complete scan (no missing/overlapping slices)',

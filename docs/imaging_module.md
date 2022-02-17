@@ -439,7 +439,7 @@ qc_params = {'specific_modality': 'ct', # target modality: CT
 
 
 ```python
-qc_dataframe = ct_dcms.get_quality_checks(qc_parameters=qc_params)
+qc_dataframe = ct_dcms.get_quality_checks(qc_params)
 ```
 
      67%|████████████████████████████████████████████████████████                            | 2/3 [00:01<00:00,  1.31it/s]
