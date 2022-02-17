@@ -50,7 +50,7 @@ Initialize the dataset:
 data_dcms = tool_box(**parameters)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.25it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.28it/s]
     
 
 Get the default metainformation from the DICOM files and print first 10:
@@ -61,7 +61,7 @@ dataset_description = data_dcms.get_dataset_description()
 dataset_description.head(10)
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:04<00:00,  1.65s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:04<00:00,  1.60s/it]
     
 
 
@@ -222,8 +222,8 @@ dataset_description = ct_dcms.get_dataset_description('CT')
 dataset_description.head(10)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.41it/s]
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.07it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.39it/s]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.13it/s]
     
 
 
@@ -442,12 +442,12 @@ qc_params = {'specific_modality': 'ct', # target modality: CT
 qc_dataframe = ct_dcms.get_quality_checks(qc_parameters=qc_params)
 ```
 
-     67%|████████████████████████████████████████████████████████                            | 2/3 [00:02<00:01,  1.35s/it]
+     67%|████████████████████████████████████████████████████████                            | 2/3 [00:01<00:00,  1.31it/s]
 
     Cannot perform conv kernel check for pat: LUNG1-002_20180526_CT_1
     
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:04<00:00,  1.39s/it]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.32it/s]
 
     Cannot perform conv kernel check for pat: LUNG1-003_20180209_CT_1
     
@@ -568,7 +568,7 @@ Initialize the dataset (originally downloaded directory with DICOM files):
 data_ct = tool_box(**parameters) 
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.34it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.38it/s]
     
 
 Run the conversion:
@@ -578,7 +578,7 @@ Run the conversion:
 data_ct.convert_to_nrrd(export_path, 'gtv')
 ```
 
-    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:06<00:00,  2.29s/it]
+    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:06<00:00,  2.28s/it]
     
 
 ## Quick check of the ROI's in the NRRD dataset
@@ -592,7 +592,7 @@ Initialize the dataset (converted NRRD files):
 data_ct_nrrd = tool_box(data_path = r'../data/converted_nrrds/', data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1502.08it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3021.11it/s]
     
 
 Run the visualization:
@@ -602,7 +602,7 @@ Run the visualization:
 data_ct_nrrd.get_jpegs(r'../data/') # the function will create 'images_quick_check' folder in the specified directory 
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [01:02<00:00, 12.56s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:55<00:00, 11.13s/it]
     
 
 Let's check one of the patients:
@@ -649,11 +649,12 @@ data_ct_nrrd = tool_box(data_path = r'../data/converted_nrrds/',
                     data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3000.22it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1501.00it/s]
     
 
 
 ```python
+sb.set(context='poster', style='white')
 data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180209_CT_2/image.nrrd',
                          save_path = '../data/nrrd_preprocessed',
                          hist_match = False,        # boolean
@@ -720,7 +721,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     20%|████████████████▊                                                                   | 1/5 [00:35<02:20, 35.07s/it]
+     20%|████████████████▊                                                                   | 1/5 [00:36<02:25, 36.47s/it]
 
     ----------------------------------------
     Original image stats:
@@ -768,7 +769,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     40%|█████████████████████████████████▌                                                  | 2/5 [01:05<01:36, 32.16s/it]
+     40%|█████████████████████████████████▌                                                  | 2/5 [01:05<01:36, 32.32s/it]
 
     ----------------------------------------
     Original image stats:
@@ -816,7 +817,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:33<01:00, 30.46s/it]
+     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:34<01:01, 30.68s/it]
 
     ----------------------------------------
     Original image stats:
@@ -864,7 +865,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:02<00:29, 29.67s/it]
+     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:02<00:29, 29.69s/it]
 
     ----------------------------------------
     Original image stats:
@@ -912,7 +913,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:31<00:00, 30.23s/it]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:31<00:00, 30.26s/it]
     
 
 ## PyRadiomics features extraction
@@ -927,7 +928,7 @@ parameters = r"example_ct_parameters.yaml"
 features = data_ct_nrrd.extract_features(parameters, loggenabled=True)
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [01:00<00:00, 12.04s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [01:00<00:00, 12.13s/it]
     
 
 Printing the features for first 3 ROIs:
