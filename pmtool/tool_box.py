@@ -6,7 +6,7 @@ s.primakov@maastrichtuniversity.nl
 """
 
 import os,re,logging
-from data_set import data_set
+from pmtool.data_set import data_set
 import pydicom
 import numpy as np
 from skimage import draw

@@ -1,6 +1,6 @@
 # Documentation for analysis_box
 
-::: analysis_box.analysis_box
+::: pmtool.analysis_box.analysis_box
     handler: python
     selection:
       members:

@@ -11,7 +11,7 @@ import scipy.stats
 from operator import le, gt
 from sklearn.metrics import auc
 import plotly.io as pio
-from features_set import features_set
+from pmtool.features_set import features_set
 
 class analysis_box(features_set):
 

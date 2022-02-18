@@ -8,7 +8,7 @@ Importing modules:
 ```python
 import os,sys
 sys.path.append(os.path.abspath(".."))
-from analysis_box import analysis_box
+from pmtool.analysis_box import analysis_box
 import pandas as pd
 ```
 
