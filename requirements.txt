@@ -16,3 +16,4 @@ scipy>=1.2.1
 plotly>=4.8.1
 mkdocstrings
 statsmodels
+opencv-python
