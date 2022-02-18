@@ -60,7 +60,7 @@ The following example illustrates how to initialize an object of a dataset class
 ```python
 import os, sys
 sys.path.append('path to precision-medicine-toolbox directory')
-from tool_box import tool_box
+from pmtool.tool_box import tool_box
 
 # set up parameters for your imaging dataset
 parameters = {'data_path': 'root directory of the imaging data',
