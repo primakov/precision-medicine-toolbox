@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/github/license/primakov/precision-medicine-toolbox)](https://opensource.org/licenses/BSD-3-Clause)
 [![Documentation Status](https://readthedocs.org/projects/precision-medicine-toolbox/badge/?version=latest)](https://precision-medicine-toolbox.readthedocs.io/en/latest/?badge=latest)
 [![CodeFactor](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox/badge)](https://www.codefactor.io/repository/github/primakov/precision-medicine-toolbox)
+![PyPI](https://img.shields.io/pypi/v/precision-medicine-toolbox)
 
 *precision-medicine-toolbox* is an open-source python package for medical imaging data preparation for data science tasks. 
 This package is aimed to provide a tool to curate the imaging data and to perform exploratory feature analysis.  
