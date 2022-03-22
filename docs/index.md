@@ -8,6 +8,9 @@
 *precision-medicine-toolbox* is an open-source python package for medical imaging data preparation for data science tasks. 
 This package is aimed to provide a tool to curate the imaging data and to perform exploratory feature analysis.  
 
+If you are using this toolbox, please, cite the [original paper](https://arxiv.org/abs/2202.13965):  
+Primakov, Sergey, Elizaveta Lavrova, Zohaib Salahuddin, Henry C. Woodruff, and Philippe Lambin. "Precision-medicine-toolbox: An open-source python package for facilitation of quantitative medical imaging and radiomics analysis." arXiv preprint arXiv:2202.13965 (2022).
+
 Currently, the toolbox has the following functionality:  
   
 * **Dataset exploration.** This function gets the specified metadata from the DICOM files of the dataset and allows for exploration of the diversity degree of the imaging parameters..
