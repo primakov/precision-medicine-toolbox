@@ -1,6 +1,6 @@
 # Description for features_set class
 
-::: pmtool.features_set.features_set
+::: pmtool.FeaturesSet.FeaturesSet
     handler: python
     rendering:
       show_root_heading: false

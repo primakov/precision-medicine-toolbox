@@ -1,6 +1,6 @@
 # Description for data_set class
 
-::: pmtool.data_set.data_set
+::: pmtool.DataSet.DataSet
     handler: python
     rendering:
       show_root_heading: false

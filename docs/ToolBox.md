@@ -1,6 +1,6 @@
 # Documentation for tool_box
 
-::: pmtool.tool_box.tool_box
+::: pmtool.ToolBox.ToolBox
     handler: python
     selection:
       members:
