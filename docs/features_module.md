@@ -7,8 +7,7 @@ Importing modules:
 
 ```python
 import os,sys
-sys.path.append(os.path.abspath(".."))
-from pmtool.analysis_box import analysis_box
+from pmtool.AnalysisBox import AnalysisBox
 import pandas as pd
 ```
 
@@ -39,7 +38,7 @@ Initialise the feature set (you will see a short summary):
 
 
 ```python
-fs = analysis_box(**parameters)
+fs = AnalysisBox(**parameters)
 ```
 
     Number of observations: 149
@@ -279,21 +278,28 @@ Visualize feature values distribution in classes for the first 12 features (will
 
 
 ```python
-fs.plot_distribution(fs._feature_column[:12])
+fs.plot_distribution(fs._feature_column[:8])
 ```
 
 Visualize mutual feature correlation coefficient (Spearman's) matrix for the first 12 features (in .html report):
 
 
 ```python
-fs.plot_correlation_matrix(fs._feature_column[:12])
+fs.plot_correlation_matrix(fs._feature_column[:8])
 ```
 
 Visualize Mann-Whitney (Bonferroni corrected) p-values for binary classes test (in .html report):
 
 
 ```python
-fs.plot_MW_p(fs._feature_column[:12])
+fs.plot_MW_p(fs._feature_column[:8])
+```
+
+Vizualize univariate ROC curves:
+
+
+```python
+fs.plot_univariate_roc(fs._feature_column[:8], auc_threshold=0.70)
 ```
 
 Calculate the basic statistics for each feature (save the values in *data/features/extracted_features_full_basic_stats.xlsx*): number of NaN, mean, std, min, max; if applicable: MW-p, univariate ROC AUC, volume correlation:
@@ -514,7 +520,7 @@ Initialise the feature set:
 
 
 ```python
-fs = analysis_box(**parameters)
+fs = AnalysisBox(**parameters)
 ```
 
     Number of observations: 149
@@ -645,14 +651,14 @@ Visualize feature values distribution in classes for the first 12 features (in .
 
 
 ```python
-fs.plot_distribution(fs._feature_column[:12])
+fs.plot_distribution(fs._feature_column[:8])
 ```
 
 Visualize feature values distribution in classes for the first 12 features only for the selected classes (in .html report):
 
 
 ```python
-fs.plot_distribution(fs._feature_column[:12], ['I', 'IIIb'])
+fs.plot_distribution(fs._feature_column[:8], ['I', 'IIIb'])
 ```
 
 Visualize mutual feature correlation coefficient (Spearman's) matrix for the first 12 features (in .html report):

@@ -7,8 +7,7 @@ Importing modules:
 
 ```python
 import os,sys
-sys.path.append(os.path.abspath(".."))
-from pmtool.tool_box import tool_box
+from pmtool.ToolBox import ToolBox
 import pandas as pd
 from pandas import DataFrame
 import matplotlib.pyplot as plt
@@ -35,7 +34,7 @@ Setting the parameters:
 
 
 ```python
-parameters = {'data_path': r'../data/dcms/', # path_to_your_DICOM_data
+parameters = {'data_path': r'../data/dcms/', # path to your DICOM data
               'data_type': 'dcm', # original data format: DICOM
               'multi_rts_per_pat': False}   # when False, it will look only for 1 rtstruct in the patient folder, 
                                             # this will speed up the process, 
@@ -47,7 +46,7 @@ Initialize the dataset:
 
 
 ```python
-data_dcms = tool_box(**parameters)
+data_dcms = ToolBox(**parameters)
 ```
 
     100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.28it/s]
@@ -217,7 +216,7 @@ Get the CT-specific metainformation from the DICOM files and print first 10:
 
 
 ```python
-ct_dcms = tool_box(**parameters)
+ct_dcms = ToolBox(**parameters)
 dataset_description = ct_dcms.get_dataset_description('CT') 
 dataset_description.head(10)
 ```
@@ -565,7 +564,7 @@ Initialize the dataset (originally downloaded directory with DICOM files):
 
 
 ```python
-data_ct = tool_box(**parameters) 
+data_ct = ToolBox(**parameters) 
 ```
 
     100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.38it/s]
@@ -589,7 +588,7 @@ Initialize the dataset (converted NRRD files):
 
 
 ```python
-data_ct_nrrd = tool_box(data_path = r'../data/converted_nrrds/', data_type='nrrd')
+data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/', data_type='nrrd')
 ```
 
     100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3021.11it/s]
@@ -645,7 +644,7 @@ Initialize the dataset (converted NRRD files):
 
 
 ```python
-data_ct_nrrd = tool_box(data_path = r'../data/converted_nrrds/',
+data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/',
                     data_type='nrrd')
 ```
 
