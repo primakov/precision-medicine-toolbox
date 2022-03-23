@@ -1,4 +1,4 @@
-# Documentation for tool_box
+# Documentation for ToolBox
 
 ::: pmtool.ToolBox.ToolBox
     handler: python

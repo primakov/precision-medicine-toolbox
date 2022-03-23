@@ -1,4 +1,4 @@
-# Documentation for analysis_box
+# Documentation for AnalysisBox
 
 ::: pmtool.AnalysisBox.AnalysisBox
     handler: python

@@ -1,4 +1,4 @@
-# Description for features_set class
+# Description for FeaturesSet class
 
 ::: pmtool.FeaturesSet.FeaturesSet
     handler: python

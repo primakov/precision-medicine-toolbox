@@ -1,4 +1,4 @@
-# Description for data_set class
+# Description for DataSet class
 
 ::: pmtool.DataSet.DataSet
     handler: python
