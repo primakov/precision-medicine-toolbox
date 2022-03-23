@@ -3,10 +3,10 @@ nav:
   - Home: index.md
   - Tutorials: tutorials.md
   - API:
-    - Imaging class: data_set.md
-    - Imaging module: tool_box.md
-    - Features class: features_set.md
-    - Features module: analysis_box.md
+    - Imaging class: DataSet.md
+    - Imaging module: ToolBox.md
+    - Features class: FeaturesSet.md
+    - Features module: AnalysisBox.md
 theme: readthedocs
 docs_dir: 'docs'
 site_dir: 'site'

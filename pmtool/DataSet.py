@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 is_in_list = lambda names_list, name: any([True for v in names_list if re.search(v, name.lower())])
 
-class data_set:
+class DataSet:
     '''This class creates imaging dataset objects.'''
 
     def __init__(self, data_path: str = None,
@@ -167,13 +167,4 @@ class data_set:
         self.index +=1
         return temp_key,temp_data
     
-    
-# parameters = {'data_path': r'', 
-#               'data_type': 'dcm',
-#               'mask_names': [],
-#               'image_only': False, 
-#               'multi_rts_per_pat': True,
-#               'image_names': ['image','volume','img','vol']}    
-    
-     
-# Data1 = data_set(**parameters)  
+

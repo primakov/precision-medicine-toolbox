@@ -20,7 +20,7 @@ from sklearn.metrics import auc
 import plotly.io as pio
 
 
-class features_set:
+class FeaturesSet:
     '''This class creates features set objects.'''
 
     def __init__(self,
@@ -175,29 +175,7 @@ class features_set:
         return None
 
 
-#parameters = {
-#    'feature_path': 'features.xlsx', # path to csv/xls file with features
-#    'outcome_path': 'NSCLC Radiomics Lung1.clinical-version3-Oct 2019.csv',
-#    'patient_column': 'Patient', # name of column with patient id
-#    'patient_in_outcome_column': 'PatientID',
-#    'outcome_column': 'gender' # name of outcome column
-#}
 
-#fs = features_set(**parameters)
-
-#fs.volume_analysis(volume_feature='original_shape_VoxelVolume')
-# parameters = {'feature_path': 'features.csv',
-#               'patient_column': 'Patient'
-#               }
-
-#fs = features_set(**parameters)
-
-# fs.plot_binary_distribution()
-# fs.plot_correlation_matrix()
-# fs.plot_MW_p()
-#fs.plot_univariate_roc()
-#fs.calculate_basic_stats(volume_feature='original_shape_MeshVolume')
-#fs.calculate_basic_stats()
 
 
 

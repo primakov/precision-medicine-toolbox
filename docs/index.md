@@ -69,14 +69,14 @@ The following example illustrates how to initialize an object of a dataset class
 ```python
 import os, sys
 sys.path.append('path to precision-medicine-toolbox directory')
-from pmtool.tool_box import tool_box
+from pmtool.ToolBox import ToolBox
 
 # set up parameters for your imaging dataset
 parameters = {'data_path': 'root directory of the imaging data',
               'data_type': 'dcm', # DICOM data
               'multi_rts_per_pat': False # looks at 1 RTStruct/patient only
               }
-my_dataset = tool_box(**parameters)
+my_dataset = ToolBox(**parameters)
 ```
 ## Contributing
 You can contribute to this package at our GitHub by:  

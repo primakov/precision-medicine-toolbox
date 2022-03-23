@@ -1,2 +1,2 @@
-from pmtool.tool_box import tool_box
-from pmtool.analysis_box import analysis_box
+from pmtool.ToolBox import ToolBox
+from pmtool.AnalysisBox import AnalysisBox

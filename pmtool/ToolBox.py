@@ -6,7 +6,7 @@ s.primakov@maastrichtuniversity.nl
 """
 
 import os,re,logging
-from pmtool.data_set import data_set
+from pmtool.DataSet import DataSet
 import pydicom
 import numpy as np
 from skimage import draw
@@ -24,9 +24,9 @@ import cv2
 class MyException(Exception):
     pass
 
-class tool_box(data_set):
+class ToolBox(DataSet):
 
-    '''This module is inherited from data_set class and allows for high-level functionality while working with the raw imaging data.'''
+    '''This module is inherited from DataSet class and allows for high-level functionality while working with the raw imaging data.'''
 
     def get_dataset_description(self, parameter_list: list =['Modality', 'SliceThickness',
                     'PixelSpacing', 'SeriesDate', 'Manufacturer']) -> DataFrame:
@@ -918,25 +918,3 @@ class tool_box(data_set):
         return img
 
 
-###Some debugs
-
-# parameters = {'data_path': r'**', 
-#               'data_type': 'dcm',
-#               'mask_names': [],
-#               'image_only': False, 
-#               'multi_rts_per_pat': True,
-#               'image_names': ['image','volume','img','vol']}      
-
-
-#Data1 = tool_box(**parameters)
-#Data1.convert_to_nrrd(r'**','all')
-#Data_MRI_nrrd = tool_box(data_path = r'**',data_type='nrrd')
-#Data_MRI_nrrd.get_jpegs(r'**')
-#parameters = r"**"
-#features = Data_MRI_nrrd.extract_features(parameters,loggenabled=True)
-
-
-#parameters = {'data_path': r'C:\Users\S.Primakov.000\Documents\GitHub\The_Dlab_toolbox\data\dcms', #path_to_your_data
-#  'data_type': 'dcm'}  
-#mri_dcms = tool_box(**parameters)
-#dataset_description = mri_dcms.get_dataset_description('MRI')

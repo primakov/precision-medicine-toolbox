@@ -11,11 +11,11 @@ import scipy.stats
 from operator import le, gt
 from sklearn.metrics import auc
 import plotly.io as pio
-from pmtool.features_set import features_set
+from pmtool.FeaturesSet import FeaturesSet
 
-class analysis_box(features_set):
+class AnalysisBox(FeaturesSet):
 
-    '''This module is inherited from features_set class and allows for preliminary statistical analysis of the numerical features.'''
+    '''This module is inherited from FeaturesSet class and allows for preliminary statistical analysis of the numerical features.'''
 
     def handle_nan(self, axis: int=1, how: str='any', mode: str='delete'):
         """Handle the missing values.
