@@ -38,6 +38,7 @@ Currently, the toolbox has the following functionality:
     * p-values (corrected) for Mann-Whitney test for features mean values in groups,
     * univariate ROC-curves for each feature,
     * volumetric analysis: volume-based precision-recall curve + features correlation with volume.
+* **Basic figures results generation**
 
 **Warning!** Not intended for clinical use!
 
