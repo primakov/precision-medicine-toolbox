@@ -113,11 +113,10 @@ class GenerateResultBox(ResultSet):
         if len(self.test_df) > 0:
             list_available_data.append("test")
         if len(self.external_df) > 0:
-            print(len(self.external_df))
             list_available_data.append("external")
         return list_available_data
 
-    def plot_roc_auc_ci(self, title, nsamples=2000):
+    def plot_roc_auc_ci(self, title, nsamples=2000,save_fig = False):
 
         curves_to_plot = self._find_available_data()
 
@@ -233,11 +232,12 @@ class GenerateResultBox(ResultSet):
 
         ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05])
         ax.legend(loc="lower right")
-        # plt.savefig(title+'.png',dpi=300)
+        if save_fig:
+            plt.savefig(title+'.png',dpi=300)
         plt.show()
-        return "done"
+        return title + " done"
 
-    def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True):
+    def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True,save_fig=False):
         sns.set(font_scale=1.4)
         if self._threshold == -1:
             self.get_optimal_threshold() #somehow doesn't update
@@ -268,17 +268,9 @@ class GenerateResultBox(ResultSet):
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
         fig.tight_layout()
-        # plt.savefig(figure_title,dpi=300)
+        if save_fig:
+            if normalize:
+                plt.savefig("normalized confusion matrices on the "+ label +class_names[0]+" vs " +class_names[1]+".png",dpi=300)
+            else:
+                plt.savefig("confusion matrices on the "+ label +class_names[0]+" vs " +class_names[1]+".png",dpi=300)
         return fig
-
-
-## test the class
-if __name__ == '__main__':
-    train_labels = [int(np.round(np.random.uniform(low=0, high=1))) for i in range(50)]
-    train_predictions = [np.random.uniform(low=0, high=1) for i in range(50)]
-    test_labels = [int(np.round(np.random.uniform(low=0, high=1))) for i in range(50)]
-    test_predictions = [np.random.uniform(low=0, high=1) for i in range(50)]
-    test = GenerateResultBox(train_labels=train_labels, train_predictions=train_predictions, test_labels=test_labels,
-                             test_predictions=test_predictions)
-    test.get_stats_with_ci("train")
-    test.print_confusion_matrix("train",["0","1"])
