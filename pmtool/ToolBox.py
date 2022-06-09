@@ -149,7 +149,7 @@ class ToolBox(DataSet):
         else:
             raise TypeError('The toolbox should be initialized with data_type = "nrrd"')
 
-    def convert_to_nrrd(self, export_path: str, region_of_interest: str = 'all', image_type = np.int16):
+    def convert_to_nrrd(self, export_path: str, region_of_interest: str = 'all', image_type=np.int16):
         '''Convert DICOM dataset to the volume (NRRD) format.
 
         Arguments:
@@ -159,34 +159,50 @@ class ToolBox(DataSet):
         '''
         if self._data_type == 'dcm':
 
-            for pat,pat_path in tqdm(self,desc='Patients converted'):
-                img_path = pat_path[0]
-                rt_path = pat_path[1]
-                try:
-                    rt_structure,roi_list = self.__get_roi(region_of_interest,rt_path)
-                except KeyboardInterrupt:
-                    raise
-                except:
-                    roi_list=[]
-                    warn('Error: ROI extraction failed for patient%s'%pat)
+            if self._image_only:
 
-                for roi in roi_list:
+                for pat, pat_path in tqdm(self, desc='Patients converted'):
+                    img_path = pat_path[0]
+                    image = self.__get_image(img_path, image_type)
+
+                    export_dir = os.path.join(export_path, 'converted_nrrds', pat)
+                    if not os.path.exists(export_dir):
+                        os.makedirs(export_dir)
+
+                    image_file_name = 'image.nrrd'
+                    sitk.WriteImage(image, os.path.join(export_dir, image_file_name))
+
+            else:
+
+                for pat, pat_path in tqdm(self, desc='Patients converted'):
+                    img_path = pat_path[0]
+                    rt_path = pat_path[1]
                     try:
-                        image,mask = self.__get_binary_mask(img_path,rt_structure,roi,image_type)
-
-                        export_dir = os.path.join(export_path,'converted_nrrds',pat)
-
-                        if not os.path.exists(export_dir):
-                            os.makedirs(export_dir)
-
-                        image_file_name='image.nrrd'
-                        mask_file_name='%s_mask.nrrd'%roi
-                        sitk.WriteImage(image,os.path.join(export_dir,image_file_name)) # save image and binary mask locally
-                        sitk.WriteImage(mask,os.path.join(export_dir,mask_file_name))
+                        rt_structure, roi_list = self.__get_roi(region_of_interest, rt_path)
                     except KeyboardInterrupt:
                         raise
                     except:
-                        warn('Patients %s ROI : %s skipped'%(pat,roi))
+                        roi_list = []
+                        warn('Error: ROI extraction failed for patient%s' % pat)
+
+                    for roi in roi_list:
+                        try:
+                            image, mask = self.__get_binary_mask(img_path, rt_structure, roi, image_type)
+
+                            export_dir = os.path.join(export_path, 'converted_nrrds', pat)
+
+                            if not os.path.exists(export_dir):
+                                os.makedirs(export_dir)
+
+                            image_file_name = 'image.nrrd'
+                            mask_file_name = '%s_mask.nrrd' % roi
+                            sitk.WriteImage(image, os.path.join(export_dir,
+                                                                image_file_name))  # save image and binary mask locally
+                            sitk.WriteImage(mask, os.path.join(export_dir, mask_file_name))
+                        except KeyboardInterrupt:
+                            raise
+                        except:
+                            warn('Patients %s ROI : %s skipped' % (pat, roi))
 
 
         else:
@@ -562,6 +578,24 @@ class ToolBox(DataSet):
                 return 0, 0
             else:
                 return image.astype(image_type)
+
+    def __get_image(self, img_path,image_type):
+
+        image, _ = self.__read_scan(img_path)
+        img_first_slice = image[0]
+        img_array = self.__get_pixel_values(image, image_type)
+
+        xres = np.array(img_first_slice.PixelSpacing[0])
+        yres = np.array(img_first_slice.PixelSpacing[1])
+        zres = np.abs(image[1].ImagePositionPatient[2] - image[0].ImagePositionPatient[2])
+        image_sitk = sitk.GetImageFromArray(img_array.astype(image_type))
+        image_sitk.SetSpacing((float(xres), float(yres), float(zres)))
+        image_sitk.SetOrigin(
+            (float(img_first_slice.ImagePositionPatient[0]), float(img_first_slice.ImagePositionPatient[1]),
+             float(img_first_slice.ImagePositionPatient[2])))
+
+
+        return image_sitk
 
     def __get_binary_mask(self,img_path,rt_structure,roi,image_type):
 
