@@ -11,15 +11,19 @@ import pickle
 import pandas as pd
 from sklearn.feature_selection import VarianceThreshold
 import matplotlib.pyplot as plt
-from ResultSet import ResultSet
+from pmtool.ResultSet import ResultSet
 import seaborn as sns
+from warnings import warn
 
 
 class GenerateResultBox(ResultSet):
-    '''This module is inherited from ResultSet class and allows for results generation.'''
+    """This module is inherited from ResultSet class and allows for results generation."""
 
     def get_optimal_threshold(self):
-        ##to obtain a good threshold based on the train dataset
+        """Get optimal threshold to convert predictions in a binary class based on the training set predictions.
+                Returns:
+                    float optimal_threshold
+                """
         fpr, tpr, thresholds = sklearn.metrics.roc_curve(self.train_df["labels"], self.train_df["predictions"])
         optimal_idx = np.argmax(tpr - fpr)
         optimal_threshold = thresholds[optimal_idx]
@@ -27,6 +31,11 @@ class GenerateResultBox(ResultSet):
         return optimal_threshold
 
     def _linking_data(self, label):
+        """
+        link the data to the correct subset
+        :param label: takes a str Label as input
+        :return: return the labels and predictions lists linked to the input label
+        """
         if label == "train":
             y_label, y_pred = self.train_df["labels"], self.train_df["predictions"]
         if label == "test":
@@ -35,17 +44,19 @@ class GenerateResultBox(ResultSet):
             y_label, y_pred = self.external_df["labels"], self.external_df["predictions"]
         return y_label, y_pred
 
-    def get_results(self, label):  # better function below to get results with confidence interval
-        ##optimal threshold: reuse the one computed on the train dataset
-        ##label: index of the dataframe, can be "external radiomics results"
-        ##returns a dataframe with auc accuracy precision recall f1-score
+    def get_results(self, label):
+        """
+        generate a dataframe containing standard results based on the labels and predictions
+        :param label: takes a str Label as input
+        :return: return the dataframe of the results
+        """
         y_label, y_pred = self._linking_data(label)
         dict_results = {}
         fpr, tpr, thresholds = sklearn.metrics.roc_curve(y_label, y_pred)
         roc_auc = sklearn.metrics.auc(fpr, tpr)
         dict_results["auc"] = roc_auc
         if self._threshold == -1:
-            self.get_optimal_threshold()
+            self.get_optimal_threshold
         y_pred_binary = (np.array(y_pred) > self.__threshold).astype(int)
         dict_results["balanced accuracy"] = [sklearn.metrics.balanced_accuracy_score(y_label, y_pred_binary)]
         dict_results["precision"] = [sklearn.metrics.precision_score(y_label, y_pred_binary)]
@@ -56,18 +67,38 @@ class GenerateResultBox(ResultSet):
         df_results.index = [label]
         return df_results
 
-    def _bootstrap(self, label, pred, f, nsamples):
+    def _bootstrap(y_label, pred, f, nsamples):
+        """
+        :param y_label: list of the labels
+        :param pred: list of the predictions
+        :param f: metric function called
+        :param nsamples: number of iterations for bootstrapping
+        :return: returns 95% confidence interval of metric in an array
+        """
         stats = []
         for b in range(nsamples):
-            random_list = np.random.randint(label.shape[0], size=label.shape[0])
-            stats.append(f(label[random_list], pred[random_list]))
+            random_list = np.random.randint(y_label.shape[0], size=y_label.shape[0])
+            stats.append(f(y_label[random_list], pred[random_list]))
         return np.percentile(stats, (2.5, 97.5))
 
     def _get_ci(self, y_label, y_pred, f, nsamples):
+        """
+        :param y_label: list of the labels
+        :param y_pred: list of the predictions
+        :param f: metric function called
+        :param nsamples: number of iterations for bootstrapping
+        :return: returns a list of string with the metric and the 95% confidence interval of the metric
+        """
         ci = self._bootstrap(y_label, y_pred, f, nsamples)
         return ["%0.2f CI [%0.2f,%0.2f]" % (f(y_label, y_pred), ci[0], ci[1])]  # doesn't compute the mean of the score
 
     def _get_ci_for_auc(self, y_label, y_pred, nsamples):
+        """
+        :param y_label: list of the labels
+        :param y_pred: list of the predictions
+        :param nsamples: number of iterations for bootstrapping
+        :return: returns a list of string with the auc and the 95% confidence interval of the auc
+        """
         auc_values = []
         tprs = []
         mean_fpr = np.linspace(0, 1, 100)
@@ -87,17 +118,18 @@ class GenerateResultBox(ResultSet):
         return ["%0.2f CI [%0.2f,%0.2f]" % (sklearn.metrics.auc(fpr, tpr), ci_auc[0], ci_auc[1])]
 
     def get_stats_with_ci(self, label, nsamples=2000):
-        ##optimal threshold: reuse the one computed on the train dataset
-        ##label: index of the dataframe, can be "external radiomics results"
-        ##returns a dataframe with auc accuracy precision recall f1-score
+        """
+        :param label: takes a str Label as input
+        :param nsamples: number of iterations for bootstrapping
+        :return: return the dataframe of the results with confidence interval
+        """
         dict_results = {}
         y_label, y_pred = self._linking_data(label)
         dict_results["auc"] = self._get_ci_for_auc(y_label, y_pred, nsamples)
         if self._threshold == -1:
-            self.get_optimal_threshold()
+            self.get_optimal_threshold
         y_pred_binary = (np.array(y_pred) > self._threshold).astype(int)
-        dict_results["accuracy"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.balanced_accuracy_score,
-                                                nsamples)
+        dict_results["balanced accuracy"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.balanced_accuracy_score,nsamples)
         dict_results["precision"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.precision_score, nsamples)
         dict_results["recall"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.recall_score, nsamples)
         dict_results["f1 score"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.f1_score, nsamples)
@@ -116,7 +148,14 @@ class GenerateResultBox(ResultSet):
             list_available_data.append("external")
         return list_available_data
 
-    def plot_roc_auc_ci(self, title, nsamples=2000,save_fig = False):
+    def plot_roc_auc_ci(self, title, nsamples=2000, save_fig=False):
+        """
+        plot the roc curve(s) of the different datasets available
+        :param title: str title of the roc curve
+        :param nsamples: number of iteration for bootstrapping
+        :param save_fig: bool savefig or not
+        :return: return fig
+        """
 
         curves_to_plot = self._find_available_data()
 
@@ -199,7 +238,7 @@ class GenerateResultBox(ResultSet):
         if "train" in curves_to_plot:
             ax.plot(mean_fpr_train, mean_tpr_train, color='darkorange',
                     label=r'Mean ROC train (AUC = %0.2f CI [%0.2f,%0.2f])' % (
-                    mean_auc_train, ci_auc_train[0], ci_auc_train[1]),
+                        mean_auc_train, ci_auc_train[0], ci_auc_train[1]),
                     lw=2, alpha=.8)
             interval_tprs_train = np.array([np.percentile(np.array(tprs_train)[:, i], (2.5, 97.5)) for i in range(100)])
             tprs_upper_train = interval_tprs_train[:, 1]
@@ -218,7 +257,7 @@ class GenerateResultBox(ResultSet):
         if "external" in curves_to_plot:
             ax.plot(mean_fpr_external, mean_tpr_external, color='green',
                     label=r'Mean ROC external (AUC = %0.2f CI [%0.2f,%0.2f])' % (
-                    mean_auc_external, ci_auc_external[0], ci_auc_external[1]),
+                        mean_auc_external, ci_auc_external[0], ci_auc_external[1]),
                     lw=2, alpha=.8)
             interval_tprs_external = np.array(
                 [np.percentile(np.array(tprs_external)[:, i], (2.5, 97.5)) for i in range(100)])
@@ -233,14 +272,14 @@ class GenerateResultBox(ResultSet):
         ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05])
         ax.legend(loc="lower right")
         if save_fig:
-            plt.savefig(title+'.png',dpi=300)
+            plt.savefig(title + '.png', dpi=300)
         plt.show()
         return title + " done"
 
-    def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True,save_fig=False):
+    def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True, save_fig=False):
         sns.set(font_scale=1.4)
         if self._threshold == -1:
-            self.get_optimal_threshold() #somehow doesn't update
+            self.get_optimal_threshold
 
         y_label, y_pred = self._linking_data(label)
         y_pred_binary = (y_pred > self._threshold).astype(int)
@@ -270,7 +309,10 @@ class GenerateResultBox(ResultSet):
         fig.tight_layout()
         if save_fig:
             if normalize:
-                plt.savefig("normalized confusion matrices on the "+ label +class_names[0]+" vs " +class_names[1]+".png",dpi=300)
+                plt.savefig(
+                    "normalized confusion matrices on the " + label + class_names[0] + " vs " + class_names[1] + ".png",
+                    dpi=300)
             else:
-                plt.savefig("confusion matrices on the "+ label +class_names[0]+" vs " +class_names[1]+".png",dpi=300)
+                plt.savefig("confusion matrices on the " + label + class_names[0] + " vs " + class_names[1] + ".png",
+                            dpi=300)
         return fig
