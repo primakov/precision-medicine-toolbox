@@ -11,7 +11,7 @@ import pickle
 import pandas as pd
 from sklearn.feature_selection import VarianceThreshold
 import matplotlib.pyplot as plt
-from pmtool.ResultSet import ResultSet
+from ResultSet import ResultSet
 import seaborn as sns
 from warnings import warn
 
@@ -37,11 +37,11 @@ class GenerateResultBox(ResultSet):
         :return: return the labels and predictions lists linked to the input label
         """
         if label == "train":
-            y_label, y_pred = self.train_df["labels"], self.train_df["predictions"]
+            y_label, y_pred = self.train_df["labels"].values, self.train_df["predictions"].values
         if label == "test":
-            y_label, y_pred = self.test_df["labels"], self.test_df["predictions"]
+            y_label, y_pred = self.test_df["labels"].values, self.test_df["predictions"].values
         if label == "external":
-            y_label, y_pred = self.external_df["labels"], self.external_df["predictions"]
+            y_label, y_pred = self.external_df["labels"].values, self.external_df["predictions"].values
         return y_label, y_pred
 
     def get_results(self, label):
@@ -56,8 +56,8 @@ class GenerateResultBox(ResultSet):
         roc_auc = sklearn.metrics.auc(fpr, tpr)
         dict_results["auc"] = roc_auc
         if self._threshold == -1:
-            self.get_optimal_threshold
-        y_pred_binary = (np.array(y_pred) > self.__threshold).astype(int)
+            self.get_optimal_threshold()
+        y_pred_binary = (np.array(y_pred) > self._threshold).astype(int)
         dict_results["balanced accuracy"] = [sklearn.metrics.balanced_accuracy_score(y_label, y_pred_binary)]
         dict_results["precision"] = [sklearn.metrics.precision_score(y_label, y_pred_binary)]
         dict_results["recall"] = [sklearn.metrics.recall_score(y_label, y_pred_binary)]
@@ -67,7 +67,7 @@ class GenerateResultBox(ResultSet):
         df_results.index = [label]
         return df_results
 
-    def _bootstrap(y_label, pred, f, nsamples):
+    def _bootstrap(self,y_label, pred, f, nsamples):
         """
         :param y_label: list of the labels
         :param pred: list of the predictions
@@ -127,7 +127,7 @@ class GenerateResultBox(ResultSet):
         y_label, y_pred = self._linking_data(label)
         dict_results["auc"] = self._get_ci_for_auc(y_label, y_pred, nsamples)
         if self._threshold == -1:
-            self.get_optimal_threshold
+            self.get_optimal_threshold()
         y_pred_binary = (np.array(y_pred) > self._threshold).astype(int)
         dict_results["balanced accuracy"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.balanced_accuracy_score,nsamples)
         dict_results["precision"] = self._get_ci(y_label, y_pred_binary, sklearn.metrics.precision_score, nsamples)
@@ -279,8 +279,7 @@ class GenerateResultBox(ResultSet):
     def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True, save_fig=False):
         sns.set(font_scale=1.4)
         if self._threshold == -1:
-            self.get_optimal_threshold
-
+            self.get_optimal_threshold()
         y_label, y_pred = self._linking_data(label)
         y_pred_binary = (y_pred > self._threshold).astype(int)
         confusion_matrix = sklearn.metrics.confusion_matrix(y_label, y_pred_binary)
@@ -310,9 +309,9 @@ class GenerateResultBox(ResultSet):
         if save_fig:
             if normalize:
                 plt.savefig(
-                    "normalized confusion matrices on the " + label + class_names[0] + " vs " + class_names[1] + ".png",
+                    "normalized confusion matrices on the " + label + " " + class_names[0] + " vs " + class_names[1] + " .png",
                     dpi=300)
             else:
-                plt.savefig("confusion matrices on the " + label + class_names[0] + " vs " + class_names[1] + ".png",
+                plt.savefig("confusion matrices on the " + label + " " + class_names[0] + " vs " + class_names[1] + " .png",
                             dpi=300)
         return fig
