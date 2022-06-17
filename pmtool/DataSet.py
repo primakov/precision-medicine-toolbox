@@ -107,7 +107,7 @@ class DataSet:
                                     pass
                                 else:
                                     datafile = os.path.dirname(os.path.abspath(dfile))
-                                    rts_name = rt[:-4].split(os.sep)[-2]  # +rt[:-4].split('\\')[-2]
+                                    rts_name = rt[:-4].split(os.sep)[-2]  # +rt[:-4].split(os.sep)[-2]
                                     self._patient_dict[patient + '_' + rts_name[-15:]] = [datafile, rt]
                                     break
                 else:

@@ -79,7 +79,7 @@ class ToolBox(DataSet):
                     temp_image_array = sitk.GetArrayFromImage(temp_data)
                     temp_mask_array = sitk.GetArrayFromImage(temp_mask)
 
-                    directory = os.path.join(export_path,'images_quick_check',pat,path[1][:-5].split('\\')[-1])
+                    directory = os.path.join(export_path,'images_quick_check',pat,path[1][:-5].split(os.sep)[-1])
                     z_dist = np.sum(temp_mask_array,axis = (1,2))
                     z_ind = np.where(z_dist!=0)[0]
 
@@ -136,7 +136,7 @@ class ToolBox(DataSet):
                     pat_features = extractor.execute(temp_data, temp_mask)
 
                     if pat_features['diagnostics_Image-original_Hash'] != '':
-                        pat_features.update({'Patient':pat,'ROI':path[1].split('\\')[-1][:-5]})
+                        pat_features.update({'Patient':pat,'ROI':path[1].split(os.sep)[-1][:-5]})
                         feat_dictionary[key_number] = pat_features
                         key_number+=1
 
