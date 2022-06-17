@@ -57,7 +57,9 @@ class ToolBox(DataSet):
             for pat,path in tqdm(self, desc='Patients processed'):
                 image,_ = self.__read_scan(path[0])
                 for i,temp_slice in enumerate(image):
-                    dataset_stats = dataset_stats.append(pd.Series([pat,str(i),*[self.__val_check(temp_slice,x) for x in params_list]],index = ['patient','slice#',*params_list]),ignore_index=True)
+                    dataset_stats = dataset_stats.append(pd.Series([pat,str(i),*[self.__val_check(temp_slice,x) for x in params_list]],
+                                                                   index = ['patient','slice#',*params_list]),
+                                                         ignore_index=True)
 
             return dataset_stats
         else:
