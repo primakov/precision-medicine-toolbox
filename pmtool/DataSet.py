@@ -65,11 +65,11 @@ class DataSet:
             
                 for mask_name in self.__mask_names:         
                     for file in temp_files:
-                        if is_in_list(self.__image_names,file.split('\\')[-1][:-5]):
+                        if is_in_list(self.__image_names,file.split(os.sep)[-1][:-5]):
                             if not self._image_only:
                                 for mfile in temp_files:
                                     if re.search(mask_name.lower(),mfile.lower()):
-                                        self._patient_dict[str(patient+'_'+ mfile.split('\\')[-1][:-5])]=[file,mfile] #[-20:-5]
+                                        self._patient_dict[str(patient+'_'+ mfile.split(os.sep)[-1][:-5])]=[file,mfile] #[-20:-5]
                             else:
                                 self._patient_dict[str(patient)]=[file]    
             
@@ -107,7 +107,7 @@ class DataSet:
                                     pass
                                 else:
                                     datafile = os.path.dirname(os.path.abspath(dfile))
-                                    rts_name = rt[:-4].split('\\')[-2]  # +rt[:-4].split('\\')[-2]
+                                    rts_name = rt[:-4].split(os.sep)[-2]  # +rt[:-4].split(os.sep)[-2]
                                     self._patient_dict[patient + '_' + rts_name[-15:]] = [datafile, rt]
                                     break
                 else:
@@ -128,7 +128,7 @@ class DataSet:
                                                 warn('StudyInstanceUID doesnt match!')
 
                                             datafile = os.path.dirname(os.path.abspath(dfile))
-                                            rts_name = structfile[:-4].split('\\')[-1]
+                                            rts_name = structfile[:-4].split(os.sep)[-1]
                                             self._patient_dict[patient + '_' + rts_name[-15:]] = [datafile, structfile]
                                             break
 
