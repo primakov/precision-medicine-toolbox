@@ -17,3 +17,4 @@ plotly>=4.8.1
 mkdocstrings
 statsmodels
 opencv-python
+seaborn
