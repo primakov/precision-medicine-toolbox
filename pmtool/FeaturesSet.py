@@ -166,8 +166,8 @@ class FeaturesSet:
             self._class_label = pd.unique(np.array(list(self._feature_outcome_dataframe[self._outcome_column])))
             self._class_label.sort()
             data_balance = []
-            for l in self._class_label:
-                data_balance.append(np.sum(np.array(list(self._outcome)) == l)/len(self._outcome))
+            for label_name in self._class_label:
+                data_balance.append(np.sum(np.array(list(self._outcome)) == label_name)/len(self._outcome))
 
         print('Number of observations: {}\nClass labels: {}\nClasses balance: {}'.format(len(self._outcome),
                                                                                   self._class_label,

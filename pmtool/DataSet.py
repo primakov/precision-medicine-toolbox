@@ -143,7 +143,7 @@ class DataSet:
 
                         except KeyboardInterrupt:
                             raise
-                        except:
+                        except Exception:
                             warn('Some problems have occured with the file: %s' % file)
 
                         if not self.__multi_rts_per_pat and dict_length - len(self._patient_dict):

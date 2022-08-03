@@ -96,7 +96,7 @@ class ToolBox(DataSet):
                         plt.contour(temp_mask_array[j,...],colors = 'red',linewidths = 2)#,alpha=0.7)
                         plt.savefig(os.path.join(directory,'slice #%d'%j),bbox_inches='tight')
                         plt.close()
-                except:
+                except Exception:
                     warn('Something wrong with %s'%pat)
 
         else:
@@ -142,7 +142,7 @@ class ToolBox(DataSet):
 
                 except KeyboardInterrupt:
                     raise
-                except:
+                except Exception:
                     warn('region : %s skipped'%pat)
 
             output_features = DataFrame.from_dict(feat_dictionary).T
@@ -183,7 +183,7 @@ class ToolBox(DataSet):
                         rt_structure, roi_list = self.__get_roi(region_of_interest, rt_path)
                     except KeyboardInterrupt:
                         raise
-                    except:
+                    except Exception:
                         roi_list = []
                         warn('Error: ROI extraction failed for patient%s' % pat)
 
@@ -203,7 +203,7 @@ class ToolBox(DataSet):
                             sitk.WriteImage(mask, os.path.join(export_dir, mask_file_name))
                         except KeyboardInterrupt:
                             raise
-                        except:
+                        except Exception:
                             warn('Patients %s ROI : %s skipped' % (pat, roi))
 
 
@@ -317,7 +317,7 @@ class ToolBox(DataSet):
         try:
             scans.sort(key=lambda x: x.ImagePositionPatient[2])
             scans_sorted = True
-        except:
+        except Exception:
             warn('Some problems with sorting scans for pat:%s' % patient)
         img = scans[0]
 
@@ -328,7 +328,7 @@ class ToolBox(DataSet):
                     modality = self.__check_modality(scans, qc_parameters['specific_modality'])
                     if verbosity:
                         print('Modality check status:', modality)
-                except:
+                except Exception:
                     modality = np.nan
                     print('Cannot perform Modality check for pat: %s' % patient)
             else:
@@ -350,7 +350,7 @@ class ToolBox(DataSet):
                         slice_nr = 0
                     if verbosity:
                         print('Number of slices check status:', slice_nr)
-                except:
+                except Exception:
                     slice_nr = np.nan
                     print('Cannot perform slice # check for pat: %s' % patient)
             else:
@@ -371,7 +371,7 @@ class ToolBox(DataSet):
                         pixel_sp = 0
                     if verbosity:
                         print('Pixel spacing in acceptable range check status:', pixel_sp)
-                except:
+                except Exception:
                     pixel_sp = np.nan
                     print('Cannot perform pixel spacing range check for pat: %s' % patient)
             else:
@@ -386,7 +386,7 @@ class ToolBox(DataSet):
             axial = self.__check_image_axial_plane(img)
             if verbosity:
                 print('Axial plane check status:', axial)
-        except:
+        except Exception:
             axial = np.nan
             print('Cannot perform axial plane check for pat: %s' % patient)
 
@@ -398,7 +398,7 @@ class ToolBox(DataSet):
                     if verbosity:
                         print('Intercept/slope check status:', intercept_slope)
                         print('Image shape is %s check status'%qc_parameters['axial_res'], image_shape)
-                except:
+                except Exception:
                     intercept_slope, image_shape = np.nan, np.nan
                     print('Cannot perform Intercept/slope and image shape check for pat: %s' % patient)
             else:
@@ -417,7 +417,7 @@ class ToolBox(DataSet):
                     if verbosity:
                         print('Slice thickness consistency check status:', slice_thickness_consistency)
                         print('Slice thickness in acceptable range check status:', slice_thickness_range)
-                except:
+                except Exception:
                     slice_thickness_consistency, slice_thickness_range = np.nan, np.nan
                     print('Cannot perform slice thickness consistency and range check for pat: %s' % patient)
             else:
@@ -432,7 +432,7 @@ class ToolBox(DataSet):
             missing_overlapping_slices = self.__check_missing_overlapping_slices(scans)
             if verbosity:
                 print('Missing/overlapping slices check status:', missing_overlapping_slices)
-        except:
+        except Exception:
             missing_overlapping_slices = np.nan
             print('Cannot perform missing/overlapping slice check for pat: %s' % patient)
 
@@ -444,7 +444,7 @@ class ToolBox(DataSet):
                     conv_pres = 1
                     if verbosity:
                         print('Conv Kernel check status:', conv_kern)
-                except:
+                except Exception:
                     conv_kern = np.nan
                     conv_pres = 0
                     print('Cannot perform conv kernel check for pat: %s' % patient)
@@ -553,12 +553,12 @@ class ToolBox(DataSet):
                 scan.append(temp_file)
                 if (temp_mod == 'RTSTRUCT') or (temp_mod == 'RTPLAN') or (temp_mod == 'RTDOSE'):
                     scan.remove(temp_file)
-            except:
+            except Exception:
                 skiped_files.append(s)
 
         try:
             scan.sort(key = lambda x: x.ImagePositionPatient[2])
-        except:
+        except Exception:
             warn('Some problems with sorting scans')
 
         return scan,skiped_files
@@ -573,7 +573,7 @@ class ToolBox(DataSet):
                     return 1, 0
             else:
                 return image.astype(image_type)
-        except:
+        except Exception:
             warn('Problems occured with rescaling intensities')
             image = np.stack([s.pixel_array for s in scans])
             if qa:
@@ -681,7 +681,7 @@ class ToolBox(DataSet):
                 return 'NaN'
             else:
                 return val
-        except:
+        except Exception:
             return 'NaN'
 
     def __normalize_image_zscore(self, image, norm_coeff):  ##Zscore whole image
