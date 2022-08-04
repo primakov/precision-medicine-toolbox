@@ -11,7 +11,7 @@ from warnings import warn
 
 
 def list_error(temp):
-    """return error if the object format is not list"""
+    """Return error if the object format is not list."""
     if type(temp) is list:
         return temp
     else:
@@ -31,13 +31,14 @@ class ResultSet:
                  ):
 
         """Initialise a result object.
+
         Arguments:
-            train_labels: labels used for training a model
-            train_predictions: output predictions on the training dataset of the model between 0 and 1
-            test_labels: ground truth of the test dataset
-            test_predictions: output predictions on the testing dataset of the model between 0 and 1
-            external_labels:ground truth of the external dataset
-            external_predictions:output predictions on the external dataset of the model between 0 and 1
+            train_labels: Labels used for training a model.
+            train_predictions: Output predictions on the training dataset of the model between 0 and 1.
+            test_labels: Ground truth of the test dataset.
+            test_predictions: Output predictions on the testing dataset of the model between 0 and 1.
+            external_labels: Ground truth of the external dataset.
+            external_predictions: Output predictions on the external dataset of the model between 0 and 1.
         """
         np.random.seed(32)
         self._train_labels = list_error(train_labels)
@@ -57,9 +58,10 @@ class ResultSet:
 
         self.__create_dataframes()
 
+
     def __create_dataframes(self):
 
-        """transform the lists of labels and predictions into dataframes """
+        """Transform the lists of labels and predictions into dataframes."""
 
         if len(self._train_labels) and len(self._train_labels) == len(self._train_predictions):
             self.train_df = pd.DataFrame({"labels": self._train_labels, "predictions": self._train_predictions})

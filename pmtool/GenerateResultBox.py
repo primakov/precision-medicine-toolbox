@@ -21,9 +21,11 @@ class GenerateResultBox(ResultSet):
 
     def get_optimal_threshold(self):
         """Get optimal threshold to convert predictions in a binary class based on the training set predictions.
-                Returns:
-                    float optimal_threshold
-                """
+
+        Returns:
+            An optimal threshold value.
+        """
+
         fpr, tpr, thresholds = sklearn.metrics.roc_curve(self.train_df["labels"], self.train_df["predictions"])
         optimal_idx = np.argmax(tpr - fpr)
         optimal_threshold = thresholds[optimal_idx]
@@ -44,11 +46,11 @@ class GenerateResultBox(ResultSet):
             y_label, y_pred = self.external_df["labels"].values, self.external_df["predictions"].values
         return y_label, y_pred
 
-    def get_results(self, label):
+    def get_results(self, label: str = None):
         """
-        generate a dataframe containing standard results based on the labels and predictions
-        :param label: takes a str Label as input
-        :return: return the dataframe of the results
+        Generate a dataframe containing standard results based on the labels and predictions.
+        :param label: Takes a str Label as input.
+        :return: Returns the dataframe of the results.
         """
         y_label, y_pred = self._linking_data(label)
         dict_results = {}
@@ -117,11 +119,12 @@ class GenerateResultBox(ResultSet):
         fpr, tpr, thresholds = sklearn.metrics.roc_curve(y_label, y_pred)
         return ["%0.2f CI [%0.2f,%0.2f]" % (sklearn.metrics.auc(fpr, tpr), ci_auc[0], ci_auc[1])]
 
-    def get_stats_with_ci(self, label, nsamples=2000):
+    def get_stats_with_ci(self, label: str = None, nsamples: int = 2000):
         """
-        :param label: takes a str Label as input
-        :param nsamples: number of iterations for bootstrapping
-        :return: return the dataframe of the results with confidence interval
+        Classification report with confidence intervals.
+        :param label: Takes a Label as an input.
+        :param nsamples: Number of iterations for bootstrapping.
+        :return: Return the dataframe of the results with confidence interval.
         """
         dict_results = {}
         y_label, y_pred = self._linking_data(label)
@@ -148,13 +151,13 @@ class GenerateResultBox(ResultSet):
             list_available_data.append("external")
         return list_available_data
 
-    def plot_roc_auc_ci(self, title, nsamples=2000, save_fig=False):
+    def plot_roc_auc_ci(self, title: str = '', nsamples: int = 2000, save_fig: bool = False):
         """
-        plot the roc curve(s) of the different datasets available
-        :param title: str title of the roc curve
-        :param nsamples: number of iteration for bootstrapping
-        :param save_fig: bool savefig or not
-        :return: return fig
+        Plot the roc curve(s) of the different datasets available.
+        :param title: Title of the roc curve.
+        :param nsamples: Number of iteration for bootstrapping.
+        :param save_fig: Enable/disable saving a figure.
+        :return: Return figure.
         """
 
         curves_to_plot = self._find_available_data()
@@ -180,7 +183,7 @@ class GenerateResultBox(ResultSet):
             mean_tpr_train = np.mean(tprs_train, axis=0)
             mean_tpr_train[-1] = 1.0
             mean_auc_train = sklearn.metrics.auc(mean_fpr_train,
-                                                 mean_tpr_train)  # does mean auc makes sense or should it be from the overall predictions?
+                                                 mean_tpr_train)
             ci_auc_train = np.percentile(auc_values_train, (2.5, 97.5))
 
         if "external" in curves_to_plot:
@@ -276,7 +279,17 @@ class GenerateResultBox(ResultSet):
         plt.show()
         return title + " done"
 
-    def print_confusion_matrix(self, label, class_names, figsize=(6, 5), fontsize=14, normalize=True, save_fig=False):
+    def print_confusion_matrix(self, label: str = None, class_names: list = None,
+                               figsize = (6, 5), fontsize: int = 14, normalize: bool = True, save_fig: bool = False):
+        """
+        Print confusion matrix.
+        :param label: Takes a label as an input.
+        :param class_names: Names of the classes.
+        :param figsize: Parameter to set a size of a figure.
+        :param fontsize: Parameter to set size of font.
+        :param normalize: Enable/disable confusion matrix normalization.
+        :param save_fig: Enable/disable saving the figure.
+        """
         sns.set(font_scale=1.4)
         if self._threshold == -1:
             self.get_optimal_threshold()
