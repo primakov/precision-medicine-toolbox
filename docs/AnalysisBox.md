@@ -7,6 +7,7 @@
         - handle_nan
         - handle_constant
         - plot_distribution
+        - normality_check
         - plot_correlation_matrix
         - plot_MW_p
         - plot_univariate_roc

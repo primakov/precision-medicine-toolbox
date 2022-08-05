@@ -7,6 +7,8 @@ nav:
     - Imaging module: ToolBox.md
     - Features class: FeaturesSet.md
     - Features module: AnalysisBox.md
+    - Classification result class: ResultSet.md
+    - Classification result module: GenerateResultBox.md
 theme: readthedocs
 docs_dir: 'docs'
 site_dir: 'site'

@@ -69,13 +69,16 @@ class AnalysisBox(FeaturesSet):
 
         return None
 
-    def normality_check(self, features_to_plot: list=[], p_thresh: float = 0.05):
+    def normality_check(self, features_to_plot: list=[], p_thresh: float = 0.05) -> list:
         """
         Perform Shapiro-Wilcoxon normality check for all the features.
 
-        :param features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
-        :param p_thresh: Shapiro-Wilcoxon test p-value.
-        :return: List of the features distributed normally.
+        Arguments:
+            features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
+            p_thresh: Shapiro-Wilk test p-value.
+
+        Returns:
+            List of the features with normal distribution.
         """
 
         if not features_to_plot:
@@ -436,7 +439,7 @@ class AnalysisBox(FeaturesSet):
         return None
 
     def calculate_basic_stats(self, volume_feature: str=''):
-        """Calculate basic statistical scores (such as: number of missing values, mean, std, min, max, Mann-Whitney test p-values for binary classes, univariate ROC AUC for binary classes, Spearman's correlation with volume if volumetric feature name is sent to function) for each feature and save it to .csv file.
+        """Calculate basic statistical scores (such as: number of missing values, mean, std, min, max, Mann-Whitney test p-values for binary classes, univariate ROC AUC for binary classes, Spearman's correlation with volume if volumetric feature name is sent to function, Shapiro-Wilk test p-values) for each feature and save it to .csv file.
 
         Arguments:
             volume_feature: Name of the feature, which is considered as volume.

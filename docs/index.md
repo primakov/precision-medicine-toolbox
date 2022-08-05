@@ -34,10 +34,14 @@ Currently, the toolbox has the following functionality:
 * **Extracting of radiomics features.** Feature extraction procedure using pyradiomics to obtain the radiomics features for NRRD/MHA dataset.  
 * **Basic analysis of radiomics features.** Export to Excel file of features basic statistics and statistical tests values and visualization (in .html report) of:  
     * features values distributions in binary classes,
+    * Shapiro-Wilk test for normality check,
     * features mutual correlation (Spearman) matrix,
     * p-values (corrected) for Mann-Whitney test for features mean values in groups,
     * univariate ROC-curves for each feature,
     * volumetric analysis: volume-based precision-recall curve + features correlation with volume.
+* **Binary classification metrics reporting.** Given true labels and predicted probabilities, this function performs:
+    * classification metrics reporting,
+    * confusion matrices and ROC curves plotting.
 
 **Warning!** Not intended for clinical use!
 

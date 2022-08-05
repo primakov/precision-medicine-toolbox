@@ -14,13 +14,16 @@ import matplotlib.pyplot as plt
 from pmtool.ResultSet import ResultSet
 import seaborn as sns
 from warnings import warn
+from pandas import DataFrame
+from matplotlib.figure import Figure
 
 
 class GenerateResultBox(ResultSet):
     """This module is inherited from ResultSet class and allows for results generation."""
 
-    def get_optimal_threshold(self):
-        """Get optimal threshold to convert predictions in a binary class based on the training set predictions.
+    def get_optimal_threshold(self) -> float:
+        """
+        Get optimal threshold to convert predictions in a binary class based on the training set predictions.
 
         Returns:
             An optimal threshold value.
@@ -32,12 +35,17 @@ class GenerateResultBox(ResultSet):
         self._threshold = optimal_threshold
         return optimal_threshold
 
-    def _linking_data(self, label):
+    def _linking_data(self, label) -> list:
         """
-        link the data to the correct subset
-        :param label: takes a str Label as input
-        :return: return the labels and predictions lists linked to the input label
+        link the data to the correct subset.
+
+        Arguments:
+            label: Takes a str Label as input.
+
+        Returns:
+            label and prediction lists linked to the input label.
         """
+
         if label == "train":
             y_label, y_pred = self.train_df["labels"].values, self.train_df["predictions"].values
         if label == "test":
@@ -46,11 +54,15 @@ class GenerateResultBox(ResultSet):
             y_label, y_pred = self.external_df["labels"].values, self.external_df["predictions"].values
         return y_label, y_pred
 
-    def get_results(self, label: str = None):
+    def get_results(self, label: str = None) -> DataFrame:
         """
         Generate a dataframe containing standard results based on the labels and predictions.
-        :param label: Takes a str Label as input.
-        :return: Returns the dataframe of the results.
+
+        Arguments:
+            label: Takes a str Label as input.
+
+        Returns:
+             The dataframe of the results.
         """
         y_label, y_pred = self._linking_data(label)
         dict_results = {}
@@ -71,11 +83,14 @@ class GenerateResultBox(ResultSet):
 
     def _bootstrap(self,y_label, pred, f, nsamples):
         """
-        :param y_label: list of the labels
-        :param pred: list of the predictions
-        :param f: metric function called
-        :param nsamples: number of iterations for bootstrapping
-        :return: returns 95% confidence interval of metric in an array
+        Arguments:
+            y_label: list of the labels.
+            pred: list of the predictions.
+            f: metric function called.
+            nsamples: number of iterations for bootstrapping.
+
+        Returns:
+             95% confidence interval of metric in an array.
         """
         stats = []
         for b in range(nsamples):
@@ -85,21 +100,25 @@ class GenerateResultBox(ResultSet):
 
     def _get_ci(self, y_label, y_pred, f, nsamples):
         """
-        :param y_label: list of the labels
-        :param y_pred: list of the predictions
-        :param f: metric function called
-        :param nsamples: number of iterations for bootstrapping
-        :return: returns a list of string with the metric and the 95% confidence interval of the metric
+        Arguments:
+            y_label: list of the labels.
+            y_pred: list of the predictions.
+            f: metric function called.
+            nsamples: number of iterations for bootstrapping.
+        Returns:
+            A list of string with the metric and the 95% confidence interval of the metric.
         """
         ci = self._bootstrap(y_label, y_pred, f, nsamples)
         return ["%0.2f CI [%0.2f,%0.2f]" % (f(y_label, y_pred), ci[0], ci[1])]  # doesn't compute the mean of the score
 
     def _get_ci_for_auc(self, y_label, y_pred, nsamples):
         """
-        :param y_label: list of the labels
-        :param y_pred: list of the predictions
-        :param nsamples: number of iterations for bootstrapping
-        :return: returns a list of string with the auc and the 95% confidence interval of the auc
+        Arguments:
+            y_label: list of the labels.
+            y_pred: list of the predictions.
+            nsamples: number of iterations for bootstrapping.
+        Returns:
+            A list of string with the AUC and the 95% confidence interval of the AUC.
         """
         auc_values = []
         tprs = []
@@ -119,12 +138,15 @@ class GenerateResultBox(ResultSet):
         fpr, tpr, thresholds = sklearn.metrics.roc_curve(y_label, y_pred)
         return ["%0.2f CI [%0.2f,%0.2f]" % (sklearn.metrics.auc(fpr, tpr), ci_auc[0], ci_auc[1])]
 
-    def get_stats_with_ci(self, label: str = None, nsamples: int = 2000):
+    def get_stats_with_ci(self, label: str = None, nsamples: int = 2000) -> DataFrame:
         """
         Classification report with confidence intervals.
-        :param label: Takes a Label as an input.
-        :param nsamples: Number of iterations for bootstrapping.
-        :return: Return the dataframe of the results with confidence interval.
+
+        Arguments:
+            label: Takes a Label as an input.
+            nsamples: Number of iterations for bootstrapping.
+        Returns:
+             The dataframe of the results with confidence interval.
         """
         dict_results = {}
         y_label, y_pred = self._linking_data(label)
@@ -151,13 +173,17 @@ class GenerateResultBox(ResultSet):
             list_available_data.append("external")
         return list_available_data
 
-    def plot_roc_auc_ci(self, title: str = '', nsamples: int = 2000, save_fig: bool = False):
+    def plot_roc_auc_ci(self, title: str = '', nsamples: int = 2000, save_fig: bool = False) -> str:
         """
         Plot the roc curve(s) of the different datasets available.
-        :param title: Title of the roc curve.
-        :param nsamples: Number of iteration for bootstrapping.
-        :param save_fig: Enable/disable saving a figure.
-        :return: Return figure.
+
+        Arguments:
+            title: Title of the roc curve.
+            nsamples: Number of iteration for bootstrapping.
+            save_fig: Enable/disable saving a figure.
+
+        Returns:
+            Figure.
         """
 
         curves_to_plot = self._find_available_data()
@@ -277,18 +303,25 @@ class GenerateResultBox(ResultSet):
         if save_fig:
             plt.savefig(title + '.png', dpi=300)
         plt.show()
+
         return title + " done"
 
     def print_confusion_matrix(self, label: str = None, class_names: list = None,
-                               figsize = (6, 5), fontsize: int = 14, normalize: bool = True, save_fig: bool = False):
+                               figsize = (6, 5), fontsize: int = 14, normalize: bool = True,
+                               save_fig: bool = False) -> Figure:
         """
         Print confusion matrix.
-        :param label: Takes a label as an input.
-        :param class_names: Names of the classes.
-        :param figsize: Parameter to set a size of a figure.
-        :param fontsize: Parameter to set size of font.
-        :param normalize: Enable/disable confusion matrix normalization.
-        :param save_fig: Enable/disable saving the figure.
+
+        Arguments:
+            label: Takes a label as an input.
+            class_names: Names of the classes.
+            figsize: Parameter to set a size of a figure.
+            fontsize: Parameter to set size of font.
+            normalize: Enable/disable confusion matrix normalization.
+            save_fig: Enable/disable saving the figure.
+
+        Returns:
+            Confusion matrix.
         """
         sns.set(font_scale=1.4)
         if self._threshold == -1:
