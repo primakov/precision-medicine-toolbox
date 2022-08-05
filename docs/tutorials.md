@@ -16,6 +16,11 @@ check Mann-Whitney U-test p-values, plot univariate ROC
 and save all the scores:
 
 * [tutorial features](features_module.md).
+## Results module
+How to get the formatted classification metrics with confidence intervals, 
+plot confusion matrices and ROC curves: 
+
+* [tutorial results](results_module.md).
 ## Suggestions
 If you are feeling a feature is not illustrated in the tutorials above, 
 don't hesitate to suggest/contribute.

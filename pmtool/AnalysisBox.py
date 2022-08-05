@@ -14,6 +14,7 @@ from sklearn.metrics import auc
 import plotly.io as pio
 from pmtool.FeaturesSet import FeaturesSet
 
+
 class AnalysisBox(FeaturesSet):
 
     '''This module is inherited from FeaturesSet class and allows for preliminary statistical analysis of the numerical features.'''
@@ -67,6 +68,32 @@ class AnalysisBox(FeaturesSet):
                                                                                          data_balance))
 
         return None
+
+    def normality_check(self, features_to_plot: list=[], p_thresh: float = 0.05):
+        """
+        Perform Shapiro-Wilcoxon normality check for all the features.
+
+        :param features_to_plot: List of specific features to be selected (otherwise selects all the numerical features).
+        :param p_thresh: Shapiro-Wilcoxon test p-value.
+        :return: List of the features distributed normally.
+        """
+
+        if not features_to_plot:
+            features_to_plot = self._feature_column
+
+        num_features = []
+        for feature in features_to_plot:
+            if self._feature_dataframe[feature].dtype != 'object':
+                num_features.append(feature)
+
+        features_norm_distr = []
+        for feature in num_features:
+            shapiro_test = sp.stats.shapiro(np.array(list(self._feature_dataframe[feature]))).pvalue
+            if shapiro_test > p_thresh:
+                features_norm_distr.append(feature)
+
+        return features_norm_distr
+
 
     def plot_distribution(self, features_to_plot: list=[], binary_classes_to_plot: list=[]):
         """Plot distribution of the feature values in classes into interactive .html report.
@@ -448,6 +475,12 @@ class AnalysisBox(FeaturesSet):
             stats_dataframe = pd.concat([stats_dataframe,
                                          pd.DataFrame({'volume_corr': vol_corr}, index=num_features)],
                                         axis=1)
+        p_shapiro_test = []
+        for feature in num_features:
+            p_shapiro_test.append(sp.stats.shapiro(np.array(list(self._feature_dataframe[feature]))).pvalue)
+        stats_dataframe = pd.concat([stats_dataframe,
+                                     pd.DataFrame({'p_shapiro_test': p_shapiro_test}, index=num_features)],
+                                    axis=1)
 
         stats_dataframe.to_excel(os.path.splitext(self._feature_path)[0] + '_basic_stats.xlsx')
 

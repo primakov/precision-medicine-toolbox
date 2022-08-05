@@ -11,7 +11,7 @@ import pickle
 import pandas as pd
 from sklearn.feature_selection import VarianceThreshold
 import matplotlib.pyplot as plt
-from ResultSet import ResultSet
+from pmtool.ResultSet import ResultSet
 import seaborn as sns
 from warnings import warn
 

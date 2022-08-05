@@ -281,6 +281,19 @@ Visualize feature values distribution in classes for the first 12 features (will
 fs.plot_distribution(fs._feature_column[:8])
 ```
 
+Shapiro-Wilcoxon test to get a list of normally distributed features:
+
+
+```python
+features_norm_distr = fs.normality_check()
+print (len(features_norm_distr))
+print (features_norm_distr)
+```
+
+    59
+    ['original_shape_Sphericity', 'original_glcm_Idm', 'original_glcm_Id', 'original_glrlm_RunLengthNonUniformityNormalized', 'original_glszm_HighGrayLevelZoneEmphasis', 'original_glszm_SmallAreaHighGrayLevelEmphasis', 'original_gldm_SmallDependenceHighGrayLevelEmphasis', 'log-sigma-1-0-mm-3D_glcm_DifferenceEntropy', 'log-sigma-2-0-mm-3D_firstorder_MeanAbsoluteDeviation', 'log-sigma-3-0-mm-3D_firstorder_InterquartileRange', 'log-sigma-3-0-mm-3D_firstorder_RobustMeanAbsoluteDeviation', 'log-sigma-3-0-mm-3D_glcm_Id', 'log-sigma-4-0-mm-3D_firstorder_InterquartileRange', 'log-sigma-4-0-mm-3D_glcm_Idm', 'log-sigma-4-0-mm-3D_glcm_Id', 'log-sigma-4-0-mm-3D_glszm_SizeZoneNonUniformityNormalized', 'log-sigma-5-0-mm-3D_firstorder_Skewness', 'log-sigma-5-0-mm-3D_glcm_Imc1', 'log-sigma-5-0-mm-3D_glcm_Idm', 'log-sigma-5-0-mm-3D_glcm_Id', 'wavelet-LLH_firstorder_Entropy', 'wavelet-LLH_glcm_SumEntropy', 'wavelet-LHL_glcm_DifferenceAverage', 'wavelet-LHH_firstorder_10Percentile', 'wavelet-LHH_firstorder_MeanAbsoluteDeviation', 'wavelet-LHH_glcm_Correlation', 'wavelet-LHH_glcm_DifferenceAverage', 'wavelet-LHH_glcm_Idm', 'wavelet-LHH_glcm_Id', 'wavelet-LHH_glrlm_RunVariance', 'wavelet-HLL_glcm_DifferenceEntropy', 'wavelet-HLL_glcm_Imc1', 'wavelet-HLL_glcm_Idm', 'wavelet-HLL_glcm_Id', 'wavelet-HLL_glrlm_RunLengthNonUniformityNormalized', 'wavelet-HLL_glrlm_RunPercentage', 'wavelet-HLH_glcm_Correlation', 'wavelet-HLH_glcm_Idm', 'wavelet-HLH_glcm_Id', 'wavelet-HLH_glcm_InverseVariance', 'wavelet-HHL_firstorder_Entropy', 'wavelet-HHL_firstorder_MeanAbsoluteDeviation', 'wavelet-HHL_firstorder_Uniformity', 'wavelet-HHL_glcm_Correlation', 'wavelet-HHL_glcm_DifferenceEntropy', 'wavelet-HHL_glcm_JointEntropy', 'wavelet-HHL_glcm_Imc2', 'wavelet-HHL_glcm_MaximumProbability', 'wavelet-HHL_glcm_SumEntropy', 'wavelet-HHL_glrlm_ShortRunEmphasis', 'wavelet-HHH_firstorder_10Percentile', 'wavelet-HHH_firstorder_90Percentile', 'wavelet-HHH_firstorder_InterquartileRange', 'wavelet-HHH_firstorder_MeanAbsoluteDeviation', 'wavelet-HHH_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-HHH_glcm_Imc2', 'wavelet-HHH_glcm_MaximumProbability', 'wavelet-LLL_glszm_HighGrayLevelZoneEmphasis', 'wavelet-LLL_gldm_SmallDependenceHighGrayLevelEmphasis']
+    
+
 Visualize mutual feature correlation coefficient (Spearman's) matrix for the first 12 features (in .html report):
 
 
@@ -350,6 +363,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <th>p_MW_corrected</th>
       <th>univar_auc</th>
       <th>volume_corr</th>
+      <th>p_shapiro_test</th>
     </tr>
   </thead>
   <tbody>
@@ -364,6 +378,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>1.000000</td>
       <td>0.517996</td>
       <td>0.037515</td>
+      <td>1.785652e-06</td>
     </tr>
     <tr>
       <th>1</th>
@@ -376,6 +391,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>1.000000</td>
       <td>0.516611</td>
       <td>0.099032</td>
+      <td>2.595303e-03</td>
     </tr>
     <tr>
       <th>2</th>
@@ -388,6 +404,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>0.117975</td>
       <td>0.686877</td>
       <td>0.973238</td>
+      <td>3.124696e-04</td>
     </tr>
     <tr>
       <th>3</th>
@@ -400,6 +417,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>0.018917</td>
       <td>0.705795</td>
       <td>0.842114</td>
+      <td>1.637431e-09</td>
     </tr>
     <tr>
       <th>4</th>
@@ -412,9 +430,11 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>0.161563</td>
       <td>0.681525</td>
       <td>0.950909</td>
+      <td>3.372626e-05</td>
     </tr>
     <tr>
       <th>...</th>
+      <td>...</td>
       <td>...</td>
       <td>...</td>
       <td>...</td>
@@ -436,6 +456,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>1.000000</td>
       <td>0.524640</td>
       <td>0.070593</td>
+      <td>3.766094e-25</td>
     </tr>
     <tr>
       <th>1214</th>
@@ -448,6 +469,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>0.471623</td>
       <td>0.515319</td>
       <td>-0.805811</td>
+      <td>5.147920e-25</td>
     </tr>
     <tr>
       <th>1215</th>
@@ -460,6 +482,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>1.000000</td>
       <td>0.654393</td>
       <td>-0.634677</td>
+      <td>1.122224e-04</td>
     </tr>
     <tr>
       <th>1216</th>
@@ -472,6 +495,7 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>1.000000</td>
       <td>0.619970</td>
       <td>-0.274001</td>
+      <td>3.676662e-01</td>
     </tr>
     <tr>
       <th>1217</th>
@@ -484,10 +508,11 @@ pd.read_excel('../data/features/extracted_features_full_basic_stats.xlsx')
       <td>0.077728</td>
       <td>0.654854</td>
       <td>-0.872534</td>
+      <td>1.102855e-20</td>
     </tr>
   </tbody>
 </table>
-<p>1218 rows × 9 columns</p>
+<p>1218 rows × 10 columns</p>
 </div>
 
 
