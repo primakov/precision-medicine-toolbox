@@ -1,12 +1,19 @@
 from distutils.core import setup
+
+try:
+    import pypandoc
+    long_description = pypandoc.convert_file('README.md', 'rst')
+except(IOError, ImportError):
+    long_description = open('README.md').read()
+
 setup(
   name = 'precision-medicine-toolbox',         # How you named your package folder (MyLib)
   packages = ['pmtool'],   # Chose the same as "name"
   version = '0.8',      # Start with a small number and increase it with every change you make
   license='bsd-3-clause',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Precision medicine tool-box for medical imaging research',   # Give a short description about your library
-  long_description="precision-medicine-toolbox is an open-source python package for medical imaging data preparation for data science tasks. This package is aimed to provide a tool to curate the imaging data and to perform exploratory feature analysis.",
-  long_description_content_type='text/markdown',
+  long_description_content_type=long_description,
+  long_description_type = 'text/x-rst',
   author = 'sergey primakov & lisa lavrova',                   # Type in your name
   author_email = 'primakov@bk.ru',      # Type in your E-Mail
   url = 'https://github.com/primakov/precision-medicine-toolbox',   # Provide either the link to your github or to your website
