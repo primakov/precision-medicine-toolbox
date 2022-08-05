@@ -72,7 +72,6 @@ pip install precision-medicine-toolbox
 The following example illustrates how to initialize an object of a dataset class:  
 ```python
 import os, sys
-sys.path.append('path to precision-medicine-toolbox directory')
 from pmtool.ToolBox import ToolBox
 
 # set up parameters for your imaging dataset
