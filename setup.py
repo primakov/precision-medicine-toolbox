@@ -1,9 +1,5 @@
 from distutils.core import setup
 
-basedir = path.abspath(path.dirname(__file__))
-with open(path.join(basedir, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(
   name = 'precision-medicine-toolbox',         # How you named your package folder (MyLib)
   packages = ['pmtool'],   # Chose the same as "name"
