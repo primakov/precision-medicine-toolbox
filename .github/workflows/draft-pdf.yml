@@ -3,7 +3,7 @@ name: compile joss paper
 on:
   push:
     branches:
-    - joss-submission-do-not-delete
+    - master
 
 jobs:
   paper:
