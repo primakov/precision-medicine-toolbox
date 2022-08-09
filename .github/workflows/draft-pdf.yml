@@ -1,26 +1,24 @@
---- 
-jobs: 
-  paper: 
-    name: "Paper Draft"
+name: compile joss paper
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  paper:
     runs-on: ubuntu-latest
-    steps: 
-      - 
-        name: Checkout
+    name: Paper Draft
+    steps:
+      - name: Checkout
         uses: actions/checkout@v2
-      - 
-        name: "Build draft PDF"
+      - name: Build draft PDF
         uses: openjournals/openjournals-draft-action@master
-        with: 
+        with:
           journal: joss
           paper-path: paper/paper.md
-      - 
-        name: Upload
+      - name: Upload
         uses: actions/upload-artifact@v1
-        with: 
+        with:
           name: paper
           path: paper/paper.pdf
-name: "compile joss paper"
-true: 
-  push: 
-    branches: 
-      - master
