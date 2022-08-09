@@ -31,11 +31,11 @@ authors:
     orcid: 0000-0001-7961-0191
     affiliation: "1, 3"
 affiliations:
- - name: Gravitation Astroparticle Physics Amsterdam (GRAPPA), University of Amsterdam, Science Park 904, 1098 XH Amsterdam
+ - name: Department of Precision Medicine, GROW School for Oncology, Maastricht University, Maastricht, The Netherlands
    index: 1
- - name: Amsterdam Machine Learning Lab (AMLab), University of Amsterdam, Science Park 904, 1098 XH Amsterdam
+ - name: GIGA Cyclotrone Research Center, University of Liege, Liege, Belgium
    index: 2
- - name: AI4Science Lab, University of Amsterdam, Science Park 904, 1098 XH Amsterdam
+ - name: Department of Radiology and Nuclear Medicine, Maastricht University Medical Centre, Maastricht, The Netherlands
    index: 3
 date: 09 August 2022
 bibliography: paper.bib
@@ -43,33 +43,14 @@ bibliography: paper.bib
 
 ---
 
-authors:
-  - name: 
-    orcid: 
-    
-    
-  - name: 
-    orcid: 
-    
-    
-  - name: 
-    orcid: 
-    
-   - name: 
-    orcid: 
-   
-   - name: 
-    orcid: 
-  
-   - name: 
-    orcid: 
+
   
 affiliations:
- - name: The D-Lab, Department of Precision Medicine, GROW School for Oncology, Maastricht University, Maastricht, The Netherlands
+ - name: 
    index: 1
- - name: GIGA Cyclotrone Research Center, University of Liege, Belgium
+ - name: 
    index: 2
- - name: Department of Radiology and Nuclear Medicine, Maastricht University Medical Centre, Maastricht, The Netherlands
+ - name: 
    index: 3
 date: 9 August 2022
 bibliography: paper.bib
