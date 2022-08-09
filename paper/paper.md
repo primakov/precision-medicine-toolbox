@@ -1,31 +1,30 @@
 ---
-title: 'swyft: Truncated Marginal Neural Ratio Estimation in Python'
+title: 'precision-medicine-toolbox: An open-source python package for facilitation of quantitative medical imaging and radiomics analysis'
 tags:
   - Python
-  - simulation-based inference
-  - likelihood-free inference
-  - machine learning
-  - bayesian inference
-  - system identification
-  - parameter identification
-  - inverse problem
+  - medical imaging
+  - radiomics
+  - DICOM
+  - features
+  - statistical analysis
+  - pre-processing
 authors:
-  - name: Benjamin Kurt Miller
+  - name: Elizaveta Lavrova
     orcid: 0000-0003-0387-8727
     affiliation: "1, 2, 3"
-  - name: Alex Cole
+  - name: Sergey Primakov
     orcid: 0000-0001-8035-4308
     affiliation: 1
-  - name: Christoph Weniger
+  - name: Zohaib Salahuddin
     orcid: 0000-0001-7579-8684
     affiliation: 1
-  - name: Francesco Nattino
+  - name: Manon Beuque
     orcid: 0000-0003-3286-0139
     affiliation: 4
-  - name: Ou Ku
+  - name: Henry C Woodruff
     orcid: 0000-0002-5373-5209
     affiliation: 4
-  - name: Meiert W. Grootes
+  - name: Philippe Lambin
     orcid: 0000-0002-5733-4795
     affiliation: 4
 affiliations:
@@ -37,40 +36,32 @@ affiliations:
    index: 3
  - name: Netherlands eScience Center, Science Park 140, 1098 XG Amsterdam, The Netherlands
    index: 4
-date: 12 December 2021
+date: 09 August 2022
 bibliography: paper.bib
 ---
 
 ---
-title: 'precision-medicine-toolbox: An open-source python package for facilitation of quantitative medical imaging and radiomics analysis'
-tags:
-  - python
-  - medical imaging
-  - radiomics
-  - DICOM
-  - features
-  - statistical analysis
-  - pre-processing
+
 authors:
-  - name: Elizaveta Lavrova
+  - name: 
     orcid: 0000-0003-2751-790X
     equal-contrib: true
     corresponding: true
     affiliation: "1, 2"
-  - name: Sergey Primakov
+  - name: 
     orcid: 0000-0002-3856-9740
     equal-contrib: true 
     affiliation: 1
-  - name: Zohaib Salahuddin
+  - name: 
     orcid: 0000-0002-9900-329X
     affiliation: 1
-   - name: Manon Beuque
+   - name: 
     orcid: 0000-0001-6804-5908
     affiliation: 1
-   - name: Henry C Woodruff
+   - name: 
     orcid: 0000-0001-7911-5123
     affiliation: "1, 3"
-   - name: Philippe Lambin
+   - name: 
     orcid: 0000-0001-7961-0191
     affiliation: "1, 3"
 affiliations:
