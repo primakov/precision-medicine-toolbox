@@ -11,9 +11,12 @@ tags:
 authors:
   - name: Elizaveta Lavrova
     orcid: 0000-0003-0387-8727
+    equal-contrib: true
+    corresponding: true
     affiliation: "1, 2, 3"
   - name: Sergey Primakov
     orcid: 0000-0001-8035-4308
+    equal-contrib: true
     affiliation: 1
   - name: Zohaib Salahuddin
     orcid: 0000-0001-7579-8684
