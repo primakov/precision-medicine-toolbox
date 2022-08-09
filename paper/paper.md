@@ -41,21 +41,6 @@ date: 09 August 2022
 bibliography: paper.bib
 ---
 
----
-
-
-  
-affiliations:
- - name: 
-   index: 1
- - name: 
-   index: 2
- - name: 
-   index: 3
-date: 9 August 2022
-bibliography: paper.bib
----
-
 # Summary
 
 The forces on stars, galaxies, and dark matter under external gravitational
