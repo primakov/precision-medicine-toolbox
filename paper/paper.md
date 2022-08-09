@@ -10,26 +10,26 @@ tags:
   - pre-processing
 authors:
   - name: Elizaveta Lavrova
-    orcid: 0000-0003-0387-8727
+    orcid: 0000-0003-2751-790X
     equal-contrib: true
     corresponding: true
-    affiliation: "1, 2, 3"
+    affiliation: "1, 2"
   - name: Sergey Primakov
-    orcid: 0000-0001-8035-4308
+    orcid: 0000-0002-3856-9740
     equal-contrib: true
     affiliation: 1
   - name: Zohaib Salahuddin
-    orcid: 0000-0001-7579-8684
+    orcid: 0000-0002-9900-329X
     affiliation: 1
   - name: Manon Beuque
-    orcid: 0000-0003-3286-0139
-    affiliation: 4
+    orcid: 0000-0001-6804-5908
+    affiliation: 1
   - name: Henry C Woodruff
-    orcid: 0000-0002-5373-5209
-    affiliation: 4
+    orcid: 0000-0001-7911-5123
+    affiliation: "1, 3"
   - name: Philippe Lambin
-    orcid: 0000-0002-5733-4795
-    affiliation: 4
+    orcid: 0000-0001-7961-0191
+    affiliation: "1, 3"
 affiliations:
  - name: Gravitation Astroparticle Physics Amsterdam (GRAPPA), University of Amsterdam, Science Park 904, 1098 XH Amsterdam
    index: 1
@@ -37,8 +37,6 @@ affiliations:
    index: 2
  - name: AI4Science Lab, University of Amsterdam, Science Park 904, 1098 XH Amsterdam
    index: 3
- - name: Netherlands eScience Center, Science Park 140, 1098 XG Amsterdam, The Netherlands
-   index: 4
 date: 09 August 2022
 bibliography: paper.bib
 ---
@@ -47,26 +45,25 @@ bibliography: paper.bib
 
 authors:
   - name: 
-    orcid: 0000-0003-2751-790X
-    equal-contrib: true
-    corresponding: true
-    affiliation: "1, 2"
+    orcid: 
+    
+    
   - name: 
-    orcid: 0000-0002-3856-9740
-    equal-contrib: true 
-    affiliation: 1
+    orcid: 
+    
+    
   - name: 
-    orcid: 0000-0002-9900-329X
-    affiliation: 1
+    orcid: 
+    
    - name: 
-    orcid: 0000-0001-6804-5908
-    affiliation: 1
+    orcid: 
+   
    - name: 
-    orcid: 0000-0001-7911-5123
-    affiliation: "1, 3"
+    orcid: 
+  
    - name: 
-    orcid: 0000-0001-7961-0191
-    affiliation: "1, 3"
+    orcid: 
+  
 affiliations:
  - name: The D-Lab, Department of Precision Medicine, GROW School for Oncology, Maastricht University, Maastricht, The Netherlands
    index: 1
