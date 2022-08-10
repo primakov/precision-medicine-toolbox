@@ -5,10 +5,6 @@ __pycache__/
 
 # redundant stuff
 test_log.txt
-features.xlsx
-data/converted_nrrds
-*.nrrd
-
 
 # C extensions
 *.so
@@ -135,4 +131,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-*.dcm
