@@ -17,12 +17,6 @@ import seaborn as sb
 %matplotlib inline
 ```
 
-    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\_distributor_init.py:32: UserWarning: loaded more than 1 DLL from .libs:
-    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\.libs\libopenblas.IPBC74C7KURV7CB2PKT5Z5FNR3SIBV4J.gfortran-win_amd64.dll
-    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\.libs\libopenblas.XWYDX2IKJW2NMTWSFYNGFUWKQU3LYTCZ.gfortran-win_amd64.dll
-      stacklevel=1)
-    
-
 ## Data download
 
 The Lung1 dataset (Aerts et al., 2014) contains pretreatment scans of 422 non-small cell lung cancer (NSCLC) patients, as well as manually deliniated gross tumor volume (GTV) for each patient, and clinical outcomes. More information you can find on the dataset web page and in the corresponding paper https://doi.org/10.1038/ncomms5006. For consistency, we recommend you to download the data to the '../data/dcms' folder of this project. You can find the data and its description (and the original paper) following the link below:
@@ -55,7 +49,7 @@ Initialize the dataset:
 data_dcms = ToolBox(**parameters)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.10it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.14it/s]
     
 
 Get the default metainformation from the DICOM files and print first 10:
@@ -66,7 +60,7 @@ dataset_description = data_dcms.get_dataset_description()
 dataset_description.head(10)
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.22s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.26s/it]
     
 
 
@@ -227,8 +221,8 @@ dataset_description = ct_dcms.get_dataset_description('CT')
 dataset_description.head(10)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.35it/s]
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.07s/it]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.38it/s]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.04s/it]
     
 
 
@@ -447,12 +441,12 @@ qc_params = {'specific_modality': 'ct', # target modality: CT
 qc_dataframe = ct_dcms.get_quality_checks(qc_params)
 ```
 
-     67%|████████████████████████████████████████████████████████                            | 2/3 [00:01<00:00,  1.05it/s]
+     67%|████████████████████████████████████████████████████████                            | 2/3 [00:03<00:01,  1.51s/it]
 
     Cannot perform conv kernel check for pat: LUNG1-002_20180526_CT_1
     
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.09it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:04<00:00,  1.42s/it]
 
     Cannot perform conv kernel check for pat: LUNG1-003_20180209_CT_1
     
@@ -573,7 +567,7 @@ Initialize the dataset (originally downloaded directory with DICOM files):
 data_ct = ToolBox(**parameters) 
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.41it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.49it/s]
     
 
 Run the conversion:
@@ -583,7 +577,7 @@ Run the conversion:
 data_ct.convert_to_nrrd(export_path, 'gtv')
 ```
 
-    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:07<00:00,  2.53s/it]
+    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:08<00:00,  2.82s/it]
     
 
 ## Quick check of the ROI's in the NRRD dataset
@@ -597,7 +591,7 @@ Initialize the dataset (converted NRRD files):
 data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/', data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1000.87it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1000.23it/s]
     
 
 Run the visualization:
@@ -607,7 +601,7 @@ Run the visualization:
 data_ct_nrrd.get_jpegs(r'../data/') # the function will create 'images_quick_check' folder in the specified directory 
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:52<00:00, 10.53s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:57<00:00, 11.42s/it]
     
 
 Let's check one of the patients:
@@ -654,7 +648,7 @@ data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/',
                     data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3009.55it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1501.00it/s]
     
 
 
@@ -726,7 +720,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     20%|████████████████▊                                                                   | 1/5 [00:35<02:20, 35.03s/it]
+     20%|████████████████▊                                                                   | 1/5 [00:36<02:26, 36.66s/it]
 
     ----------------------------------------
     Original image stats:
@@ -774,7 +768,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     40%|█████████████████████████████████▌                                                  | 2/5 [01:04<01:34, 31.57s/it]
+     40%|█████████████████████████████████▌                                                  | 2/5 [01:05<01:36, 32.28s/it]
 
     ----------------------------------------
     Original image stats:
@@ -822,7 +816,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:32<01:00, 30.17s/it]
+     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:35<01:01, 30.95s/it]
 
     ----------------------------------------
     Original image stats:
@@ -870,7 +864,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:00<00:29, 29.37s/it]
+     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:03<00:29, 29.96s/it]
 
     ----------------------------------------
     Original image stats:
@@ -918,7 +912,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:28<00:00, 29.79s/it]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:33<00:00, 30.67s/it]
     
 
 ## PyRadiomics features extraction
@@ -933,9 +927,9 @@ parameters = r"example_ct_parameters.yaml"
 features = data_ct_nrrd.extract_features(parameters, loggenabled=True)
 ```
 
-    Patients processed:  40%|█████████████████████████▌                                      | 2/5 [00:15<00:22,  7.65s/it]C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\pmtool\ToolBox.py:146: UserWarning: region : LUNG1-003_20180209_CT_1_GTV-1_mask skipped
+    Patients processed:  40%|█████████████████████████▌                                      | 2/5 [00:14<00:22,  7.49s/it]C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\pmtool\ToolBox.py:146: UserWarning: region : LUNG1-003_20180209_CT_1_GTV-1_mask skipped
       warn('region : %s skipped'%pat)
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:27<00:00,  5.46s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:26<00:00,  5.40s/it]
     
 
 Printing the features for first 3 ROIs:
@@ -977,14 +971,14 @@ features.head(3)
       <th>diagnostics_Image-original_Dimensionality</th>
       <th>diagnostics_Image-original_Spacing</th>
       <th>...</th>
-      <th>wavelet-LLL_gldm_HighGrayLevelEmphasis</th>
-      <th>wavelet-LLL_gldm_LargeDependenceEmphasis</th>
-      <th>wavelet-LLL_gldm_LargeDependenceHighGrayLevelEmphasis</th>
-      <th>wavelet-LLL_gldm_LargeDependenceLowGrayLevelEmphasis</th>
-      <th>wavelet-LLL_gldm_LowGrayLevelEmphasis</th>
-      <th>wavelet-LLL_gldm_SmallDependenceEmphasis</th>
-      <th>wavelet-LLL_gldm_SmallDependenceHighGrayLevelEmphasis</th>
-      <th>wavelet-LLL_gldm_SmallDependenceLowGrayLevelEmphasis</th>
+      <th>original_gldm_HighGrayLevelEmphasis</th>
+      <th>original_gldm_LargeDependenceEmphasis</th>
+      <th>original_gldm_LargeDependenceHighGrayLevelEmphasis</th>
+      <th>original_gldm_LargeDependenceLowGrayLevelEmphasis</th>
+      <th>original_gldm_LowGrayLevelEmphasis</th>
+      <th>original_gldm_SmallDependenceEmphasis</th>
+      <th>original_gldm_SmallDependenceHighGrayLevelEmphasis</th>
+      <th>original_gldm_SmallDependenceLowGrayLevelEmphasis</th>
       <th>Patient</th>
       <th>ROI</th>
     </tr>
@@ -992,79 +986,79 @@ features.head(3)
   <tbody>
     <tr>
       <th>0</th>
-      <td>v3.0</td>
-      <td>1.18.5</td>
+      <td>2.2.0</td>
+      <td>1.21.6</td>
       <td>1.2.0</td>
-      <td>1.1.1</td>
+      <td>1.0.0</td>
       <td>3.7.1</td>
       <td>{'minimumROIDimensions': 2, 'minimumROISize': ...</td>
-      <td>{'Original': {}, 'LoG': {'sigma': [1.0, 2.0, 3...</td>
+      <td>{'Original': {}}</td>
       <td>01ae3d400f3f6fdacc121a85f52fd9dba8be2253</td>
       <td>3D</td>
       <td>(0.9765625, 0.9765625, 3.0)</td>
       <td>...</td>
-      <td>14462.536758039314</td>
-      <td>33.609142408868486</td>
-      <td>548084.071741353</td>
-      <td>0.0027591623386472087</td>
-      <td>0.00013875155227786726</td>
-      <td>0.2677613556442223</td>
-      <td>2959.5714944611627</td>
-      <td>5.8227784555678714e-05</td>
+      <td>1907.8928027161019</td>
+      <td>99.42648713645454</td>
+      <td>213058.91888989627</td>
+      <td>0.059357098967502825</td>
+      <td>0.0008981270271727171</td>
+      <td>0.13258230653722738</td>
+      <td>173.11811535919472</td>
+      <td>0.0001963430889220179</td>
       <td>LUNG1-001_20180209_CT_2_GTV-1_mask</td>
       <td>GTV-1_mask</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>v3.0</td>
-      <td>1.18.5</td>
+      <td>2.2.0</td>
+      <td>1.21.6</td>
       <td>1.2.0</td>
-      <td>1.1.1</td>
+      <td>1.0.0</td>
       <td>3.7.1</td>
       <td>{'minimumROIDimensions': 2, 'minimumROISize': ...</td>
-      <td>{'Original': {}, 'LoG': {'sigma': [1.0, 2.0, 3...</td>
+      <td>{'Original': {}}</td>
       <td>5c66c70353901fd238191b88a2584cd8c3f645e5</td>
       <td>3D</td>
       <td>(0.977, 0.977, 3.0)</td>
       <td>...</td>
-      <td>13208.12549259126</td>
-      <td>55.600106536368784</td>
-      <td>832176.2485225748</td>
-      <td>0.004497426306875555</td>
-      <td>0.00016233377171621347</td>
-      <td>0.1889311894310745</td>
-      <td>1733.8368052732842</td>
-      <td>5.3429352136211716e-05</td>
+      <td>1731.2372665333567</td>
+      <td>124.54216692742976</td>
+      <td>243373.09511578162</td>
+      <td>0.07974467815992821</td>
+      <td>0.0011213314231000426</td>
+      <td>0.0911157206194848</td>
+      <td>106.00051605739702</td>
+      <td>0.00017046775986821598</td>
       <td>LUNG1-002_20180526_CT_1_GTV-1_mask</td>
       <td>GTV-1_mask</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>v3.0</td>
-      <td>1.18.5</td>
+      <td>2.2.0</td>
+      <td>1.21.6</td>
       <td>1.2.0</td>
-      <td>1.1.1</td>
+      <td>1.0.0</td>
       <td>3.7.1</td>
       <td>{'minimumROIDimensions': 2, 'minimumROISize': ...</td>
-      <td>{'Original': {}, 'LoG': {'sigma': [1.0, 2.0, 3...</td>
+      <td>{'Original': {}}</td>
       <td>9a2b123cabcc00593e4255d41cbef78f0cb63630</td>
       <td>3D</td>
       <td>(0.977, 0.977, 3.0)</td>
       <td>...</td>
-      <td>9142.646956472132</td>
-      <td>17.90900792971647</td>
-      <td>209143.44409264647</td>
-      <td>0.0026732953405101414</td>
-      <td>0.0003673562141585293</td>
-      <td>0.4029303292416708</td>
-      <td>2838.784544208129</td>
-      <td>0.00019106863067788412</td>
-      <td>LUNG1-003_20180209_CT_1_GTV-1_mask</td>
-      <td>GTV-1_mask</td>
+      <td>262.68393251340274</td>
+      <td>146.74445495637548</td>
+      <td>38029.17720487754</td>
+      <td>0.5787461697075557</td>
+      <td>0.0040825026807062405</td>
+      <td>0.035790479836333586</td>
+      <td>12.887196454760987</td>
+      <td>0.00019361484227453635</td>
+      <td>LUNG1-003_20180209_CT_1_GTV-2_mask</td>
+      <td>GTV-2_mask</td>
     </tr>
   </tbody>
 </table>
-<p>3 rows × 1257 columns</p>
+<p>3 rows × 117 columns</p>
 </div>
 
 
