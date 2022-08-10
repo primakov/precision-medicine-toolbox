@@ -14,7 +14,7 @@ Pillow>=5.4.1
 scikit-learn>=0.21.3
 scipy>=1.2.1
 plotly>=4.8.1
-mkdocstrings==0.17.0
+mkdocstrings==0.18.0
 statsmodels
 opencv-python
 seaborn
