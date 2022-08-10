@@ -15,22 +15,27 @@ import shutil
 
 # initialising objects
 def test_toolbox_init():
-    parameters = {'data_path': '../data/test/dicom_test/',
+    parameters = {'data_path': 'data/test/dicom_test/',
                   'data_type': 'dcm',
                   'multi_rts_per_pat': False}
     data_dcms = ToolBox(**parameters)
+
+    #pickle.dump(data_dcms, file=open("data/test/data_dcms.pickle", "wb"))
 
     assert len(data_dcms) > 0
 
 def test_analysisbox_init():
     parameters = {
-        'feature_path': '../data/test/extracted_features_full.xlsx',  # path to csv/xls file with features
-        'outcome_path': '../data/test/extended_clinical_df.xlsx',  # path to csv/xls file with outcome
+        'feature_path': 'data/test/extracted_features_full.xlsx',  # path to csv/xls file with features
+        'outcome_path': 'data/test/extended_clinical_df.xlsx',  # path to csv/xls file with outcome
         'patient_column': 'Patient',  # name of column with patient ID
         'patient_in_outcome_column': 'PatientID',  # name of column with patient ID in clinical data file
         'outcome_column': '1yearsurvival'  # name of outcome column
     }
     fs = AnalysisBox(**parameters)
+
+    #pickle.dump(fs, file=open("data/test/fs.pickle", "wb"))
+
     assert len(fs._feature_outcome_dataframe) > 0
 
 def test_generateresultbox_init():
@@ -56,11 +61,13 @@ def test_generateresultbox_init():
     external_labels_present = len(result_generation._external_labels) > 0
     external_predictors_present = len(result_generation._external_predictions) > 0
 
+    #pickle.dump(result_generation, file=open("data/test/result_generation.pickle", "wb"))
+
     assert ((train_labels_present)&(train_predictors_present))|((test_labels_present)&(test_predictors_present))|((external_labels_present)&(external_predictors_present))
 
 # imaging methods tests
 def test_get_dataset_description():
-    data_dcms = pickle.load(open('../data/test/data_dcms.pickle', "rb"))
+    data_dcms = pickle.load(open('data/test/data_dcms.pickle', "rb"))
     assert len(data_dcms.get_dataset_description()) > 0
 
 def test_get_quality_checks():
@@ -70,17 +77,17 @@ def test_get_quality_checks():
                  'scan_length_range': [5, 170],
                  'axial_res': [512, 512],
                  'kernels_list': ['standard', 'lung', 'b19f']}
-    data_dcms = pickle.load(open('../data/test/data_dcms.pickle', "rb"))
+    data_dcms = pickle.load(open('data/test/data_dcms.pickle', "rb"))
     assert len(data_dcms.get_quality_checks(qc_params)) > 0
 
 def test_convert_to_nrrd():
 
     flag_files_created = False
 
-    export_path = '../data/test/'
+    export_path = 'data/test/'
     nrrd_path = export_path + 'converted_nrrds/'
 
-    data_dcms = pickle.load(open('../data/test/data_dcms.pickle', "rb"))
+    data_dcms = pickle.load(open('data/test/data_dcms.pickle', "rb"))
     data_dcms.convert_to_nrrd(export_path, 'gtv')
 
     flag_folders_created = len(os.listdir(nrrd_path)) > 0
@@ -90,16 +97,19 @@ def test_convert_to_nrrd():
         first_folder_path = nrrd_path + first_folder
         flag_files_created = len(os.listdir(first_folder_path)) > 0
 
+    data_nrrd = ToolBox(data_path = 'data/test/converted_nrrds/', data_type='nrrd')
+    #pickle.dump(data_nrrd, file=open("data/test/data_nrrd.pickle", "wb"))
+
     assert (flag_folders_created)&(flag_files_created)
 
 def test_get_jpegs():
 
     flag_files_created = False
 
-    export_path = '../data/test/'
+    export_path = 'data/test/'
     jpeg_path = export_path + 'images_quick_check/'
 
-    data_nrrd = pickle.load(open("../data/test/data_nrrd.pickle", "rb"))
+    data_nrrd = pickle.load(open("data/test/data_nrrd.pickle", "rb"))
     data_nrrd.get_jpegs(export_path)
 
     flag_folders_created = len(os.listdir(jpeg_path)) > 0
@@ -120,11 +130,11 @@ def test_pre_process():
     flag_files_created = False
     first_folder_path = ''
 
-    export_path = '../data/test/'
+    export_path = 'data/test/'
     proc_path = export_path + 'nrrd_preprocessed/'
 
-    data_nrrd = pickle.load(open("../data/test/data_nrrd.pickle", "rb"))
-    data_nrrd.pre_process(ref_img_path='../data/test/converted_nrrds_test/sub-001_2/image.nrrd',
+    data_nrrd = pickle.load(open("data/test/data_nrrd.pickle", "rb"))
+    data_nrrd.pre_process(ref_img_path='data/test/converted_nrrds_test/sub-001_2/image.nrrd',
                           save_path=proc_path,
                           hist_match=False,
                           subcateneus_fat=False,
@@ -153,80 +163,80 @@ def test_pre_process():
 
 def test_extract_features():
 
-    data_nrrd = pickle.load(open("../data/test/data_nrrd.pickle", "rb"))
-    parameters = '../examples/example_ct_parameters.yaml'
+    data_nrrd = pickle.load(open("data/test/data_nrrd.pickle", "rb"))
+    parameters = 'examples/example_ct_parameters.yaml'
     features = data_nrrd.extract_features(parameters, loggenabled=True)
 
     assert len(features) > 0
 
 def test_clean_imaging_module():
     try:
-        shutil.rmtree('../data/test/converted_nrrds/')
+        shutil.rmtree('data/test/converted_nrrds/')
     except:
         print ('NRRD conversion failed.')
 
     try:
-        shutil.rmtree('../data/test/images_quick_check/')
+        shutil.rmtree('data/test/images_quick_check/')
     except:
         print ('ROIs check failed.')
 
     try:
-        shutil.rmtree('../data/test/nrrd_preprocessed/')
+        shutil.rmtree('data/test/nrrd_preprocessed/')
     except:
         print ('Pre-processing failed.')
 
 #features methods tests
 def test_plot_distribution():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.plot_distribution(fs._feature_column[:10])
 
-    assert os.path.isfile('../data/test/extracted_features_full_distr.html')
+    assert os.path.isfile('data/test/extracted_features_full_distr.html')
 
 def test_plot_correlation_matrix():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.plot_correlation_matrix(fs._feature_column[:10])
 
-    assert os.path.isfile('../data/test/extracted_features_full_corr.html')
+    assert os.path.isfile('data/test/extracted_features_full_corr.html')
 
 def test_plot_MW_p():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.plot_MW_p(fs._feature_column[:10])
 
-    assert os.path.isfile('../data/test/extracted_features_full_MW.html')
+    assert os.path.isfile('data/test/extracted_features_full_MW.html')
 
 def test_plot_univariate_roc():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.plot_univariate_roc(fs._feature_column[:10])
 
-    assert os.path.isfile('../data/test/extracted_features_full_roc-univar.html')
+    assert os.path.isfile('data/test/extracted_features_full_roc-univar.html')
 
 def test_volume_analysis():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.volume_analysis(volume_feature='original_shape_VoxelVolume')
 
-    assert os.path.isfile('../data/test/extracted_features_full_volume_corr.html')&os.path.isfile('../data/test/extracted_features_full_volume_PRC.html')
+    assert os.path.isfile('data/test/extracted_features_full_volume_corr.html')&os.path.isfile('data/test/extracted_features_full_volume_PRC.html')
 
 def test_calculate_basic_stats():
 
-    fs = pickle.load(open('../data/test/fs.pickle', "rb"))
+    fs = pickle.load(open('data/test/fs.pickle', "rb"))
     fs.calculate_basic_stats(volume_feature='original_shape_VoxelVolume')
 
-    assert os.path.isfile('../data/test/extracted_features_full_basic_stats.xlsx')
+    assert os.path.isfile('data/test/extracted_features_full_basic_stats.xlsx')
 
 def test_clean_features_module():
 
-    files_to_delete = ['../data/test/extracted_features_full_distr.html',
-                       '../data/test/extracted_features_full_corr.html',
-                       '../data/test/extracted_features_full_MW.html',
-                       '../data/test/extracted_features_full_roc-univar.html',
-                       '../data/test/extracted_features_full_volume_corr.html',
-                       '../data/test/extracted_features_full_volume_PRC.html',
-                       '../data/test/extracted_features_full_basic_stats.xlsx'
+    files_to_delete = ['data/test/extracted_features_full_distr.html',
+                       'data/test/extracted_features_full_corr.html',
+                       'data/test/extracted_features_full_MW.html',
+                       'data/test/extracted_features_full_roc-univar.html',
+                       'data/test/extracted_features_full_volume_corr.html',
+                       'data/test/extracted_features_full_volume_PRC.html',
+                       'data/test/extracted_features_full_basic_stats.xlsx'
                        ]
 
     for filename in files_to_delete:
@@ -239,7 +249,7 @@ def test_clean_features_module():
 # results methods tests
 def test_get_results():
 
-    result_generation = pickle.load(open('../data/test/result_generation.pickle', "rb"))
+    result_generation = pickle.load(open('data/test/result_generation.pickle', "rb"))
 
     result_generation.get_results('train')
     result_generation.get_results('test')
@@ -247,7 +257,7 @@ def test_get_results():
 
 def test_get_stats_with_ci():
 
-    result_generation = pickle.load(open('../data/test/result_generation.pickle', "rb"))
+    result_generation = pickle.load(open('data/test/result_generation.pickle', "rb"))
 
     result_generation.get_stats_with_ci('train')
     result_generation.get_stats_with_ci('test')
@@ -255,7 +265,7 @@ def test_get_stats_with_ci():
 
 def test_print_confusion_matrix():
 
-    result_generation = pickle.load(open('../data/test/result_generation.pickle', "rb"))
+    result_generation = pickle.load(open('data/test/result_generation.pickle', "rb"))
 
     result_generation.print_confusion_matrix('train', ['0', '1'])
     result_generation.print_confusion_matrix('test', ['0', '1'])
@@ -263,7 +273,7 @@ def test_print_confusion_matrix():
 
 def test_plot_roc_auc_ci():
 
-    result_generation = pickle.load(open('../data/test/result_generation.pickle', "rb"))
+    result_generation = pickle.load(open('data/test/result_generation.pickle', "rb"))
     result_generation.plot_roc_auc_ci(title ="testing roc curve function")
 
 
