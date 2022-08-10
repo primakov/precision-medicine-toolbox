@@ -31,7 +31,7 @@ plot confusion matrices and ROC curves:
 
 * [tutorial results](results_module.md).
   
-Example of the binary classification results presentation:
+Example of the binary classification results presentation:  
 ![ROC curve](results_example.png 'ROC curve')  
 
 ## Suggestions
