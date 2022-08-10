@@ -104,9 +104,9 @@ This project is licensed under the BSD-3-Clause License
 (see the [LICENSE](https://github.com/primakov/precision-medicine-toolbox/blob/master/LICENSE) for the details).
 ## Acknowledgements  
 The authors would like to thank:  
-    * the Precision Medicine department colleagues for their support and feedback,
-    * Mart Smidt for testing the tool on the different data,
-    * external users for the feedback,    
-    * PyRadiomics for a reliable open-source tool for features extraction,  
-    * Hugo Aerts et al. for the Lung1 dataset we used to demonstrate our functionality 
+* the Precision Medicine department colleagues for their support and feedback,
+* Mart Smidt for testing the tool on the different data,
+* external users for the feedback,
+* PyRadiomics for a reliable open-source tool for features extraction,  
+* Hugo Aerts et al. for the Lung1 dataset we used to demonstrate our functionality 
 and The Cancer Imaging Archive for the publically available data.
