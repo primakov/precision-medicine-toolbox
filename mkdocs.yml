@@ -14,5 +14,7 @@ docs_dir: 'docs'
 site_dir: 'site'
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python
 copyright: Copyright &copy; 2019 - 2022, Sergey Primakov & Lisa Lavrova.
