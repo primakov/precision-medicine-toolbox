@@ -302,7 +302,7 @@ class GenerateResultBox(ResultSet):
         ax.legend(loc="lower right")
         if save_fig:
             plt.savefig(title + '.png', dpi=300)
-        plt.show()
+        plt.show(block=False)
 
         return title + " done"
 
