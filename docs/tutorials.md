@@ -30,6 +30,10 @@ How to get the formatted classification metrics with confidence intervals,
 plot confusion matrices and ROC curves: 
 
 * [tutorial results](results_module.md).
+  
+Example of the binary classification results presentation:
+![ROC curve](results_example.png 'ROC curve')  
+
 ## Suggestions
 If you are feeling a feature is not illustrated in the tutorials above, 
 don't hesitate to suggest/contribute.
