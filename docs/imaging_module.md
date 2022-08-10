@@ -17,6 +17,12 @@ import seaborn as sb
 %matplotlib inline
 ```
 
+    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\_distributor_init.py:32: UserWarning: loaded more than 1 DLL from .libs:
+    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\.libs\libopenblas.IPBC74C7KURV7CB2PKT5Z5FNR3SIBV4J.gfortran-win_amd64.dll
+    C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\numpy\.libs\libopenblas.XWYDX2IKJW2NMTWSFYNGFUWKQU3LYTCZ.gfortran-win_amd64.dll
+      stacklevel=1)
+    
+
 ## Data download
 
 The Lung1 dataset (Aerts et al., 2014) contains pretreatment scans of 422 non-small cell lung cancer (NSCLC) patients, as well as manually deliniated gross tumor volume (GTV) for each patient, and clinical outcomes. More information you can find on the dataset web page and in the corresponding paper https://doi.org/10.1038/ncomms5006. For consistency, we recommend you to download the data to the '../data/dcms' folder of this project. You can find the data and its description (and the original paper) following the link below:
@@ -49,7 +55,7 @@ Initialize the dataset:
 data_dcms = ToolBox(**parameters)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.28it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.10it/s]
     
 
 Get the default metainformation from the DICOM files and print first 10:
@@ -60,7 +66,7 @@ dataset_description = data_dcms.get_dataset_description()
 dataset_description.head(10)
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:04<00:00,  1.60s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.22s/it]
     
 
 
@@ -221,8 +227,8 @@ dataset_description = ct_dcms.get_dataset_description('CT')
 dataset_description.head(10)
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.39it/s]
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.13it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.35it/s]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:03<00:00,  1.07s/it]
     
 
 
@@ -261,7 +267,7 @@ dataset_description.head(10)
   <tbody>
     <tr>
       <th>0</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -274,7 +280,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>1</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -287,7 +293,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>2</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -300,7 +306,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>3</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -313,7 +319,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>4</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -326,7 +332,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>5</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -339,7 +345,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>6</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -352,7 +358,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>7</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -365,7 +371,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>8</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -378,7 +384,7 @@ dataset_description.head(10)
     </tr>
     <tr>
       <th>9</th>
-      <td>LUNG1-001</td>
+      <td>(L, U, N, G, 1, -, 0, 0, 1)</td>
       <td>B19f</td>
       <td>3.0</td>
       <td>[0.9765625, 0.9765625]</td>
@@ -441,12 +447,12 @@ qc_params = {'specific_modality': 'ct', # target modality: CT
 qc_dataframe = ct_dcms.get_quality_checks(qc_params)
 ```
 
-     67%|████████████████████████████████████████████████████████                            | 2/3 [00:01<00:00,  1.31it/s]
+     67%|████████████████████████████████████████████████████████                            | 2/3 [00:01<00:00,  1.05it/s]
 
     Cannot perform conv kernel check for pat: LUNG1-002_20180526_CT_1
     
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.32it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:02<00:00,  1.09it/s]
 
     Cannot perform conv kernel check for pat: LUNG1-003_20180209_CT_1
     
@@ -567,7 +573,7 @@ Initialize the dataset (originally downloaded directory with DICOM files):
 data_ct = ToolBox(**parameters) 
 ```
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.38it/s]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:01<00:00,  2.41it/s]
     
 
 Run the conversion:
@@ -577,7 +583,7 @@ Run the conversion:
 data_ct.convert_to_nrrd(export_path, 'gtv')
 ```
 
-    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:06<00:00,  2.28s/it]
+    Patients converted: 100%|████████████████████████████████████████████████████████████████| 3/3 [00:07<00:00,  2.53s/it]
     
 
 ## Quick check of the ROI's in the NRRD dataset
@@ -591,7 +597,7 @@ Initialize the dataset (converted NRRD files):
 data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/', data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3021.11it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1000.87it/s]
     
 
 Run the visualization:
@@ -601,7 +607,7 @@ Run the visualization:
 data_ct_nrrd.get_jpegs(r'../data/') # the function will create 'images_quick_check' folder in the specified directory 
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:55<00:00, 11.13s/it]
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:52<00:00, 10.53s/it]
     
 
 Let's check one of the patients:
@@ -648,7 +654,7 @@ data_ct_nrrd = ToolBox(data_path = r'../data/converted_nrrds/',
                     data_type='nrrd')
 ```
 
-    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 1501.00it/s]
+    100%|██████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00, 3009.55it/s]
     
 
 
@@ -720,7 +726,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     20%|████████████████▊                                                                   | 1/5 [00:36<02:25, 36.47s/it]
+     20%|████████████████▊                                                                   | 1/5 [00:35<02:20, 35.03s/it]
 
     ----------------------------------------
     Original image stats:
@@ -768,7 +774,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     40%|█████████████████████████████████▌                                                  | 2/5 [01:05<01:36, 32.32s/it]
+     40%|█████████████████████████████████▌                                                  | 2/5 [01:04<01:34, 31.57s/it]
 
     ----------------------------------------
     Original image stats:
@@ -816,7 +822,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:34<01:01, 30.68s/it]
+     60%|██████████████████████████████████████████████████▍                                 | 3/5 [01:32<01:00, 30.17s/it]
 
     ----------------------------------------
     Original image stats:
@@ -864,7 +870,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:02<00:29, 29.69s/it]
+     80%|███████████████████████████████████████████████████████████████████▏                | 4/5 [02:00<00:29, 29.37s/it]
 
     ----------------------------------------
     Original image stats:
@@ -912,7 +918,7 @@ data_ct_nrrd.pre_process(ref_img_path = '../data/converted_nrrds/LUNG1-001_20180
     
 
 
-    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:31<00:00, 30.26s/it]
+    100%|████████████████████████████████████████████████████████████████████████████████████| 5/5 [02:28<00:00, 29.79s/it]
     
 
 ## PyRadiomics features extraction
@@ -927,7 +933,9 @@ parameters = r"example_ct_parameters.yaml"
 features = data_ct_nrrd.extract_features(parameters, loggenabled=True)
 ```
 
-    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [01:00<00:00, 12.13s/it]
+    Patients processed:  40%|█████████████████████████▌                                      | 2/5 [00:15<00:22,  7.65s/it]C:\Users\e.lavrova\AppData\Local\Continuum\anaconda3\lib\site-packages\pmtool\ToolBox.py:146: UserWarning: region : LUNG1-003_20180209_CT_1_GTV-1_mask skipped
+      warn('region : %s skipped'%pat)
+    Patients processed: 100%|████████████████████████████████████████████████████████████████| 5/5 [00:27<00:00,  5.46s/it]
     
 
 Printing the features for first 3 ROIs:

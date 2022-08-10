@@ -18,3 +18,4 @@ mkdocstrings==0.18.0
 statsmodels
 opencv-python
 seaborn
+pickle

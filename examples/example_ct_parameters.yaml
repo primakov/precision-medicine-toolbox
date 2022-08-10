@@ -9,38 +9,12 @@
 
 imageType:
   Original: {}
-  LoG:
-    sigma: [1.0, 2.0, 3.0, 4.0, 5.0]  # If you include sigma values >5, remember to also increase the padDistance.
-  Wavelet: {}
 
 featureClass:
   # redundant Compactness 1, Compactness 2 an Spherical Disproportion features are disabled by default, they can be
   # enabled by specifying individual feature names (as is done for glcm) and including them in the list.
   shape:
   firstorder:
-  glcm:  # Disable SumAverage by specifying all other GLCM features available
-    - 'Autocorrelation'
-    - 'JointAverage'
-    - 'ClusterProminence'
-    - 'ClusterShade'
-    - 'ClusterTendency'
-    - 'Contrast'
-    - 'Correlation'
-    - 'DifferenceAverage'
-    - 'DifferenceEntropy'
-    - 'DifferenceVariance'
-    - 'JointEnergy'
-    - 'JointEntropy'
-    - 'Imc1'
-    - 'Imc2'
-    - 'Idm'
-    - 'Idmn'
-    - 'Id'
-    - 'Idn'
-    - 'InverseVariance'
-    - 'MaximumProbability'
-    - 'SumEntropy'
-    - 'SumSquares'
   glrlm:
   glszm:
   gldm:
