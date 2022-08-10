@@ -10,7 +10,9 @@ This package is aimed to provide a tool to curate the imaging data and to perfor
 
 If you are using this toolbox, please, cite the [original paper](https://arxiv.org/abs/2202.13965):  
 *Primakov, Sergey, Elizaveta Lavrova, Zohaib Salahuddin, Henry C. Woodruff, and Philippe Lambin. "Precision-medicine-toolbox: An open-source python package for facilitation of quantitative medical imaging and radiomics analysis." arXiv preprint arXiv:2202.13965 (2022).*
-
+  
+![Graphical abstract](graphical_abstract.png 'Graphical abstract')
+  
 Currently, the toolbox has the following functionality:  
   
 * **Dataset exploration.** This function gets the specified metadata from the DICOM files of the dataset and allows for exploration of the diversity degree of the imaging parameters..
@@ -100,7 +102,10 @@ Also you can see the list of the [contributors](https://github.com/primakov/prec
 This project is licensed under the BSD-3-Clause License 
 (see the [LICENSE](https://github.com/primakov/precision-medicine-toolbox/blob/master/LICENSE) for the details).
 ## Acknowledgements  
-The Precision Medicine department colleagues for their support and feedback.  
-PyRadiomics for a reliable open-source tool for features extraction.  
-Hugo Aerts et al. for the Lung1 dataset we used to demonstrate our functionality 
-and TCIA for the publically available data.
+The authors would like to thank:  
+    * the Precision Medicine department colleagues for their support and feedback,
+    * Mart Smidt for testing the tool on the different data,
+    * external users for the feedback,    
+    * PyRadiomics for a reliable open-source tool for features extraction,  
+    * Hugo Aerts et al. for the Lung1 dataset we used to demonstrate our functionality 
+and The Cancer Imaging Archive for the publically available data.
