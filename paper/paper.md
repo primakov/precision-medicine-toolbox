@@ -61,7 +61,7 @@ existing packages, and improve the reproducibility of quantitative medical imagi
 
 The concept of precision medicine is rising in popularity, which aims to enhance individual patient care 
 by identifying subgroups of patients within a disease group using genotypic and phenotypic data, 
-consequently targeting the disease with more efficient treatment [@Niu2019-gw; @Carrier-Vallieres2018-ml]. 
+consequently targeting the disease with more efficient treatment [@Niu2019-gw]. 
 Medical image analysis plays a key role in precision medicine as it allows the clinicians to non-invasively 
 identify (radiological) phenotypes [@Acharya2018-zi]. 
 
@@ -93,7 +93,7 @@ Data curation and the pre-processing of medical images are time-consuming and cr
 radiomics workflow that can have a significant impact on the resulting model performance 
 [@Hosseini2021-bm; @Zhang2019-ha]. These steps may be performed manually or using lower level 
 Python libraries such as `Numpy` [@Van_der_Walt2011-mn], 
-`Pandas` [@McKinney2011-rb], `Pydicom` [@Mason2011-kt], `Scikit-image` [@Van_der_Walt2014-ih], 
+`Pandas` [@McKinney2011-fb], `Pydicom` [@Mason2011-kt], `Scikit-image` [@Van_der_Walt2014-ih], 
 `Scikit-learn` [@Kramer2016-zr], `SimpleITK` [@Yaniv2018-nh], `Nibabel` [@Brett2020-bm], 
 or `Scipy` [@Virtanen2020-jy]. As most current data curation workflows necessitate time-consuming human 
 input, this step becomes an error-prone bottleneck and adds to the current reproducibility problem. 
