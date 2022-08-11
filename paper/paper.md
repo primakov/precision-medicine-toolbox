@@ -1,5 +1,5 @@
 ---
-title: 'precision-medicine-toolbox: An open-source python package for facilitation of quantitative medical imaging and radiomics analysis'
+title: 'Precision-medicine-toolbox: An open-source package for facilitation of quantitative medical imaging and radiomics analysis'
 tags:
   - Python
   - medical imaging
@@ -37,87 +37,88 @@ affiliations:
    index: 2
  - name: Department of Radiology and Nuclear Medicine, Maastricht University Medical Centre, Maastricht, The Netherlands
    index: 3
-date: 09 August 2022
+date: 11 August 2022
 bibliography: paper.bib
 ---
 
 # Summary
 
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+Medical image analysis plays a key role in precision medicine, allowing clinicians to non-invasively 
+identify phenotypic abnormalities and trends in routine clinical assessment. With the exponential increase 
+of available imaging data and the advances of machine learning, state-of-the-art data science 
+and engineering techniques are being applied to quantify  medical images and treat them as rich data sources. 
+Data curation and pre-processing of medical images are critical steps in the quantitative medical image 
+analysis that can have a significant impact on the resulting performance of machine learning models.
+We introduce the `Precision-medicine-toolbox`, allowing clinical and junior researchers to perform 
+data curation, image pre-processing, handcrafted radiomics extraction using open source software, 
+and feature exploration tasks with a customizable Python package. With this open-source tool we aim 
+to facilitate the crucial data preparation and exploration steps, bridge the gap between the currently 
+existing packages, and improve the reproducibility of quantitative medical imaging research.
 
 # Statement of need
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
+The concept of precision medicine is rising in popularity, which aims to enhance individual patient care 
+by identifying subgroups of patients within a disease group using genotypic and phenotypic data, 
+consequently targeting the disease with more efficient treatment [@Niu:2019; @Carrier-Vallières:2018]. 
+Medical image analysis plays a key role in precision medicine as it allows the clinicians to non-invasively 
+identify (radiological) phenotypes [@Acharya:2018]. 
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+The number of medical imaging data to analyze is rising rapidly and physicians struggle to cope with 
+the increasing demand. Moreover, multiple studies have shown that there is significant inter-observer 
+variability when performing various clinical tasks [@Kinkel:2000; @Luijnenburg:2010]. 
+Hence, there is a need for medical image analysis tools that can aid clinicians in meeting the challenges 
+of rising demand and better clinical performance, while reducing variability and costs. At the heart of 
+these tools will be advanced quantitative imaging analysis, such as handcrafted radiomics and deep learning. 
+Handcrafted radiomics is the high-throughput extraction of pre-defined high-dimensional quantitative 
+image features and their correlation with biological and clinical outcomes using machine learning methods 
+[@Lambin:2012]. Deep learning automatically learns representative image features from the high 
+dimensional image data without the need of feature engineering by using non-linear modules that constitute 
+a neural network [@Schmidhuber:2015]. As illustrated by \autoref{fig:1}, the field of quantitative image analysis 
+is expanding due to increases in computational power and availability of large quantities of multimodal data 
+[@Oren:2020; @Aggarwal:2021]. Moreover, it has demonstrated promising results in 
+various clinical applications [@Tagliafico:2020; @Zhang:2017; @Wang:2021; @Mu:2020]. 
+As with many nascent technologies, high-throughput quantitative image analysis suffers from a lack of 
+standardization, e.g. in the image domain (different vendors, acquisition and reconstruction protocols, 
+pre-processing), or different definitions of handcrafted features (such as shape, intensity, and texture 
+features), which initiatives such as the image biomarker standardization initiative (IBSI) try to counter 
+[@Zwanenburg:2020]. 
+The spread of widely used open-source software such as `Pyradiomics`, allows the extraction of IBSI-compliant 
+handcrafted radiomics features [@van Griethuysen:2017]. 
 
-# Mathematics
+![Number of publications, by year, containing keywords ((‘radiomics’ OR ‘deep learning’) AND ‘medical imaging’) in PubMed database (https://pubmed.ncbi.nlm.nih.gov/?term=(%E2%80%98radiomics%E2%80%99%20OR%20%E2%80%98deep%20learning%E2%80%99)%20AND%20%E2%80%98medical%20imaging%E2%80%99&timeline=expanded).\label{fig:1}](figure_1.png)
 
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
+Data curation and the pre-processing of medical images are time-consuming and critical steps in the 
+radiomics workflow that can have a significant impact on the resulting model performance 
+[@Hosseini:2021; @Zhang:2019]. These steps may be performed manually or using lower level 
+Python libraries such as `Numpy` [@Stefan van der Walt:2011], 
+`Pandas` [@McKinney:2011], `Pydicom` [@Mason:2011], `Scikit-image` [@Stéfan van der Walt:2014], 
+`Scikit-learn` [@Kramer:2016], `SimpleITK` [@Yaniv:2018], `Nibabel` [@Brett:2020], 
+or `Scipy` [@Virtanen:2020]. As most current data curation workflows necessitate time-consuming human 
+input, this step becomes an error-prone bottleneck and adds to the current reproducibility problem. 
+Several published works have led the IBSI to also emphasize the need for image processing before 
+the extraction of radiomics features. Moreover, it is important to perform an exploratory analysis 
+to understand the link between the data used as input in a machine learning model with the outcome 
+it has to predict. While there are  tools available for the implementation of the radiomics 
+pipeline such as `Nipype` [@Gorgolewski:2016], `Pymia` [@Jungo:2021], 
+and `MONAI` [@MONAI], there is also the need for a tool that allows for the systematic 
+and standardized data curation, image pre-processing, and feature exploration during the development 
+phase of the study.
 
-Double dollars make self-standing equations:
-
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
-
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
-
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
-
-# Figures
-
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
-
-Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+We introduce the open-source `Precision-medicine-toolbox` that facilitates data curation, image pre-processing, 
+and feature exploration using customizable Python scripts. This toolbox will also benefit researchers 
+without a strong programming background, allowing them to implement these steps and 
+increase the reproducibility of quantitative medical imaging research. The toolbox was utilized and tested 
+during the development of multiple projects including automatic lung tumor segmentation 
+on the CT [@Primakov:2021], repeatability of breast MRI radiomic features [@Granzier:2021], 
+and radiomics-based diagnosis of multiple sclerosis [@Lavrova:2021]. 
+Based on feedback from the community of users, improvements and more functionality will be added 
+to the toolbox with time. 
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+The authors would like to thank the Precision Medicine department colleagues and external users for 
+the feedback, Mart Smidt for testing the tool on the different data, PyRadiomics for a reliable 
+open-source tool for features extraction, Hugo Aerts et al. for the Lung1 dataset we used 
+to demonstrate our functionality, and The Cancer Imaging Archive for the publically available data.
 
 # References

@@ -42,6 +42,59 @@
   language = "en"
 }
 
+@ARTICLE{Lavrova2021-tf,
+  title    = "Exploratory Radiomic Analysis of Conventional vs. Quantitative
+              Brain {MRI}: Toward Automatic Diagnosis of Early Multiple
+              Sclerosis",
+  author   = "Lavrova, Elizaveta and Lommers, Emilie and Woodruff, Henry C and
+              Chatterjee, Avishek and Maquet, Pierre and Salmon, Eric and
+              Lambin, Philippe and Phillips, Christophe",
+  abstract = "Conventional magnetic resonance imaging (cMRI) is poorly
+              sensitive to pathological changes related to multiple sclerosis
+              (MS) in normal-appearing white matter (NAWM) and gray matter
+              (GM), with the added difficulty of not being very reproducible.
+              Quantitative MRI (qMRI), on the other hand, attempts to represent
+              the physical properties of tissues, making it an ideal candidate
+              for quantitative medical image analysis or radiomics. We
+              therefore hypothesized that qMRI-based radiomic features have
+              added diagnostic value in MS compared to cMRI. This study
+              investigated the ability of cMRI (T1w) and qMRI features
+              extracted from white matter (WM), NAWM, and GM to distinguish
+              between MS patients (MSP) and healthy control subjects (HCS). We
+              developed exploratory radiomic classification models on a dataset
+              comprising 36 MSP and 36 HCS recruited in CHU Liege, Belgium,
+              acquired with cMRI and qMRI. For each image type and region of
+              interest, qMRI radiomic models for MS diagnosis were developed on
+              a training subset and validated on a testing subset. Radiomic
+              models based on cMRI were developed on the entire training
+              dataset and externally validated on open-source datasets with 167
+              HCS and 10 MSP. Ranked by region of interest, the best diagnostic
+              performance was achieved in the whole WM. Here the model based on
+              magnetization transfer imaging (a type of qMRI) features yielded
+              a median area under the receiver operating characteristic curve
+              (AUC) of 1.00 in the testing sub-cohort. Ranked by image type,
+              the best performance was achieved by the magnetization transfer
+              models, with median AUCs of 0.79 (0.69-0.90, 90\% CI) in NAWM and
+              0.81 (0.71-0.90) in GM. The external validation of the T1w models
+              yielded an AUC of 0.78 (0.47-1.00) in the whole WM, demonstrating
+              a large 95\% CI and a low sensitivity of 0.30 (0.10-0.70). This
+              exploratory study indicates that qMRI radiomics could provide
+              efficient diagnostic information using NAWM and GM analysis in
+              MSP. T1w radiomics could be useful for a fast and automated check
+              of conventional MRI for WM abnormalities once acquisition and
+              reconstruction heterogeneities have been overcome. Further
+              prospective validation is needed, involving more data for better
+              interpretation and generalization of the results.",
+  journal  = "Front. Neurosci.",
+  volume   =  15,
+  pages    = "679941",
+  month    =  aug,
+  year     =  2021,
+  keywords = "brain MRI; histological MRI; multiple sclerosis; quantitative
+              MRI; radiomic feature",
+  language = "en"
+}
+
 @ARTICLE{Mason2011-kt,
   title     = "{SU-E-T-33}: Pydicom: An Open Source {DICOM} Library",
   author    = "Mason, D",
@@ -443,6 +496,59 @@
   pages    = "46349",
   month    =  apr,
   year     =  2017,
+  language = "en"
+}
+
+@ARTICLE{Granzier2021-zl,
+  title    = "{Test-Retest} Data for the Assessment of Breast {MRI} Radiomic
+              Feature Repeatability",
+  author   = "Granzier, R W Y and Ibrahim, A and Primakov, S and Keek, S A and
+              Halilaj, I and Zwanenburg, A and Engelen, S M E and Lobbes, M B I
+              and Lambin, P and Woodruff, H C and Smidt, M L",
+  abstract = "BACKGROUND: Radiomic features extracted from breast MRI have
+              potential for diagnostic, prognostic, and predictive purposes.
+              However, before they can be used as biomarkers in clinical
+              decision support systems, features need to be repeatable and
+              reproducible. OBJECTIVE: Identify repeatable radiomics features
+              within breast tissue on prospectively collected MRI exams through
+              multiple test-retest measurements. STUDY TYPE: Prospective.
+              POPULATION: 11 healthy female volunteers. FIELD
+              STRENGTH/SEQUENCE: 1.5 T; MRI exams, comprising T2-weighted turbo
+              spin-echo (T2W) sequence, native T1-weighted turbo gradient-echo
+              (T1W) sequence, diffusion-weighted imaging (DWI) sequence using
+              b-values 0/150/800, and corresponding derived ADC maps.
+              ASSESSMENT: 18 MRI exams (three test-retest settings, repeated on
+              2 days) per healthy volunteer were examined on an identical
+              scanner using a fixed clinical breast protocol. For each scan, 91
+              features were extracted from the 3D manually segmented right
+              breast using Pyradiomics, before and after image preprocessing.
+              Image preprocessing consisted of 1) bias field correction (BFC);
+              2) z-score normalization with and without BFC; 3) grayscale
+              discretization using 32 and 64 bins with and without BFC; and 4)
+              z-score normalization + grayscale discretization using 32 and 64
+              bins with and without BFC. STATISTICAL TESTS: Features'
+              repeatability was assessed using concordance correlation
+              coefficient(CCC) for each pair, i.e. each MRI was compared to
+              each of the remaining 17 MRI with a cut-off value of CCC > 0.90.
+              RESULTS: Images without preprocessing produced the highest number
+              of repeatable features for both T1W sequence and ADC maps with 15
+              of 91 (16.5\%) and 8 of 91 (8.8\%) repeatable features,
+              respectively. Preprocessed images produced between 4 of 91
+              (4.4\%) and 14 of 91 (15.4\%), and 6 of 91 (6.6\%) and 7 of 91
+              (7.7\%) repeatable features, respectively for T1W and ADC maps.
+              Z-score normalization produced highest number of repeatable
+              features, 26 of 91 (28.6\%) in T2W sequences, in these images, no
+              preprocessing produced 11 of 91 (12.1\%) repeatable features.
+              DATA CONCLUSION: Radiomic features extracted from T1W, T2W
+              sequences and ADC maps from breast MRI exams showed a varying
+              number of repeatable features, depending on the sequence. Effects
+              of different preprocessing procedures on repeatability of
+              features were different for each sequence. LEVEL OF EVIDENCE: 2
+              TECHNICAL EFFICACY STAGE: 1.",
+  journal  = "J. Magn. Reson. Imaging",
+  month    =  dec,
+  year     =  2021,
+  keywords = "MRI; breast; feature repeatability; radiomics",
   language = "en"
 }
 
@@ -1005,6 +1111,49 @@
   keywords  = "Medical physics and biomedical engineering; medical imaging;
                Image data; artificial intelligence; Imaging technology",
   language  = "en"
+}
+
+@ARTICLE{Lambin2012-qo,
+  title    = "Radiomics: extracting more information from medical images using
+              advanced feature analysis",
+  author   = "Lambin, Philippe and Rios-Velazquez, Emmanuel and Leijenaar,
+              Ralph and Carvalho, Sara and van Stiphout, Ruud G P M and
+              Granton, Patrick and Zegers, Catharina M L and Gillies, Robert
+              and Boellard, Ronald and Dekker, Andr{\'e} and Aerts, Hugo J W L",
+  abstract = "Solid cancers are spatially and temporally heterogeneous. This
+              limits the use of invasive biopsy based molecular assays but
+              gives huge potential for medical imaging, which has the ability
+              to capture intra-tumoural heterogeneity in a non-invasive way.
+              During the past decades, medical imaging innovations with new
+              hardware, new imaging agents and standardised protocols, allows
+              the field to move towards quantitative imaging. Therefore, also
+              the development of automated and reproducible analysis
+              methodologies to extract more information from image-based
+              features is a requirement. Radiomics--the high-throughput
+              extraction of large amounts of image features from radiographic
+              images--addresses this problem and is one of the approaches that
+              hold great promises but need further validation in multi-centric
+              settings and in the laboratory.",
+  journal  = "Eur. J. Cancer",
+  volume   =  48,
+  number   =  4,
+  pages    = "441--446",
+  month    =  mar,
+  year     =  2012,
+  language = "en"
+}
+
+@ARTICLE{Primakov2021-cs,
+  title     = "{OC-0557} {AI-based} {NSCLC} detection and segmentation: faster
+               and more prognostic than manual segmentation",
+  author    = "Primakov, S and Ibrahim, A and van Timmeren, J and Wu, G and
+               Keek, S and Beuque, M and Granzier, R and Scrivener, M and
+               Sanduleanu, S and Kayan, E and {Others}",
+  journal   = "Radiother. Oncol.",
+  publisher = "Elsevier",
+  volume    =  161,
+  pages     = "S441--S443",
+  year      =  2021
 }
 
 @MISC{Brett2020-bm,
