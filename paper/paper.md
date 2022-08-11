@@ -24,6 +24,8 @@ authors:
   - name: Manon Beuque
     orcid: 0000-0001-6804-5908
     affiliation: 1
+  - name: Damon Verstappen
+    affiliation: 1
   - name: Henry C Woodruff
     orcid: 0000-0001-7911-5123
     affiliation: "1, 3"
