@@ -93,7 +93,7 @@ Data curation and the pre-processing of medical images are time-consuming and cr
 radiomics workflow that can have a significant impact on the resulting model performance 
 [@Hosseini2021-bm; @Zhang2019-ha]. These steps may be performed manually or using lower level 
 Python libraries such as `Numpy` [@Van_der_Walt2011-mn], 
-`Pandas` [@McKinney2011-fb], `Pydicom` [@Mason2011-kt], `Scikit-image` [@Van_der_Walt2014-ih], 
+`Pandas` [@McKinney2010-fb], `Pydicom` [@Mason2011-kt], `Scikit-image` [@Van_der_Walt2014-ih], 
 `Scikit-learn` [@Kramer2016-zr], `SimpleITK` [@Yaniv2018-nh], `Nibabel` [@Brett2020-bm], 
 or `Scipy` [@Virtanen2020-jy]. As most current data curation workflows necessitate time-consuming human 
 input, this step becomes an error-prone bottleneck and adds to the current reproducibility problem. 
@@ -111,7 +111,7 @@ and feature exploration using customizable Python scripts. This toolbox will als
 without a strong programming background, allowing them to implement these steps and 
 increase the reproducibility of quantitative medical imaging research. The toolbox was utilized and tested 
 during the development of multiple projects including automatic lung tumor segmentation 
-on the CT [@Primakov2021-cs], repeatability of breast MRI radiomic features [@Granzier2021-zl], 
+on the CT [@Primakov2022-cs], repeatability of breast MRI radiomic features [@Granzier2021-zl], 
 and radiomics-based diagnosis of multiple sclerosis [@Lavrova2021-tf]. 
 Based on feedback from the community of users, improvements and more functionality will be added 
 to the toolbox with time. 
