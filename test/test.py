@@ -63,7 +63,7 @@ def test_generateresultbox_init():
 
     assert ((train_labels_present)&(train_predictors_present))|((test_labels_present)&(test_predictors_present))|((external_labels_present)&(external_predictors_present))
 
-"""# imaging methods tests
+# imaging methods tests
 def test_get_dataset_description():
     parameters = {'data_path': 'data/test/dicom_test/',
                   'data_type': 'dcm',
@@ -248,7 +248,7 @@ def test_clean_features_module():
         try:
             os.remove(filename)
         except:
-            print ('Could not remove ', filename)"""
+            print ('Could not remove ', filename)
 
 # results methods tests
 def test_get_results():
