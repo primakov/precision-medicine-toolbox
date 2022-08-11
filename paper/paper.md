@@ -59,48 +59,48 @@ existing packages, and improve the reproducibility of quantitative medical imagi
 
 The concept of precision medicine is rising in popularity, which aims to enhance individual patient care 
 by identifying subgroups of patients within a disease group using genotypic and phenotypic data, 
-consequently targeting the disease with more efficient treatment [@Niu:2019; @Carrier-Vallières:2018]. 
+consequently targeting the disease with more efficient treatment [@Niu2019-gw; @Carrier-Vallieres2018-ml]. 
 Medical image analysis plays a key role in precision medicine as it allows the clinicians to non-invasively 
-identify (radiological) phenotypes [@Acharya:2018]. 
+identify (radiological) phenotypes [@Acharya2018-zi]. 
 
 The number of medical imaging data to analyze is rising rapidly and physicians struggle to cope with 
 the increasing demand. Moreover, multiple studies have shown that there is significant inter-observer 
-variability when performing various clinical tasks [@Kinkel:2000; @Luijnenburg:2010]. 
+variability when performing various clinical tasks [@Kinkel2000-dd; @Luijnenburg2010-ls]. 
 Hence, there is a need for medical image analysis tools that can aid clinicians in meeting the challenges 
 of rising demand and better clinical performance, while reducing variability and costs. At the heart of 
 these tools will be advanced quantitative imaging analysis, such as handcrafted radiomics and deep learning. 
 Handcrafted radiomics is the high-throughput extraction of pre-defined high-dimensional quantitative 
 image features and their correlation with biological and clinical outcomes using machine learning methods 
-[@Lambin:2012]. Deep learning automatically learns representative image features from the high 
+[@Lambin2012-qo]. Deep learning automatically learns representative image features from the high 
 dimensional image data without the need of feature engineering by using non-linear modules that constitute 
-a neural network [@Schmidhuber:2015]. As illustrated by \autoref{fig:1}, the field of quantitative image analysis 
+a neural network [@Schmidhuber2015-la]. As illustrated by \autoref{fig:1}, the field of quantitative image analysis 
 is expanding due to increases in computational power and availability of large quantities of multimodal data 
-[@Oren:2020; @Aggarwal:2021]. Moreover, it has demonstrated promising results in 
-various clinical applications [@Tagliafico:2020; @Zhang:2017; @Wang:2021; @Mu:2020]. 
+[@Oren2020-eb; @Aggarwal2021-cm]. Moreover, it has demonstrated promising results in 
+various clinical applications [@Tagliafico2020-jp; @Zhang2017-so; @Wang2021-zx; @Mu2020-pw]. 
 As with many nascent technologies, high-throughput quantitative image analysis suffers from a lack of 
 standardization, e.g. in the image domain (different vendors, acquisition and reconstruction protocols, 
 pre-processing), or different definitions of handcrafted features (such as shape, intensity, and texture 
 features), which initiatives such as the image biomarker standardization initiative (IBSI) try to counter 
-[@Zwanenburg:2020]. 
+[@Zwanenburg2020-ca]. 
 The spread of widely used open-source software such as `Pyradiomics`, allows the extraction of IBSI-compliant 
-handcrafted radiomics features [@van Griethuysen:2017]. 
+handcrafted radiomics features [@Van_Griethuysen2017-ph]. 
 
 ![Number of publications, by year, containing keywords ((‘radiomics’ OR ‘deep learning’) AND ‘medical imaging’) in PubMed database (https://pubmed.ncbi.nlm.nih.gov/?term=(%E2%80%98radiomics%E2%80%99%20OR%20%E2%80%98deep%20learning%E2%80%99)%20AND%20%E2%80%98medical%20imaging%E2%80%99&timeline=expanded).\label{fig:1}](figure_1.png)
 
 Data curation and the pre-processing of medical images are time-consuming and critical steps in the 
 radiomics workflow that can have a significant impact on the resulting model performance 
-[@Hosseini:2021; @Zhang:2019]. These steps may be performed manually or using lower level 
-Python libraries such as `Numpy` [@Stefan van der Walt:2011], 
-`Pandas` [@McKinney:2011], `Pydicom` [@Mason:2011], `Scikit-image` [@Stéfan van der Walt:2014], 
-`Scikit-learn` [@Kramer:2016], `SimpleITK` [@Yaniv:2018], `Nibabel` [@Brett:2020], 
-or `Scipy` [@Virtanen:2020]. As most current data curation workflows necessitate time-consuming human 
+[@Hosseini2021-bm; @Zhang2019-ha]. These steps may be performed manually or using lower level 
+Python libraries such as `Numpy` [@Van_der_Walt2011-mn], 
+`Pandas` [@McKinney2011-rb], `Pydicom` [@Mason2011-kt], `Scikit-image` [@Van_der_Walt2014-ih], 
+`Scikit-learn` [@Kramer2016-zr], `SimpleITK` [@Yaniv2018-nh], `Nibabel` [@Brett2020-bm], 
+or `Scipy` [@Virtanen2020-jy]. As most current data curation workflows necessitate time-consuming human 
 input, this step becomes an error-prone bottleneck and adds to the current reproducibility problem. 
 Several published works have led the IBSI to also emphasize the need for image processing before 
 the extraction of radiomics features. Moreover, it is important to perform an exploratory analysis 
 to understand the link between the data used as input in a machine learning model with the outcome 
 it has to predict. While there are  tools available for the implementation of the radiomics 
-pipeline such as `Nipype` [@Gorgolewski:2016], `Pymia` [@Jungo:2021], 
-and `MONAI` [@MONAI], there is also the need for a tool that allows for the systematic 
+pipeline such as `Nipype` [@Gorgolewski2016-vf], `Pymia` [@Jungo2021-fg], 
+and `MONAI` [@MONAI_Consortium2020-kr], there is also the need for a tool that allows for the systematic 
 and standardized data curation, image pre-processing, and feature exploration during the development 
 phase of the study.
 
@@ -109,7 +109,7 @@ and feature exploration using customizable Python scripts. This toolbox will als
 without a strong programming background, allowing them to implement these steps and 
 increase the reproducibility of quantitative medical imaging research. The toolbox was utilized and tested 
 during the development of multiple projects including automatic lung tumor segmentation 
-on the CT [@Primakov2021], repeatability of breast MRI radiomic features [@Granzier2021], 
+on the CT [@Primakov2021-cs], repeatability of breast MRI radiomic features [@Granzier2021-zl], 
 and radiomics-based diagnosis of multiple sclerosis [@Lavrova2021-tf]. 
 Based on feedback from the community of users, improvements and more functionality will be added 
 to the toolbox with time. 
