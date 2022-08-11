@@ -109,8 +109,8 @@ and feature exploration using customizable Python scripts. This toolbox will als
 without a strong programming background, allowing them to implement these steps and 
 increase the reproducibility of quantitative medical imaging research. The toolbox was utilized and tested 
 during the development of multiple projects including automatic lung tumor segmentation 
-on the CT [@Primakov:2021], repeatability of breast MRI radiomic features [@Granzier:2021], 
-and radiomics-based diagnosis of multiple sclerosis [@Lavrova:2021]. 
+on the CT [@Primakov2021], repeatability of breast MRI radiomic features [@Granzier2021], 
+and radiomics-based diagnosis of multiple sclerosis [@Lavrova2021-tf]. 
 Based on feedback from the community of users, improvements and more functionality will be added 
 to the toolbox with time. 
 
