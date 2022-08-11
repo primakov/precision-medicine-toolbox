@@ -1,5 +1,5 @@
 ---
-title: 'Precision-medicine-toolbox: An open-source package for facilitation of quantitative medical imaging and radiomics analysis'
+title: '`Precision-medicine-toolbox`: An open-source package for facilitation of quantitative medical imaging and radiomics analysis'
 tags:
   - Python
   - medical imaging
