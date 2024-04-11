@@ -8,6 +8,7 @@ s.primakov@maastrichtuniversity.nl
 import os,re,logging
 from pmtool.DataSet import DataSet
 import pydicom
+from pydicom.dataset import Dataset, FileDataset
 import numpy as np
 from skimage import draw
 import SimpleITK as sitk
@@ -209,6 +210,62 @@ class ToolBox(DataSet):
 
         else:
             raise TypeError('Currently only conversion from dicom -> nrrd is available')
+        
+    
+    def convert_nrrd_to_dicom(self, nrrd_path: str, original_dicom_dir: str, output_dicom_dir: str):
+        """
+        Convert an NRRD file to a series of DICOM files using metadata from an original DICOM series.
+
+        Parameters:
+        - nrrd_path: Path to the NRRD file.
+        - original_dicom_dir: Directory containing the original DICOM files for metadata.
+        - output_dicom_dir: Directory where the new DICOM files will be saved.
+        """
+        # Read the NRRD file
+        nrrd_image = sitk.ReadImage(nrrd_path)
+        nrrd_array = sitk.GetArrayFromImage(nrrd_image)
+
+        # Load one of the original DICOM files to use as a template
+        dicom_template = None
+        for root, dirs, files in os.walk(original_dicom_dir):
+            for file in files:
+                if file.endswith('.dcm'):
+                    dicom_template = pydicom.dcmread(os.path.join(root, file))
+                    break
+            if dicom_template:
+                break
+
+        if not dicom_template:
+            raise FileNotFoundError("No DICOM template found in the specified directory.")
+
+        # Ensure the output directory exists
+        if not os.path.exists(output_dicom_dir):
+            os.makedirs(output_dicom_dir)
+
+        # Generate DICOM files from NRRD slices
+        for i, slice in enumerate(nrrd_array):
+            # Create a new DICOM file based on the template
+            new_dicom = FileDataset('', {}, file_meta=Dataset(), preamble=b"\0" * 128)
+            new_dicom.update((tag, dicom_template.get(tag)) for tag in dicom_template.dir() if hasattr(new_dicom, tag))
+
+            # Set pixel data
+            new_dicom.PixelData = slice.tobytes()
+            new_dicom.Rows, new_dicom.Columns = slice.shape
+
+            # Update instance specific tags
+            new_dicom.InstanceNumber = str(i + 1)
+            new_dicom.ImagePositionPatient[2] = dicom_template.ImagePositionPatient[2] + i * dicom_template.SliceThickness
+            new_dicom.SOPInstanceUID = pydicom.uid.generate_uid()
+            new_dicom.SeriesInstanceUID = pydicom.uid.generate_uid()
+            new_dicom.StudyInstanceUID = dicom_template.StudyInstanceUID
+            new_dicom.SeriesNumber = dicom_template.SeriesNumber
+            new_dicom.AcquisitionNumber = dicom_template.AcquisitionNumber
+
+            # Save the new DICOM file
+            output_path = os.path.join(output_dicom_dir, f"slice_{i + 1}.dcm")
+            new_dicom.save_as(output_path)
+
+        print(f"Conversion complete. DICOM files saved to {output_dicom_dir}")    
 
     def pre_process(self, ref_img_path: str = None, save_path: str = None,
                     z_score: bool = False, norm_coeff: tuple = None, hist_match: bool = False,

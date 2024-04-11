@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 
 # initialising objects
 def test_toolbox_init():
+    print(" test_toolbox_init")
     parameters = {'data_path': 'data/test/dicom_test/',
                   'data_type': 'dcm',
                   'multi_rts_per_pat': False}
@@ -105,6 +106,26 @@ def test_convert_to_nrrd():
         flag_files_created = len(os.listdir(first_folder_path)) > 0
 
     assert (flag_folders_created)&(flag_files_created)
+    
+def test_convert_nrrd_to_dicom():
+
+    flag_files_created = False
+
+    nrrd_path = 'data/test/sample.nrrd'
+    original_dicom_dir = 'data/test/original_dicoms/'
+    output_dicom_dir = 'data/test/output_dicoms/'
+
+    toolbox = ToolBox()
+
+    # Execute the conversion from NRRD to DICOM
+    toolbox.convert_nrrd_to_dicom(nrrd_path, original_dicom_dir, output_dicom_dir)
+
+    # Check if the output directory has been created and contains files
+    flag_folders_created = os.path.exists(output_dicom_dir) and os.path.isdir(output_dicom_dir)
+    if flag_folders_created:
+        flag_files_created = len(os.listdir(output_dicom_dir)) > 0
+
+    assert flag_folders_created and flag_files_created, "DICOM files were not created successfully."  
 
 def test_get_jpegs():
 
